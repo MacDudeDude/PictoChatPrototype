@@ -48,37 +48,30 @@ public class PlayerDraw : MonoBehaviour
         Adding();
         Removing();
 
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            ClearAllTiles();
+        }
         //currentGridPos = grid.WorldToCell(cam.ScreenToWorldPoint(Input.mousePosition));
-
-        //if(Input.GetMouseButton(0))
-        //{
-        //    PlacePixel(currentGridPos, currentTileMapPos);
-        //}else if(Input.GetMouseButton(1))
-        //{
-        //    RemovePixel(currentGridPos, currentTileMapPos);
-        //}
     }
 
-    public void PlacePixel(Vector3Int pos, Vector3Int tileMapPos)
+    public void ClearAllTiles()
     {
-        if (pos.x < 0 || pos.x >= width || pos.y < 0 || pos.y >= height)
-            return;
-        if (pixelgrid[pos.x, pos.y] == 1)
-            return;
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                if (pixelgrid[x, y] == 1)
+                {
+                    Vector3Int currentGridPos = new Vector3Int(x, y);
+                    Vector3 worldPos = grid.CellToWorld(currentGridPos);
+                    Vector3Int currentTileMapPos = tilemapGrid.WorldToCell(worldPos);
 
-        pixelgrid[pos.x, pos.y] = 1;
-        tilemaps[tileMapPos.x, tileMapPos.y].SetTile(pos, tile);
-    }
-
-    public void RemovePixel(Vector3Int pos, Vector3Int tileMapPos)
-    {
-        if (pos.x < 0 || pos.x >= width || pos.y < 0 || pos.y >= height)
-            return;
-        if (pixelgrid[pos.x, pos.y] == 0)
-            return;
-
-        pixelgrid[pos.x, pos.y] = 0;
-        tilemaps[tileMapPos.x, tileMapPos.y].SetTile(pos, null);
+                    pixelgrid[currentGridPos.x, currentGridPos.y] = 0;
+                    tilemaps[currentTileMapPos.x, currentTileMapPos.y].SetTile(currentGridPos, null);
+                }
+            }
+        }
     }
 
     private void Adding()
