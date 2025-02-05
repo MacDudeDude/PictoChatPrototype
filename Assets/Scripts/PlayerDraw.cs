@@ -10,13 +10,13 @@ public class PlayerDraw : MonoBehaviour
     public Grid grid;
     public Grid tilemapGrid;
     public GameObject tilemapPrefab;
-    public int ppu;
 
     public int rows;
     public int collumns;
     public int width;
     public int height;
 
+    private int ppu;
     private Vector2 lastMousePosition;
     private Tilemap[,] tilemaps;
     private Tilemap playareaOutline;
@@ -27,7 +27,8 @@ public class PlayerDraw : MonoBehaviour
     void Start()
     {
         cam = Camera.main;
-
+        ppu = Mathf.RoundToInt(tile.sprite.pixelsPerUnit);
+        
         tilemaps = new Tilemap[rows, collumns];
         for (int x = 0; x < rows; x++)
         {
