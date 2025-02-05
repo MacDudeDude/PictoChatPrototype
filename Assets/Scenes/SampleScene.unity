@@ -563,7 +563,7 @@ MonoBehaviour:
   tile: {fileID: 11400000, guid: 49b2b84931f1bc64d816d81003ab91cf, type: 2}
   grid: {fileID: 1534801706}
   tilemapGrid: {fileID: 1552339699}
-  tilemapPrefab: {fileID: 7810132759729672120, guid: ac735e0672fb1af40802e03479b2a127, type: 3}
+  tilemapPrefab: {fileID: 7810132759729672120, guid: ea86279986b17864eb6147ab0c4e2f31, type: 3}
   ppu: 40
   rows: 5
   collumns: 3
