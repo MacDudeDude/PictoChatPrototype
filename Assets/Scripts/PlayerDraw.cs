@@ -19,6 +19,7 @@ public class PlayerDraw : MonoBehaviour
 
     private Vector2 lastMousePosition;
     private Tilemap[,] tilemaps;
+    private Tilemap playareaOutline;
     private int[,] pixelgrid;
     private Camera cam;
 
@@ -37,9 +38,53 @@ public class PlayerDraw : MonoBehaviour
             }
         }
 
+        playareaOutline = Instantiate(tilemapPrefab, Vector3.zero, Quaternion.identity, grid.transform).GetComponent<Tilemap>();
+
         width *= rows;
         height *= collumns;
         pixelgrid = new int[width,height];
+
+        SetOutlineTiles();
+    }
+
+    public void SetOutlineTiles()
+    {
+        Vector3Int[] positions = new Vector3Int[width + 2];
+        TileBase[] tiles = new TileBase[width + 2];
+
+        //Bottom outline
+        for (int x = 0; x < width + 2; x++) {
+            positions[x] = new Vector3Int(x - 1, -1, 0);
+            tiles[x] = tile;
+        }
+        playareaOutline.SetTiles(positions, tiles);
+
+        //Top Outline
+        for (int x = 0; x < width + 2; x++)
+        {
+            positions[x] = new Vector3Int(x - 1, height, 0);
+            tiles[x] = tile;
+        }
+        playareaOutline.SetTiles(positions, tiles);
+
+        positions = new Vector3Int[height + 2];
+        tiles = new TileBase[width + 2];
+
+        //Left outline
+        for (int x = 0; x < height + 2; x++)
+        {
+            positions[x] = new Vector3Int(-1, x - 1, 0);
+            tiles[x] = tile;
+        }
+        playareaOutline.SetTiles(positions, tiles);
+
+        //Right Outline
+        for (int x = 0; x < height + 2; x++)
+        {
+            positions[x] = new Vector3Int(width, x - 1, 0);
+            tiles[x] = tile;
+        }
+        playareaOutline.SetTiles(positions, tiles);
     }
 
     // Update is called once per frame
