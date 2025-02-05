@@ -234,7 +234,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.5, y: 5, z: -10}
+  m_LocalPosition: {x: 6.5, y: 3.75, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -564,11 +564,11 @@ MonoBehaviour:
   grid: {fileID: 1534801706}
   tilemapGrid: {fileID: 1552339699}
   tilemapPrefab: {fileID: 7810132759729672120, guid: ac735e0672fb1af40802e03479b2a127, type: 3}
-  ppu: 20
-  rows: 6
-  collumns: 4
-  width: 50
-  height: 50
+  ppu: 40
+  rows: 5
+  collumns: 3
+  width: 100
+  height: 100
 --- !u!4 &1355456121
 Transform:
   m_ObjectHideFlags: 0
@@ -610,7 +610,7 @@ Transform:
   m_GameObject: {fileID: 1407392183}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 300, y: 200, z: 1}
+  m_LocalScale: {x: 250, y: 150, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1552339700}
@@ -693,7 +693,7 @@ Grid:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1534801705}
   m_Enabled: 1
-  m_CellSize: {x: 0.05, y: 0.05, z: 0}
+  m_CellSize: {x: 0.025, y: 0.025, z: 0}
   m_CellGap: {x: 0, y: 0, z: 0}
   m_CellLayout: 0
   m_CellSwizzle: 0
