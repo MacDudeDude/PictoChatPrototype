@@ -23,12 +23,24 @@ public class PlayerDraw : MonoBehaviour
     private int[,] pixelgrid;
     private Camera cam;
 
+    private List<Vector3Int>[] updatedTilesPos;
+    private List<TileBase>[] updatedTilesTile;
+    private bool tilemapUpdated;
+
     // Start is called before the first frame update
     void Start()
     {
         cam = Camera.main;
         ppu = Mathf.RoundToInt(tile.sprite.pixelsPerUnit);
-        
+
+        updatedTilesPos = new List<Vector3Int>[rows * collumns];
+        updatedTilesTile = new List<TileBase>[rows * collumns];
+        for (int i = 0; i < rows * collumns; i++)
+        {
+            updatedTilesPos[i] = new List<Vector3Int>();
+            updatedTilesTile[i] = new List<TileBase>();
+        }
+
         tilemaps = new Tilemap[rows, collumns];
         for (int x = 0; x < rows; x++)
         {
@@ -99,6 +111,28 @@ public class PlayerDraw : MonoBehaviour
             ClearAllTiles();
         }
         //currentGridPos = grid.WorldToCell(cam.ScreenToWorldPoint(Input.mousePosition));
+
+        if(tilemapUpdated)
+        {
+            UpdateTiles();
+        }
+    }
+
+    public void UpdateTiles()
+    {
+        for (int i = 0; i < updatedTilesPos.Length; i++)
+        {
+            if(updatedTilesPos[i].Count > 0)
+            {
+                (int x, int y) = To2DIndex(i);
+                tilemaps[x, y].SetTiles(updatedTilesPos[i].ToArray(), updatedTilesTile[i].ToArray());
+            }
+
+            updatedTilesPos[i].Clear();
+            updatedTilesTile[i].Clear();
+        }
+
+        tilemapUpdated = false;
     }
 
     public void ClearAllTiles()
@@ -114,10 +148,12 @@ public class PlayerDraw : MonoBehaviour
                     Vector3Int currentTileMapPos = tilemapGrid.WorldToCell(worldPos);
 
                     pixelgrid[currentGridPos.x, currentGridPos.y] = 0;
-                    tilemaps[currentTileMapPos.x, currentTileMapPos.y].SetTile(currentGridPos, null);
+                    QueTile(currentTileMapPos.x, currentTileMapPos.y, currentGridPos, null);
                 }
             }
         }
+
+        tilemapUpdated = true;
     }
 
     private void Adding()
@@ -160,7 +196,7 @@ public class PlayerDraw : MonoBehaviour
                                 continue;
 
                             pixelgrid[currentGridPos.x, currentGridPos.y] = 1;
-                            tilemaps[currentTileMapPos.x, currentTileMapPos.y].SetTile(currentGridPos, tile);
+                            QueTile(currentTileMapPos.x, currentTileMapPos.y, currentGridPos, tile);
                         }
                     }
                 }
@@ -168,6 +204,14 @@ public class PlayerDraw : MonoBehaviour
 
             lastMousePosition = mousePos;
         }
+    }
+
+    private void QueTile(int x, int y, Vector3Int pos, Tile tile)
+    {
+        int i = To1DIndex(x, y);
+        updatedTilesPos[i].Add(pos);
+        updatedTilesTile[i].Add(tile);
+        tilemapUpdated = true;
     }
 
     private void Removing()
@@ -210,7 +254,7 @@ public class PlayerDraw : MonoBehaviour
                                 continue;
 
                             pixelgrid[currentGridPos.x, currentGridPos.y] = 0;
-                            tilemaps[currentTileMapPos.x, currentTileMapPos.y].SetTile(currentGridPos, null);
+                            QueTile(currentTileMapPos.x, currentTileMapPos.y, currentGridPos, null);
                         }
                     }
                 }
@@ -218,6 +262,18 @@ public class PlayerDraw : MonoBehaviour
 
             lastMousePosition = mousePos;
         }
+    }
+
+    public int To1DIndex(int x, int y)
+    {
+        return y * rows + x;
+    }
+
+    public (int x, int y) To2DIndex(int i)
+    {
+        int x = i % rows;
+        int y = i / rows;
+        return (x, y);
     }
 
     public List<Vector2Int> GenerateLine(int x, int y, int x2, int y2)
