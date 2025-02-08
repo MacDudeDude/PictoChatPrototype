@@ -141,7 +141,7 @@ public class PlayerDraw : MonoBehaviour
         {
             for (int y = 0; y < height; y++)
             {
-                if (pixelgrid[x, y] == 1)
+                if (pixelgrid[x, y] != 0)
                 {
                     Vector3Int currentGridPos = new Vector3Int(x, y);
                     Vector3 worldPos = grid.CellToWorld(currentGridPos);
