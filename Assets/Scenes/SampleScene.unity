@@ -559,11 +559,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2860070cf0572a44d8057645e7c69117, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  placeRadius: 0.1
+  placeRadius: 1.1
   tile: {fileID: 11400000, guid: 49b2b84931f1bc64d816d81003ab91cf, type: 2}
   grid: {fileID: 1534801706}
   tilemapGrid: {fileID: 1552339699}
-  tilemapPrefab: {fileID: 7810132759729672120, guid: ea86279986b17864eb6147ab0c4e2f31, type: 3}
+  tilemapPrefab: {fileID: 7604062276924931468, guid: ea86279986b17864eb6147ab0c4e2f31, type: 3}
   rows: 5
   collumns: 3
   width: 100
