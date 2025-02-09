@@ -5,6 +5,11 @@ using UnityEngine.Tilemaps;
 
 public class PlayerDraw : MonoBehaviour
 {
+    public TextureManager texManager;
+    public int layersAmount;
+    public int collisionLayer = 1;
+    public Color32[] colorValues;
+
     public float placeRadius;
     public Tile tile;
     public Grid grid;
@@ -16,12 +21,15 @@ public class PlayerDraw : MonoBehaviour
     public int width;
     public int height;
 
+    public int currentLayer;
     private int ppu;
     private Vector2 lastMousePosition;
     private Tilemap[,] tilemaps;
     private Tilemap playareaOutline;
-    private int[,] pixelgrid;
     private Camera cam;
+
+    private List<int[,]> pixelgrid;
+    private List<Color32[]> textureColors;
 
     private List<Vector3Int>[] updatedTilesPos;
     private List<TileBase>[] updatedTilesTile;
@@ -55,8 +63,16 @@ public class PlayerDraw : MonoBehaviour
 
         width *= rows;
         height *= collumns;
-        pixelgrid = new int[width,height];
 
+        currentLayer = collisionLayer;
+        pixelgrid = new List<int[,]>();
+        textureColors = new List<Color32[]>();
+        for (int i = 0; i < layersAmount; i++) {
+            pixelgrid.Add(new int[width, height]);
+            textureColors.Add(new Color32[width * height]);
+        }
+
+        texManager.InitializeTextures(width, height, layersAmount, ppu);
         SetOutlineTiles();
     }
 
@@ -132,6 +148,8 @@ public class PlayerDraw : MonoBehaviour
             updatedTilesTile[i].Clear();
         }
 
+        texManager.SetPixels(textureColors[currentLayer], currentLayer);
+
         tilemapUpdated = false;
     }
 
@@ -141,14 +159,13 @@ public class PlayerDraw : MonoBehaviour
         {
             for (int y = 0; y < height; y++)
             {
-                if (pixelgrid[x, y] != 0)
+                if (pixelgrid[currentLayer][x, y] != 0)
                 {
                     Vector3Int currentGridPos = new Vector3Int(x, y);
                     Vector3 worldPos = grid.CellToWorld(currentGridPos);
                     Vector3Int currentTileMapPos = tilemapGrid.WorldToCell(worldPos);
 
-                    pixelgrid[currentGridPos.x, currentGridPos.y] = 0;
-                    QueTile(currentTileMapPos.x, currentTileMapPos.y, currentGridPos, null);
+                    QueTile(currentTileMapPos.x, currentTileMapPos.y, currentGridPos, null, 0);
                 }
             }
         }
@@ -192,11 +209,10 @@ public class PlayerDraw : MonoBehaviour
 
                             Vector3Int currentTileMapPos = tilemapGrid.WorldToCell(worldPos);
 
-                            if (pixelgrid[currentGridPos.x, currentGridPos.y] == 1)
+                            if (pixelgrid[currentLayer][currentGridPos.x, currentGridPos.y] == 1)
                                 continue;
 
-                            pixelgrid[currentGridPos.x, currentGridPos.y] = 1;
-                            QueTile(currentTileMapPos.x, currentTileMapPos.y, currentGridPos, tile);
+                            QueTile(currentTileMapPos.x, currentTileMapPos.y, currentGridPos, tile, 1);
                         }
                     }
                 }
@@ -206,11 +222,21 @@ public class PlayerDraw : MonoBehaviour
         }
     }
 
-    private void QueTile(int x, int y, Vector3Int pos, Tile tile)
+    private void QueTile(int x, int y, Vector3Int pos, Tile tile, int value)
     {
         int i = To1DIndex(x, y);
-        updatedTilesPos[i].Add(pos);
-        updatedTilesTile[i].Add(tile);
+
+        if(currentLayer == collisionLayer)
+        {
+            updatedTilesPos[i].Add(pos);
+            updatedTilesTile[i].Add(tile);
+        }
+
+        pixelgrid[currentLayer][pos.x, pos.y] = value;
+
+        i = (pos.y * width) + pos.x;
+        textureColors[currentLayer][i] = colorValues[value];
+
         tilemapUpdated = true;
     }
 
@@ -250,11 +276,10 @@ public class PlayerDraw : MonoBehaviour
 
                             Vector3Int currentTileMapPos = tilemapGrid.WorldToCell(worldPos);
 
-                            if (pixelgrid[currentGridPos.x, currentGridPos.y] == 0)
+                            if (pixelgrid[currentLayer][currentGridPos.x, currentGridPos.y] == 0)
                                 continue;
 
-                            pixelgrid[currentGridPos.x, currentGridPos.y] = 0;
-                            QueTile(currentTileMapPos.x, currentTileMapPos.y, currentGridPos, null);
+                            QueTile(currentTileMapPos.x, currentTileMapPos.y, currentGridPos, null, 0);
                         }
                     }
                 }
