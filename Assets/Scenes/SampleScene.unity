@@ -568,7 +568,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 926668899}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.4, y: 7.17, z: 0}
+  m_LocalPosition: {x: 5.98, y: 2.36, z: 0}
   m_LocalScale: {x: 0.45, y: 0.45, z: 0.45}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -688,12 +688,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   texManager: {fileID: 916048789}
   layersAmount: 3
+  collisionLayer: 1
   colorValues:
   - serializedVersion: 2
     rgba: 16777215
   - serializedVersion: 2
     rgba: 4278190080
-  placeRadius: 0.1
+  placeRadius: 1.1
   tile: {fileID: 11400000, guid: 49b2b84931f1bc64d816d81003ab91cf, type: 2}
   grid: {fileID: 1534801706}
   tilemapGrid: {fileID: 1552339699}
@@ -702,6 +703,7 @@ MonoBehaviour:
   collumns: 3
   width: 100
   height: 100
+  currentLayer: 0
 --- !u!4 &1355456121
 Transform:
   m_ObjectHideFlags: 0
