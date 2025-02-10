@@ -3,7 +3,7 @@ using FishNet.Transporting;
 using UnityEditor;
 using UnityEngine;
 
-public class ConnectionStarter : MonoBehaviour
+public class ConnectionHandler : MonoBehaviour
 {
     [SerializeField] private ConnectionType _connectionType;
 
@@ -14,7 +14,6 @@ public class ConnectionStarter : MonoBehaviour
         {
             case ConnectionType.Host:
                 InstanceFinder.ServerManager.StartConnection();
-                InstanceFinder.ClientManager.StartConnection();
                 break;
 
 
