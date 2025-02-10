@@ -18,8 +18,6 @@ public class PlayerMovement : NetworkBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		if (!base.IsOwner)
-			return;
 
 		horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
 
@@ -41,8 +39,11 @@ public class PlayerMovement : NetworkBehaviour
 
 	void FixedUpdate()
 	{
+		if (!base.IsOwner)
+			return;
 		// Move our character
 		controller.Move(horizontalMove * Time.fixedDeltaTime, crouch, jump);
 		jump = false;
 	}
+
 }

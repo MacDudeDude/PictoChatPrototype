@@ -14,9 +14,8 @@ public class ConnectionHandler : MonoBehaviour
         {
             case ConnectionType.Host:
                 InstanceFinder.ServerManager.StartConnection();
+                InstanceFinder.ClientManager.StartConnection();
                 break;
-
-
             case ConnectionType.Client:
                 InstanceFinder.ClientManager.StartConnection();
                 break;
