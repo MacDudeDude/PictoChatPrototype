@@ -1,11 +1,11 @@
 using UnityEngine;
-
-public class CharacterController2D : MonoBehaviour
+using FishNet.Object;
+public class CharacterController2D : NetworkBehaviour
 {
 	[SerializeField] private float m_JumpForce = 400f;                          // Amount of force added when the player jumps.
-	[Range(0, 1)] [SerializeField] private float m_CrouchSpeed = .36f;          // Amount of maxSpeed applied to crouching movement. 1 = 100%
-	[Range(0, .3f)] [SerializeField] private float m_MovementSmoothing = .05f;  // How much to smooth out the movement
-	[Range(0, .3f)] [SerializeField] private float m_CrouchedMovementSmoothing = .05f;  // How much to smooth out the movement
+	[Range(0, 1)][SerializeField] private float m_CrouchSpeed = .36f;          // Amount of maxSpeed applied to crouching movement. 1 = 100%
+	[Range(0, .3f)][SerializeField] private float m_MovementSmoothing = .05f;  // How much to smooth out the movement
+	[Range(0, .3f)][SerializeField] private float m_CrouchedMovementSmoothing = .05f;  // How much to smooth out the movement
 	[SerializeField] private bool m_AirControl = false;                         // Whether or not a player can steer while jumping;
 	[SerializeField] private LayerMask m_WhatIsGround;                          // A mask determining what is ground to the character
 	[SerializeField] private Transform m_GroundCheck;                           // A position marking where to check if the player is grounded.
@@ -28,7 +28,12 @@ public class CharacterController2D : MonoBehaviour
 
 	private void FixedUpdate()
 	{
+
+		if (!base.IsOwner)
+			return;
+
 		m_Grounded = false;
+
 
 		// The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
 		// This can be done using layers instead but Sample Assets will not overwrite your project settings.
@@ -124,8 +129,8 @@ public class CharacterController2D : MonoBehaviour
 		transform.localScale = theScale;
 	}
 
-    private void OnDrawGizmos()
-    {
+	private void OnDrawGizmos()
+	{
 		Gizmos.DrawWireSphere(m_GroundCheck.position, k_GroundedRadius);
 		Gizmos.DrawWireSphere(m_CeilingCheck.position, k_CeilingRadius);
 	}
