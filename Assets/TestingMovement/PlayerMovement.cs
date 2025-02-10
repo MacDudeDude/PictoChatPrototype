@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using FishNet.Object;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : NetworkBehaviour
 {
 
 	public CharacterController2D controller;
+
 
 	public float runSpeed = 40f;
 
@@ -16,6 +18,8 @@ public class PlayerMovement : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
+		if (!base.IsOwner)
+			return;
 
 		horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
 
