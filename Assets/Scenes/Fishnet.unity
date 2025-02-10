@@ -957,6 +957,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1560052436 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4014318380982401772, guid: 01c5c87a5cb1ced4abb5e32cb24049d2, type: 3}
+  m_PrefabInstance: {fileID: 1707797268}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1633573317
 GameObject:
   m_ObjectHideFlags: 0
@@ -1055,19 +1060,63 @@ PrefabInstance:
       propertyPath: <SceneId>k__BackingField
       value: 3841097497
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6616334143033599905, guid: 01c5c87a5cb1ced4abb5e32cb24049d2, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 01c5c87a5cb1ced4abb5e32cb24049d2, type: 3}
 --- !u!114 &1707797269 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 557061136684890029, guid: 01c5c87a5cb1ced4abb5e32cb24049d2, type: 3}
   m_PrefabInstance: {fileID: 1707797268}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1560052436}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1707797276
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1560052436}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 1707797269}
+  _networkObjectCache: {fileID: 0}
+  _componentConfiguration: 0
+  _synchronizeParent: 0
+  _packing:
+    Position: 1
+    Rotation: 1
+    Scale: 0
+  _interpolation: 2
+  _extrapolation: 2
+  _enableTeleport: 0
+  _teleportThreshold: 1
+  _clientAuthoritative: 1
+  _sendToOwner: 1
+  _interval: 1
+  _synchronizePosition: 1
+  _positionSnapping:
+    X: 0
+    Y: 0
+    Z: 0
+  _synchronizeRotation: 1
+  _rotationSnapping:
+    X: 0
+    Y: 0
+    Z: 0
+  _synchronizeScale: 1
+  _scaleSnapping:
+    X: 0
+    Y: 0
+    Z: 0
 --- !u!114 &2153192823054635956
 MonoBehaviour:
   m_ObjectHideFlags: 0
