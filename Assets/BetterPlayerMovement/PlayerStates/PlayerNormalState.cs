@@ -122,7 +122,7 @@ public class PlayerNormalState : PlayerState
         if((crouch && !m_Crouched && groundedBufferTime > 0))
         {
             velocity.x = 0;
-            m_Rigidbody2D.velocity = new Vector2(0, m_Rigidbody2D.velocity.y);
+            //m_Rigidbody2D.velocity = new Vector2(0, m_Rigidbody2D.velocity.y);
         }
 
         //only control the player if grounded or airControl is turned on
