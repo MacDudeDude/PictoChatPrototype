@@ -46,6 +46,8 @@ public class PlayerNormalState : PlayerState
     private float airborneTime;
     private bool dazed;
     private float dazedTime;
+    private float flipBuffer;
+    private float animationBuffer;
 
     public override void Init(Player player, PlayerStateMachine playerStateMachine)
     {
@@ -91,6 +93,9 @@ public class PlayerNormalState : PlayerState
         player.animator.SetBool("Dazed", dazed);
 
         player.animator.SetBool("Falling", falling);
+        player.animator.SetBool("CanFlip", animationBuffer < 0);
+        if (animationBuffer < 0)
+            animationBuffer = 0.4f;
     }
 
     private void GetInputs()
@@ -99,6 +104,8 @@ public class PlayerNormalState : PlayerState
         jumpCooldownTime -= Time.deltaTime;
         groundedBufferTime -= Time.deltaTime;
         groundedSlideBufferTime -= Time.deltaTime;
+        animationBuffer -= Time.deltaTime;
+        flipBuffer -= Time.deltaTime;
 
         if (!m_Grounded && m_Rigidbody2D.velocity.y < 0.05f)
             airborneTime += Time.deltaTime;
@@ -215,19 +222,20 @@ public class PlayerNormalState : PlayerState
 
             m_Rigidbody2D.velocity = Vector3.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref velocity, movementSmoothing);
 
-            if(crouch)
+            if(crouch && flipBuffer < 0)
             {
+                flipBuffer = 0.1f;
                 horizontalMove = m_Rigidbody2D.velocity.x;
             }
 
             // If the input is moving the player right and the player is facing left...
-            if (horizontalMove > 0 && !m_FacingRight)
+            if (horizontalMove > 0.05f && !m_FacingRight)
             {
                 // ... flip the player.
                 Flip();
             }
             // Otherwise if the input is moving the player left and the player is facing right...
-            else if (horizontalMove < 0 && m_FacingRight)
+            else if (horizontalMove < -0.05f && m_FacingRight)
             {
                 // ... flip the player.
                 Flip();
