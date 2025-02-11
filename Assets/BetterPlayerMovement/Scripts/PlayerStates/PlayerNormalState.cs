@@ -18,8 +18,9 @@ public class PlayerNormalState : PlayerState
     [Range(0, 2f)] [SerializeField] private float m_CrouchedMovementSmoothing = .05f;  // How much to smooth out the movement
     [Range(0, 2f)] [SerializeField] private float m_CrouchedAirMovementSmoothing = .05f;  // How much to smooth out the movement
     [SerializeField] private bool m_AirControl = false;                         // Whether or not a player can steer while jumping;
-    
+
     [Header("Collision")]
+    [SerializeField] private float stateGravityScale = 2;
     [SerializeField] private LayerMask m_WhatIsGround;                          // A mask determining what is ground to the character
     [SerializeField] private Transform m_GroundCheck;                           // A position marking where to check if the player is grounded.
     [SerializeField] private Transform m_CeilingCheck;                          // A position marking where to check for ceilings
@@ -58,6 +59,7 @@ public class PlayerNormalState : PlayerState
     public override void EnterState()
     {
         base.EnterState();
+        m_Rigidbody2D.gravityScale = stateGravityScale;
         player.animator.SetLayerWeight(0, 1);
     }
 

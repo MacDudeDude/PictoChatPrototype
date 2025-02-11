@@ -6,6 +6,7 @@ public class Player : MonoBehaviour
 {
     public Animator animator;
     public Transform spritesHolder;
+    public int startingState;
     public PlayerState[] PlayerStates;
     public PlayerStateMachine StateMachine { get; set; }
 
@@ -20,12 +21,17 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
-        StateMachine.Initialize(PlayerStates[0]);
+        StateMachine.Initialize(PlayerStates[startingState]);
     }
 
     void Update()
     {
         StateMachine.CurrentPlayerState.FrameUpdate();
+
+        if(Input.GetKeyDown(KeyCode.Z))
+        {
+            StateMachine.ChangeState(PlayerStates[Random.Range(0, 2)]);
+        }
     }
 
     private void FixedUpdate()
