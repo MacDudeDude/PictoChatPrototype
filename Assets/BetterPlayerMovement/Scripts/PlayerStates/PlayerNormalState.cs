@@ -28,6 +28,7 @@ public class PlayerNormalState : PlayerState
     [SerializeField] private float k_CeilingRadius = .1f; // Radius of the overlap circle to determine if the player can stand up
 
     //Misc Values
+    private bool m_wasGrounded;
     private bool m_Grounded;            // Whether or not the player is grounded.
     private Rigidbody2D m_Rigidbody2D;
     private bool m_FacingRight = true;  // For determining which way the player is currently facing.
@@ -136,6 +137,19 @@ public class PlayerNormalState : PlayerState
             //m_Rigidbody2D.velocity = new Vector2(0, m_Rigidbody2D.velocity.y);
         }
 
+        if(crouch && !m_Crouched)
+        {
+            StartCoroutine(JumpSqueeze(1.2f, 0.9f, 0.05f));
+        }else if(!crouch && m_Crouched)
+        {
+            StartCoroutine(JumpSqueeze(0.8f, 1.1f, 0.05f));
+        }
+
+        if(m_Grounded && !m_wasGrounded)
+        {
+            StartCoroutine(JumpSqueeze(1.25f, 0.8f, 0.05f));
+        }
+
         //only control the player if grounded or airControl is turned on
         if (m_Grounded || m_AirControl)
         {
@@ -185,6 +199,8 @@ public class PlayerNormalState : PlayerState
         // If the player should jump...
         if (doJump)
         {
+            StartCoroutine(JumpSqueeze(0.75f, 1.2f, 0.05f));
+
             // Add a vertical force to the player.
             m_Grounded = false;
             m_Rigidbody2D.velocity = (new Vector2(m_Rigidbody2D.velocity.x, m_JumpForce));
@@ -192,6 +208,8 @@ public class PlayerNormalState : PlayerState
             doJump = false;
             jumpCooldownTime = jumpCooldownDuration;
         }
+
+        m_wasGrounded = m_Grounded;
     }
 
     public void GroundCheck()
@@ -211,6 +229,27 @@ public class PlayerNormalState : PlayerState
                 break;
             }
         }
+    }
+
+    IEnumerator JumpSqueeze(float xSqueeze, float ySqueeze, float seconds)
+    {
+        Vector3 originalSize = Vector3.one;
+        Vector3 newSize = new Vector3(xSqueeze, ySqueeze, originalSize.z);
+        float t = 0f;
+        while (t <= 1.0)
+        {
+            t += Time.deltaTime / seconds;
+            player.spritesHolder.localScale = Vector3.Lerp(originalSize, newSize, t);
+            yield return null;
+        }
+        t = 0f;
+        while (t <= 1.0)
+        {
+            t += Time.deltaTime / seconds;
+            player.spritesHolder.localScale = Vector3.Lerp(newSize, originalSize, t);
+            yield return null;
+        }
+
     }
 
     private void Flip()

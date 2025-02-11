@@ -5,6 +5,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public Animator animator;
+    public Transform spritesHolder;
     public PlayerState[] PlayerStates;
     public PlayerStateMachine StateMachine { get; set; }
 
