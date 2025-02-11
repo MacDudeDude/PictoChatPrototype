@@ -84,7 +84,7 @@ public class PlayerNormalState : PlayerState
         player.animator.SetFloat("HorizontalVelocity", Mathf.Abs(m_Rigidbody2D.velocity.x));
         player.animator.SetFloat("VerticalVelocity", m_Rigidbody2D.velocity.y);
         player.animator.SetBool("Crouching", m_Crouched);
-        player.animator.SetBool("Jumping", jumpCooldownTime > 0);
+        player.animator.SetBool("Jumping", jumpCooldownTime > -0.2);
 
         bool falling = m_Rigidbody2D.velocity.y < 0 && !m_Grounded;
         if (m_Crouched && groundedSlideBufferTime > 0)
