@@ -59,7 +59,6 @@ public class PlayerDraw : MonoBehaviour
             }
         }
 
-        playareaOutline = Instantiate(tilemapPrefab, Vector3.zero, Quaternion.identity, grid.transform).GetComponent<Tilemap>();
 
         width *= rows;
         height *= collumns;
@@ -73,11 +72,36 @@ public class PlayerDraw : MonoBehaviour
         }
 
         texManager.InitializeTextures(width, height, layersAmount, ppu);
+        //GenerateBoundryColliders();
         SetOutlineTiles();
+    }
+
+    // Generate box colliders are around the play area, only problem is that it's too good and better than the tilemaps which creates a noticeable difference
+    public void GenerateBoundryColliders()
+    {
+        List<Vector2> boundryOffsets = new List<Vector2>();
+
+        boundryOffsets.Add(new Vector2(1f, 0));
+        boundryOffsets.Add(new Vector2(-1f, 0));
+        boundryOffsets.Add(new Vector2(0, 1f));
+        boundryOffsets.Add(new Vector2(0, -1f));
+
+        for (int i = 0; i < boundryOffsets.Count; i++)
+        {
+            GameObject bottomCol = new GameObject("BottomCollider");
+            bottomCol.transform.parent = transform;
+            var col = bottomCol.AddComponent<BoxCollider2D>();
+
+            float ppu = 1f / this.ppu;
+            bottomCol.transform.position = new Vector3(width * ppu * 0.5f, height * ppu * 0.5f, 0) + new Vector3(boundryOffsets[i].x * width * ppu, boundryOffsets[i].y * height * ppu, 0);
+            bottomCol.transform.localScale = new Vector3(width * ppu, height * ppu, 1);
+        }
     }
 
     public void SetOutlineTiles()
     {
+        playareaOutline = Instantiate(tilemapPrefab, Vector3.zero, Quaternion.identity, grid.transform).GetComponent<Tilemap>();
+
         Vector3Int[] positions = new Vector3Int[width + 2];
         TileBase[] tiles = new TileBase[width + 2];
 

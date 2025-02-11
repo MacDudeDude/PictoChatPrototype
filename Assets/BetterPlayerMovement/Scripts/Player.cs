@@ -27,11 +27,6 @@ public class Player : MonoBehaviour
     void Update()
     {
         StateMachine.CurrentPlayerState.FrameUpdate();
-
-        if(Input.GetKeyDown(KeyCode.Z))
-        {
-            StateMachine.ChangeState(PlayerStates[Random.Range(0, 2)]);
-        }
     }
 
     private void FixedUpdate()

@@ -174,12 +174,12 @@ public class PlayerNormalState : PlayerState
 
         if(m_Grounded && !m_wasGrounded)
         {
-            if (airborneTime > 0.7f)
+            if (airborneTime > 0.6f)
             {
                 crouch = true;
                 verticalMove = -1;
                 dazed = true;
-                dazedTime = 1;
+                dazedTime = 1f;
 
                 if ((crouch && !m_Crouched && groundedBufferTime > 0))
                 {
