@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public Animator animator;
     public PlayerState[] PlayerStates;
     public PlayerStateMachine StateMachine { get; set; }
 

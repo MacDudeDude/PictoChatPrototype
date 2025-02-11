@@ -52,22 +52,33 @@ public class PlayerNormalState : PlayerState
     public override void EnterState()
     {
         base.EnterState();
+        player.animator.SetLayerWeight(0, 1);
     }
 
     public override void ExitState()
     {
         base.ExitState();
+        player.animator.SetLayerWeight(0, 0);
     }
 
     public override void FrameUpdate()
     {
         GetInputs();
+        SetAnimatorValues();
     }
 
     public override void PhysicsUpdate()
     {
         GroundCheck();
         Move();
+    }
+
+    private void SetAnimatorValues()
+    {
+        player.animator.SetFloat("HorizontalVelocity", Mathf.Abs(m_Rigidbody2D.velocity.x));
+        player.animator.SetFloat("VerticalVelocity", m_Rigidbody2D.velocity.y);
+        player.animator.SetBool("Crouching", m_Crouched);
+        player.animator.SetBool("Jumping", jumpBufferTime > 0);
     }
 
     private void GetInputs()
