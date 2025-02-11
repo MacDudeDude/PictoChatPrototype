@@ -208,6 +208,11 @@ public class PlayerNormalState : PlayerState
 
             m_Rigidbody2D.velocity = Vector3.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref velocity, movementSmoothing);
 
+            if(crouch)
+            {
+                horizontalMove = m_Rigidbody2D.velocity.x;
+            }
+
             // If the input is moving the player right and the player is facing left...
             if (horizontalMove > 0 && !m_FacingRight)
             {
