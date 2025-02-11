@@ -168,8 +168,15 @@ public class PlayerNormalState : PlayerState
             if (airborneTime > 0.7f)
             {
                 crouch = true;
+                verticalMove = -1;
                 dazed = true;
                 dazedTime = 1;
+
+                if ((crouch && !m_Crouched && groundedBufferTime > 0))
+                {
+                    velocity.x = Mathf.Clamp(velocity.x, -1f, 1f);
+                    //m_Rigidbody2D.velocity = new Vector2(0, m_Rigidbody2D.velocity.y);
+                }
             }
 
             airborneTime = 0;
