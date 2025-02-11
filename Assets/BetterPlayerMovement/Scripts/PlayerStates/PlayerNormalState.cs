@@ -43,6 +43,9 @@ public class PlayerNormalState : PlayerState
     private float groundedSlideBufferTime;
     private bool doJump;
     private float jumpCooldownTime;
+    private float airborneTime;
+    private bool dazed;
+    private float dazedTime;
 
     public override void Init(Player player, PlayerStateMachine playerStateMachine)
     {
@@ -85,21 +88,30 @@ public class PlayerNormalState : PlayerState
         if (m_Crouched && groundedSlideBufferTime > 0)
             falling = false;
 
+        player.animator.SetBool("Dazed", dazed);
+
         player.animator.SetBool("Falling", falling);
     }
 
     private void GetInputs()
     {
+        jumpBufferTime -= Time.deltaTime;
+        jumpCooldownTime -= Time.deltaTime;
+        groundedBufferTime -= Time.deltaTime;
+        groundedSlideBufferTime -= Time.deltaTime;
+
+        if (!m_Grounded && m_Rigidbody2D.velocity.y < 0.05f)
+            airborneTime += Time.deltaTime;
+
+        dazedTime -= Time.deltaTime;
+        if (dazed)
+            return;
+
         horizontalMove = 0;
         verticalMove = 0;
 
         horizontalMove = Input.GetAxisRaw("Horizontal") * moveSpeed;
         verticalMove = Input.GetAxisRaw("Vertical");
-
-        jumpBufferTime -= Time.deltaTime;
-        jumpCooldownTime -= Time.deltaTime;
-        groundedBufferTime -= Time.deltaTime;
-        groundedSlideBufferTime -= Time.deltaTime;
 
         if (Input.GetKeyDown(KeyCode.Space) && jumpCooldownTime < 0)
         {
@@ -153,6 +165,14 @@ public class PlayerNormalState : PlayerState
 
         if(m_Grounded && !m_wasGrounded)
         {
+            if (airborneTime > 0.7f)
+            {
+                crouch = true;
+                dazed = true;
+                dazedTime = 1;
+            }
+
+            airborneTime = 0;
             StartCoroutine(JumpSqueeze(1.25f, 0.8f, 0.05f));
         }
 
@@ -202,13 +222,22 @@ public class PlayerNormalState : PlayerState
             }
         }
 
+        if(dazed && dazedTime < 0)
+        {
+            if(m_Rigidbody2D.velocity.magnitude < 0.05f)
+            {
+                dazed = false;
+            }
+        }
+
+
         // If the player should jump...
         if (doJump)
         {
             StartCoroutine(JumpSqueeze(0.75f, 1.25f, 0.07f));
 
             // Add a vertical force to the player.
-            m_Grounded = false;
+            //m_Grounded = false;
             m_Rigidbody2D.velocity = (new Vector2(m_Rigidbody2D.velocity.x, m_JumpForce));
 
             doJump = false;
