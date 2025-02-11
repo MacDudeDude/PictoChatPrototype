@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 5f89aed246a586c40acc1fab68d392c9
+guid: 470f1bc3f2cca334da1847684809a2ce
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -129,13 +129,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: duck_walk_color_0
+      name: sock_walk_color_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 344
-        height: 359
+        width: 436
+        height: 334
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -143,20 +143,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4ac4d685d7eda4245b1581ffa6bd60da
-      internalID: -1710149430
+      spriteID: e1a1f0b5f984ce64f9c4a24e9cf5804c
+      internalID: -1811219877
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: duck_walk_color_1
+      name: sock_walk_color_1
       rect:
         serializedVersion: 2
-        x: 344
+        x: 436
         y: 0
-        width: 344
-        height: 359
+        width: 436
+        height: 334
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -164,20 +164,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 99bb1853523772645a4ba01ace31eb26
-      internalID: 1040937453
+      spriteID: dc82961256a71f946833690c169770d9
+      internalID: -188917581
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: duck_walk_color_2
+      name: sock_walk_color_2
       rect:
         serializedVersion: 2
-        x: 688
+        x: 872
         y: 0
-        width: 344
-        height: 359
+        width: 436
+        height: 334
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -185,20 +185,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 48cbb477ed9a3d145b192a40748d1608
-      internalID: -1401379540
+      spriteID: eac014d83c682cc4a8d4634d70ef53f3
+      internalID: 262136280
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: duck_walk_color_3
+      name: sock_walk_color_3
       rect:
         serializedVersion: 2
-        x: 1032
+        x: 1308
         y: 0
-        width: 344
-        height: 359
+        width: 436
+        height: 334
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -206,8 +206,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ef7e55cbabf72b944a23b2cd94e4a6e2
-      internalID: 553742625
+      spriteID: fdbebceadde291f46bb9405e8009c3b1
+      internalID: -756422648
       vertices: []
       indices: 
       edges: []
@@ -223,10 +223,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      duck_walk_color_0: -1710149430
-      duck_walk_color_1: 1040937453
-      duck_walk_color_2: -1401379540
-      duck_walk_color_3: 553742625
+      sock_walk_color_0: -1811219877
+      sock_walk_color_1: -188917581
+      sock_walk_color_2: 262136280
+      sock_walk_color_3: -756422648
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

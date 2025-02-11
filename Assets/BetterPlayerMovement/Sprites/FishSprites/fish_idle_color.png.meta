@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 5f89aed246a586c40acc1fab68d392c9
+guid: de11046ea4b9fb541b2983e7e0e8b1f9
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -129,13 +129,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: duck_walk_color_0
+      name: fish_idle_color_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 344
-        height: 359
+        width: 343
+        height: 347
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -143,20 +143,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4ac4d685d7eda4245b1581ffa6bd60da
-      internalID: -1710149430
+      spriteID: 9a8b96f567f935a42a55d271ca41f2c5
+      internalID: 1433191629
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: duck_walk_color_1
+      name: fish_idle_color_1
       rect:
         serializedVersion: 2
-        x: 344
+        x: 343
         y: 0
-        width: 344
-        height: 359
+        width: 343
+        height: 347
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -164,50 +164,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 99bb1853523772645a4ba01ace31eb26
-      internalID: 1040937453
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: duck_walk_color_2
-      rect:
-        serializedVersion: 2
-        x: 688
-        y: 0
-        width: 344
-        height: 359
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 48cbb477ed9a3d145b192a40748d1608
-      internalID: -1401379540
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: duck_walk_color_3
-      rect:
-        serializedVersion: 2
-        x: 1032
-        y: 0
-        width: 344
-        height: 359
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: ef7e55cbabf72b944a23b2cd94e4a6e2
-      internalID: 553742625
+      spriteID: 9629fbe5f288e794d915908d7de051d7
+      internalID: 631535668
       vertices: []
       indices: 
       edges: []
@@ -223,10 +181,8 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      duck_walk_color_0: -1710149430
-      duck_walk_color_1: 1040937453
-      duck_walk_color_2: -1401379540
-      duck_walk_color_3: 553742625
+      fish_idle_color_0: 1433191629
+      fish_idle_color_1: 631535668
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

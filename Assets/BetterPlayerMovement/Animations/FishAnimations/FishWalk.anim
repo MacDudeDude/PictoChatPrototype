@@ -33,9 +33,13 @@ AnimationClip:
     script: {fileID: 0}
   - curve:
     - time: 0
-      value: {fileID: 1780318016, guid: ae077827498b0184085d925fa7be7312, type: 3}
+      value: {fileID: -883933751, guid: 583c281d4bc1b354a877144605ec0b37, type: 3}
+    - time: 0.041666668
+      value: {fileID: 149039153, guid: 583c281d4bc1b354a877144605ec0b37, type: 3}
     - time: 0.083333336
-      value: {fileID: 645353215, guid: ae077827498b0184085d925fa7be7312, type: 3}
+      value: {fileID: -1810067518, guid: 583c281d4bc1b354a877144605ec0b37, type: 3}
+    - time: 0.125
+      value: {fileID: 1558536165, guid: 583c281d4bc1b354a877144605ec0b37, type: 3}
     attribute: m_Sprite
     path: Body/Scribbles
     classID: 212
@@ -66,8 +70,10 @@ AnimationClip:
     - {fileID: -1182628124, guid: 108cb86b0a13deb4e8d2de7c202988f8, type: 3}
     - {fileID: -1645204315, guid: 108cb86b0a13deb4e8d2de7c202988f8, type: 3}
     - {fileID: 150322664, guid: 108cb86b0a13deb4e8d2de7c202988f8, type: 3}
-    - {fileID: 1780318016, guid: ae077827498b0184085d925fa7be7312, type: 3}
-    - {fileID: 645353215, guid: ae077827498b0184085d925fa7be7312, type: 3}
+    - {fileID: -883933751, guid: 583c281d4bc1b354a877144605ec0b37, type: 3}
+    - {fileID: 149039153, guid: 583c281d4bc1b354a877144605ec0b37, type: 3}
+    - {fileID: -1810067518, guid: 583c281d4bc1b354a877144605ec0b37, type: 3}
+    - {fileID: 1558536165, guid: 583c281d4bc1b354a877144605ec0b37, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}

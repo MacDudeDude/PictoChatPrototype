@@ -15,7 +15,7 @@ public class PlayerNormalState : PlayerState
     [SerializeField] private float m_JumpForce = 400f;                          // Amount of force added when the player jumps.
     [Range(0, 1)] [SerializeField] private float m_CrouchSpeed = .36f;          // Amount of maxSpeed applied to crouching movement. 1 = 100%
     [Range(0, .3f)] [SerializeField] private float m_MovementSmoothing = .05f;  // How much to smooth out the movement
-    [Range(0, 2f)] [SerializeField] private float m_CrouchedMovementSmoothing = .05f;  // How much to smooth out the movement
+    [Range(0, 10f)] [SerializeField] private float m_CrouchedMovementSmoothing = .05f;  // How much to smooth out the movement
     [Range(0, 2f)] [SerializeField] private float m_CrouchedAirMovementSmoothing = .05f;  // How much to smooth out the movement
     [SerializeField] private bool m_AirControl = false;                         // Whether or not a player can steer while jumping;
 
