@@ -199,7 +199,7 @@ public class PlayerNormalState : PlayerState
         // If the player should jump...
         if (doJump)
         {
-            StartCoroutine(JumpSqueeze(0.75f, 1.2f, 0.05f));
+            StartCoroutine(JumpSqueeze(0.75f, 1.25f, 0.07f));
 
             // Add a vertical force to the player.
             m_Grounded = false;
