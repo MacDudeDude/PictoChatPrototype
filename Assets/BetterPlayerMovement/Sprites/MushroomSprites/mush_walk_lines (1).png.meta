@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: d74678c6360ebec45a0979801462b913
+guid: c14279cd87bdf0143a4372498473a93d
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -129,13 +129,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: sock_walk_lines_0
+      name: mush_walk_lines (1)_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 432
-        height: 409
+        width: 392
+        height: 460
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -143,20 +143,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e4cc20941bd9156489d31d7776602d8f
-      internalID: -1849895104
+      spriteID: 99095177577e05a4d97c32ef0b085bc9
+      internalID: 1730694713
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: sock_walk_lines_1
+      name: mush_walk_lines (1)_1
       rect:
         serializedVersion: 2
-        x: 432
+        x: 392
         y: 0
-        width: 432
-        height: 409
+        width: 392
+        height: 460
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -164,20 +164,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d2e6c2431ea4d4247b38f652a28df0c4
-      internalID: 1993357337
+      spriteID: 48cebf0b5c1a04b498ea8b63b19e364e
+      internalID: 2091241535
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: sock_walk_lines_2
+      name: mush_walk_lines (1)_2
       rect:
         serializedVersion: 2
-        x: 864
+        x: 784
         y: 0
-        width: 432
-        height: 409
+        width: 392
+        height: 460
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -185,20 +185,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6f228e6a24ce99c4493b6be406f3e71c
-      internalID: 1689080280
+      spriteID: 9f259f10e1a63b24ca30f374c0d42c9b
+      internalID: -1007033285
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: sock_walk_lines_3
+      name: mush_walk_lines (1)_3
       rect:
         serializedVersion: 2
-        x: 1296
+        x: 1176
         y: 0
-        width: 432
-        height: 409
+        width: 392
+        height: 460
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -206,8 +206,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5d0f58ea6ade3af4485a7032d8b39c4c
-      internalID: -1709302962
+      spriteID: d61d0214b66770646b36877a13e53896
+      internalID: -356427795
       vertices: []
       indices: 
       edges: []
@@ -223,10 +223,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      sock_walk_lines_0: -1849895104
-      sock_walk_lines_1: 1993357337
-      sock_walk_lines_2: 1689080280
-      sock_walk_lines_3: -1709302962
+      mush_walk_lines (1)_0: 1730694713
+      mush_walk_lines (1)_1: 2091241535
+      mush_walk_lines (1)_2: -1007033285
+      mush_walk_lines (1)_3: -356427795
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

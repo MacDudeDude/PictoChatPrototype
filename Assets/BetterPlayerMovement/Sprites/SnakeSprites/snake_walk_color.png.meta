@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: d7ae8cc27360806499416a4bd666f022
+guid: 9e0c2a92dd472f641ac8dbed49220256
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -129,13 +129,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: mush_walk_lines_0
+      name: snake_walk_color_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 397
-        height: 412
+        width: 420
+        height: 460
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -143,20 +143,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: dd38f06ab77046a40ae6d899cfa5a67a
-      internalID: 931231694
+      spriteID: ec642110672704547b8a8ae64568e997
+      internalID: -869335905
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: mush_walk_lines_1
+      name: snake_walk_color_1
       rect:
         serializedVersion: 2
-        x: 397
+        x: 420
         y: 0
-        width: 397
-        height: 412
+        width: 420
+        height: 460
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -164,20 +164,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 92813cf31cc81ff4c83a41dd556bd826
-      internalID: -2049538435
+      spriteID: af9cda4e664f0814c8b81de05d73a8a0
+      internalID: 949839229
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: mush_walk_lines_2
+      name: snake_walk_color_2
       rect:
         serializedVersion: 2
-        x: 794
+        x: 840
         y: 0
-        width: 397
-        height: 412
+        width: 420
+        height: 460
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -185,20 +185,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: de57acd44dece4e49ac0ba2520a5f8a9
-      internalID: 642685778
+      spriteID: 6614a37ddfb2a504ca3363033050fb44
+      internalID: -2136469156
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: mush_walk_lines_3
+      name: snake_walk_color_3
       rect:
         serializedVersion: 2
-        x: 1191
+        x: 1260
         y: 0
-        width: 397
-        height: 412
+        width: 420
+        height: 460
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -206,8 +206,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7276ef6633e20c045ab64853328253f8
-      internalID: -948793590
+      spriteID: cb3d4d4f254966b45aa0383a675a3ca7
+      internalID: -1348603535
       vertices: []
       indices: 
       edges: []
@@ -223,10 +223,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      mush_walk_lines_0: 931231694
-      mush_walk_lines_1: -2049538435
-      mush_walk_lines_2: 642685778
-      mush_walk_lines_3: -948793590
+      snake_walk_color_0: -869335905
+      snake_walk_color_1: 949839229
+      snake_walk_color_2: -2136469156
+      snake_walk_color_3: -1348603535
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

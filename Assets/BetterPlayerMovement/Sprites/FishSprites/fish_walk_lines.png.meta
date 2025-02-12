@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 108cb86b0a13deb4e8d2de7c202988f8
+guid: f84797613bb1ca2429b519ffb65e2e4d
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -129,13 +129,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: FishWalk_0
+      name: fish_walk_lines_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 499
-        height: 433
+        width: 459
+        height: 460
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -143,20 +143,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3ea61bae1c224d9429d101f0da5338cb
-      internalID: 1201410625
+      spriteID: f6e8efb67fabfa4429507acc70bf9aa1
+      internalID: -1815413415
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FishWalk_1
+      name: fish_walk_lines_1
       rect:
         serializedVersion: 2
-        x: 499
+        x: 459
         y: 0
-        width: 499
-        height: 433
+        width: 459
+        height: 460
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -164,20 +164,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 039a4683cc18e3d40a524ee88d6a9a1b
-      internalID: -1182628124
+      spriteID: cf2f14a16c928bf46931ff7bd4917f25
+      internalID: 770147145
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FishWalk_2
+      name: fish_walk_lines_2
       rect:
         serializedVersion: 2
-        x: 998
+        x: 918
         y: 0
-        width: 499
-        height: 433
+        width: 459
+        height: 460
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -185,20 +185,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b1a52e2b366cb3f47a3d1d35a090e5cc
-      internalID: -1645204315
+      spriteID: fddee61458f00b444a35d146e2672630
+      internalID: -1521825124
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FishWalk_3
+      name: fish_walk_lines_3
       rect:
         serializedVersion: 2
-        x: 1497
+        x: 1377
         y: 0
-        width: 499
-        height: 433
+        width: 459
+        height: 460
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -206,8 +206,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8949380fcf9180a46a179fe524ed5c80
-      internalID: 150322664
+      spriteID: 59c7a1762b6139747a6bbd9b8785b5ad
+      internalID: -511616104
       vertices: []
       indices: 
       edges: []
@@ -223,10 +223,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      FishWalk_0: 1201410625
-      FishWalk_1: -1182628124
-      FishWalk_2: -1645204315
-      FishWalk_3: 150322664
+      fish_walk_lines_0: -1815413415
+      fish_walk_lines_1: 770147145
+      fish_walk_lines_2: -1521825124
+      fish_walk_lines_3: -511616104
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

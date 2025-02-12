@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 22ef47fae5bee774cb4db7a899d1ae7c
+guid: 6942080dab6e0054285761cd58787769
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -134,8 +134,8 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 414
-        height: 351
+        width: 392
+        height: 460
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -143,8 +143,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 113b179511bfd604f943b61b5a4b98e3
-      internalID: -806897086
+      spriteID: 722dadce4fba76443807cef837333047
+      internalID: -1869934029
       vertices: []
       indices: 
       edges: []
@@ -153,10 +153,10 @@ TextureImporter:
       name: mush_walk_color_1
       rect:
         serializedVersion: 2
-        x: 414
+        x: 392
         y: 0
-        width: 414
-        height: 351
+        width: 392
+        height: 460
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -164,8 +164,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4e074ffb1a537074fa4176978150b1d1
-      internalID: -1418298850
+      spriteID: bbbd81a6e81b6c240b563a97c873c32a
+      internalID: 4421669
       vertices: []
       indices: 
       edges: []
@@ -174,10 +174,10 @@ TextureImporter:
       name: mush_walk_color_2
       rect:
         serializedVersion: 2
-        x: 828
+        x: 784
         y: 0
-        width: 414
-        height: 351
+        width: 392
+        height: 460
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -185,8 +185,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 56ec53060ea5b664494cd5ba419463b5
-      internalID: -620758255
+      spriteID: c1cfd14142b441045b4689ac5d701609
+      internalID: 1167702060
       vertices: []
       indices: 
       edges: []
@@ -195,10 +195,10 @@ TextureImporter:
       name: mush_walk_color_3
       rect:
         serializedVersion: 2
-        x: 1242
+        x: 1176
         y: 0
-        width: 414
-        height: 351
+        width: 392
+        height: 460
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -206,8 +206,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d2582788c1209d9419e7a47544a95f5f
-      internalID: -2002635900
+      spriteID: dc4029a8f29227044b355560fa0188df
+      internalID: 212510941
       vertices: []
       indices: 
       edges: []
@@ -223,10 +223,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      mush_walk_color_0: -806897086
-      mush_walk_color_1: -1418298850
-      mush_walk_color_2: -620758255
-      mush_walk_color_3: -2002635900
+      mush_walk_color_0: -1869934029
+      mush_walk_color_1: 4421669
+      mush_walk_color_2: 1167702060
+      mush_walk_color_3: 212510941
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

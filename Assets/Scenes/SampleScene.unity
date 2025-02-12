@@ -123,6 +123,54 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &382688617
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 382688618}
+  - component: {fileID: 382688619}
+  m_Layer: 10
+  m_Name: SquishCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &382688618
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 382688617}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1074397859}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &382688619
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 382688617}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.2619628
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -650,6 +698,11 @@ MonoBehaviour:
   m_CrouchDisableCollider: {fileID: 1206427761}
   k_GroundedRadius: 0.135
   k_CeilingRadius: 0.14
+--- !u!4 &1074397859 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5121102187584088593, guid: 6bc8c8c1de6f9f747bbe0a810a8d438b, type: 3}
+  m_PrefabInstance: {fileID: 5121102189246785565}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1206427760
 GameObject:
   m_ObjectHideFlags: 0
@@ -1155,5 +1208,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: ImprovedPlayer
       objectReference: {fileID: 0}
+    - target: {fileID: 5121102187716458251, guid: 6bc8c8c1de6f9f747bbe0a810a8d438b, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 937210104, guid: b7d45ecf61216e647ae5020b8acb17bb, type: 3}
+    - target: {fileID: 5121102187716458251, guid: 6bc8c8c1de6f9f747bbe0a810a8d438b, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5121102188850857792, guid: 6bc8c8c1de6f9f747bbe0a810a8d438b, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 22100000, guid: feb7ee7c845387246b7ed0996adeec51, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6bc8c8c1de6f9f747bbe0a810a8d438b, type: 3}
