@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PrimeTween;
 
 public class RespawnPoint : MonoBehaviour
 {
@@ -29,6 +30,9 @@ public class RespawnPoint : MonoBehaviour
 
     private IEnumerator RespawnPlayer(Player player, float duration)
     {
+        bool positiveScale = player.transform.localScale.x >= 0;
+
+        Tween.Scale(player.transform, 0, 0.1f);
         player.DisableMovement();
 
         while (duration > 0)
@@ -43,6 +47,10 @@ public class RespawnPoint : MonoBehaviour
         }
 
         player.transform.position = transform.position;
+
+        yield return Tween.Scale(player.transform, new Vector3(positiveScale ? 0.6f : -0.6f, 0.6f, 0.6f), 0.1f).ToYieldInstruction();
+
         player.EnableMovement();
+
     }
 }

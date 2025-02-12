@@ -191,6 +191,7 @@ MonoBehaviour:
   PlayerStates:
   - {fileID: 5121102187584088595}
   - {fileID: 5121102187584088594}
+  rb: {fileID: 5121102187584088596}
 --- !u!114 &5121102187584088595
 MonoBehaviour:
   m_ObjectHideFlags: 0
