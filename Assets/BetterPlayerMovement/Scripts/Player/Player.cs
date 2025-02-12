@@ -8,7 +8,10 @@ public class Player : MonoBehaviour, IKillable
     public Transform spritesHolder;
     public int startingState;
     public PlayerState[] PlayerStates;
+    public Rigidbody2D rb;
     public PlayerStateMachine StateMachine { get; set; }
+
+    private bool movementEnabled;
 
     private void Awake()
     {
@@ -21,17 +24,20 @@ public class Player : MonoBehaviour, IKillable
 
     private void Start()
     {
+        Kill();
         StateMachine.Initialize(PlayerStates[startingState]);
     }
 
     void Update()
     {
-        StateMachine.CurrentPlayerState.FrameUpdate();
+        if(movementEnabled)
+            StateMachine.CurrentPlayerState.FrameUpdate();
     }
 
     private void FixedUpdate()
     {
-        StateMachine.CurrentPlayerState.PhysicsUpdate();
+        if(movementEnabled)
+            StateMachine.CurrentPlayerState.PhysicsUpdate();
     }
 
     private void OnCollisionStay2D(Collision2D collision)
@@ -49,6 +55,19 @@ public class Player : MonoBehaviour, IKillable
 
     public void Kill()
     {
-        transform.position = new Vector3(10, 10, 0);
+        if(RespawnPoint.Instance != null)
+            RespawnPoint.Instance.QueRespawn(this);
+    }
+
+    public void DisableMovement()
+    {
+        movementEnabled = false;
+        rb.simulated = false;
+    }
+
+    public void EnableMovement()
+    {
+        movementEnabled = true;
+        rb.simulated = true;
     }
 }
