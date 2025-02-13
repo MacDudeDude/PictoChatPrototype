@@ -7,6 +7,7 @@ public class PlayerDragManager : MonoBehaviour
     public Camera cam;
     public MouseManager grabber;
     public Player grabbedPlayer;
+    public bool canDrag;
 
     private Vector3 lastPos;
 
@@ -22,7 +23,7 @@ public class PlayerDragManager : MonoBehaviour
             GameObject clickedOn = grabber.GetHoveredObject();
             if(clickedOn != null)
             {
-                if(clickedOn.layer == 10)
+                if(clickedOn.layer == 10 || clickedOn.layer == 11)
                 {
                     grabbedPlayer = clickedOn.GetComponent<Player>();
                     grabbedPlayer.DisableMovement();
@@ -33,16 +34,22 @@ public class PlayerDragManager : MonoBehaviour
 
         if(grabbedPlayer != null)
         {
-            Vector2 newPos = cam.ScreenToWorldPoint(Input.mousePosition);
-            grabbedPlayer.transform.position = newPos;
+            if(!grabbedPlayer.IsAlive())
+            {
+                grabbedPlayer = null;
+            }else
+            {
+                Vector2 newPos = cam.ScreenToWorldPoint(Input.mousePosition);
+                grabbedPlayer.transform.position = Vector3.Lerp(grabbedPlayer.transform.position, newPos, Time.deltaTime * 30);
+            }
         }
 
         if(Input.GetMouseButtonUp(0))
         {
             if(grabbedPlayer != null)
             {
-                grabbedPlayer.EnableMovement(true);
                 grabbedPlayer.rb.velocity = (grabbedPlayer.transform.position - lastPos) / Time.deltaTime;
+                grabbedPlayer.EnableMovement(true);
                 grabbedPlayer = null;
             }
         }

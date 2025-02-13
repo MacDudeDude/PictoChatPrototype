@@ -61,8 +61,10 @@ public class PlayerNormalState : PlayerState
         base.EnterState();
         m_Rigidbody2D.gravityScale = stateGravityScale;
         player.animator.SetLayerWeight(0, 1);
+
         if(m_Rigidbody2D.velocity.magnitude > 10)
         {
+            m_Rigidbody2D.velocity = Vector2.ClampMagnitude(m_Rigidbody2D.velocity, 50);
             dazed = true;
             dazedTime = 1f;
         }
@@ -221,6 +223,9 @@ public class PlayerNormalState : PlayerState
 
             // Move the character by finding the target velocity
             Vector3 targetVelocity = new Vector2(horizontalMove * 10f, m_Rigidbody2D.velocity.y);
+
+            if (dazed || crouch) // Don't know why I didn't do that earlier
+                targetVelocity.x = m_Rigidbody2D.velocity.x;
             // And then smoothing it out and applying it to the character
 
             float movementSmoothing = (crouch) ? m_CrouchedMovementSmoothing : m_MovementSmoothing;

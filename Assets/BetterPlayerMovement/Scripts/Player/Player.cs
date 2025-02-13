@@ -100,4 +100,9 @@ public class Player : MonoBehaviour, IKillable
         rb.simulated = true;
         alive = true;
     }
+
+    public bool IsAlive()
+    {
+        return alive;
+    }
 }

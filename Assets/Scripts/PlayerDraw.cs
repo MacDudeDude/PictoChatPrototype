@@ -5,12 +5,19 @@ using UnityEngine.Tilemaps;
 
 public class PlayerDraw : MonoBehaviour
 {
+    public bool doDraw;
+    public bool doErase;
+    public int currentLayer;
+    public float placeRadius;
+
+    public Vector2 playAreaBoundsX;
+    public Vector2 playAreaBoundsY;
+
     public TextureManager texManager;
     public int layersAmount;
     public int collisionLayer = 1;
     public Color32[] colorValues;
 
-    public float placeRadius;
     public Tile tile;
     public Grid grid;
     public Grid tilemapGrid;
@@ -21,7 +28,6 @@ public class PlayerDraw : MonoBehaviour
     public int width;
     public int height;
 
-    public int currentLayer;
     private int ppu;
     private Vector2 lastMousePosition;
     private Tilemap[,] tilemaps;
@@ -66,7 +72,8 @@ public class PlayerDraw : MonoBehaviour
         currentLayer = collisionLayer;
         pixelgrid = new List<int[,]>();
         textureColors = new List<Color32[]>();
-        for (int i = 0; i < layersAmount; i++) {
+        for (int i = 0; i < layersAmount; i++)
+        {
             pixelgrid.Add(new int[width, height]);
             textureColors.Add(new Color32[width * height]);
         }
@@ -74,6 +81,9 @@ public class PlayerDraw : MonoBehaviour
         texManager.InitializeTextures(width, height, layersAmount, ppu);
         //GenerateBoundryColliders();
         SetOutlineTiles();
+
+        playAreaBoundsX.y = width * (1f / ppu);
+        playAreaBoundsY.y = height * (1f / ppu);
     }
 
     // Generate box colliders are around the play area, only problem is that it's too good and better than the tilemaps which creates a noticeable difference
@@ -143,10 +153,13 @@ public class PlayerDraw : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Adding();
-        Removing();
+        if(doDraw)
+            Adding();
 
-        if(Input.GetKeyDown(KeyCode.R))
+        if(doErase)
+            Removing();
+
+        if(Input.GetKeyDown(KeyCode.T))
         {
             ClearAllTiles();
         }
