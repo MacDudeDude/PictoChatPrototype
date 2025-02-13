@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour, IKillable
+public class Player : MonoBehaviour, IKillable, IDraggable
 {
     public Animator animator;
     public Transform spritesHolder;
@@ -54,6 +54,7 @@ public class Player : MonoBehaviour, IKillable
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        Debug.Log("s");
         Kill();
     }
 
@@ -101,8 +102,19 @@ public class Player : MonoBehaviour, IKillable
         alive = true;
     }
 
-    public bool IsAlive()
+    public bool CanDrag()
     {
         return alive;
+    }
+
+    public void BeginDrag()
+    {
+        DisableMovement();
+    }
+
+    public void EndDrag(Vector3 dragEndVelocity)
+    {
+        rb.velocity = dragEndVelocity;
+        EnableMovement(true);
     }
 }

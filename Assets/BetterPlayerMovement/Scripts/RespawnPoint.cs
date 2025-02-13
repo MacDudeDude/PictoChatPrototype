@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using PrimeTween;
 
-public class RespawnPoint : MonoBehaviour
+public class RespawnPoint : MonoBehaviour, IDraggable
 {
     public float respawnDuration;
     public bool canRespawn;
@@ -47,10 +47,26 @@ public class RespawnPoint : MonoBehaviour
         }
 
         player.transform.position = transform.position;
+        player.transform.rotation = transform.rotation;
 
         yield return Tween.Scale(player.transform, new Vector3(positiveScale ? 0.6f : -0.6f, 0.6f, 0.6f), 0.1f).ToYieldInstruction();
 
         player.EnableMovement(false);
+
+    }
+
+    public bool CanDrag()
+    {
+        return canRespawn;
+    }
+
+    public void BeginDrag()
+    {
+
+    }
+
+    public void EndDrag(Vector3 dragEndVelocity)
+    {
 
     }
 }
