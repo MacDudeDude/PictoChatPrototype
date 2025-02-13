@@ -69,6 +69,8 @@ public class Player : MonoBehaviour, IKillable
 
         if (killTimer >= 2)
             Kill();
+
+        killTimer = Mathf.Clamp(killTimer, 0, 2);
     }
 
     public void Kill()
@@ -83,15 +85,19 @@ public class Player : MonoBehaviour, IKillable
 
     public void DisableMovement()
     {
+        rb.velocity = Vector2.zero;
         movementEnabled = false;
         rb.simulated = false;
     }
 
-    public void EnableMovement(bool setAlive)
+    public void EnableMovement(bool onlyIfAlive)
     {
+        if (onlyIfAlive && !alive)
+            return;
+
+        StateMachine.CurrentPlayerState.EnterState();
         movementEnabled = true;
         rb.simulated = true;
-
-        alive = setAlive;
+        alive = true;
     }
 }

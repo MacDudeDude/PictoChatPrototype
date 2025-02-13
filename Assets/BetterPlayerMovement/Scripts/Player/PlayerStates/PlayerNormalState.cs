@@ -61,6 +61,11 @@ public class PlayerNormalState : PlayerState
         base.EnterState();
         m_Rigidbody2D.gravityScale = stateGravityScale;
         player.animator.SetLayerWeight(0, 1);
+        if(m_Rigidbody2D.velocity.magnitude > 10)
+        {
+            dazed = true;
+            dazedTime = 1f;
+        }
     }
 
     public override void ExitState()

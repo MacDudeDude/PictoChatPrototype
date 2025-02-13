@@ -50,7 +50,7 @@ public class RespawnPoint : MonoBehaviour
 
         yield return Tween.Scale(player.transform, new Vector3(positiveScale ? 0.6f : -0.6f, 0.6f, 0.6f), 0.1f).ToYieldInstruction();
 
-        player.EnableMovement(true);
+        player.EnableMovement(false);
 
     }
 }
