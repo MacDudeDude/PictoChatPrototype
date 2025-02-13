@@ -45,8 +45,8 @@ TextureImporter:
   spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
-  alignment: 0
-  spritePivot: {x: 0.5, y: 0.5}
+  alignment: 7
+  spritePivot: {x: 0.5, y: 0}
   spritePixelsToUnits: 300
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
@@ -129,43 +129,43 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: spritesheet (60)_0
+      name: snake_idle_color_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 296
         height: 460
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7e30349cc40e70447841abe11c13b18b
-      internalID: -1571761571
+      spriteID: 51cbd59a5e4c3c64a8c85d10b3f549a8
+      internalID: 825387693
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: spritesheet (60)_1
+      name: snake_idle_color_1
       rect:
         serializedVersion: 2
         x: 296
         y: 0
         width: 296
         height: 460
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 15759065d1b68ee4e931ba7de7279d0c
-      internalID: 497346296
+      spriteID: d7ea6df210d4eaf408066b62a245a1a5
+      internalID: -859443662
       vertices: []
       indices: 
       edges: []
@@ -181,8 +181,8 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      spritesheet (60)_0: -1571761571
-      spritesheet (60)_1: 497346296
+      snake_idle_color_0: 825387693
+      snake_idle_color_1: -859443662
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

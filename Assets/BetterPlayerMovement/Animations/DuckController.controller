@@ -82,7 +82,7 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 3
     m_ConditionEvent: HorizontalVelocity
-    m_EventTreshold: 0.05
+    m_EventTreshold: 0.2
   - m_ConditionMode: 2
     m_ConditionEvent: Crouching
     m_EventTreshold: 0
@@ -110,7 +110,7 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 4
     m_ConditionEvent: HorizontalVelocity
-    m_EventTreshold: 0.05
+    m_EventTreshold: 0.2
   - m_ConditionMode: 1
     m_ConditionEvent: Crouching
     m_EventTreshold: 0
@@ -141,7 +141,7 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 3
     m_ConditionEvent: HorizontalVelocity
-    m_EventTreshold: 0.05
+    m_EventTreshold: 0.2
   - m_ConditionMode: 2
     m_ConditionEvent: Crouching
     m_EventTreshold: 0
@@ -201,7 +201,7 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 4
     m_ConditionEvent: HorizontalVelocity
-    m_EventTreshold: 0.05
+    m_EventTreshold: 0.2
   - m_ConditionMode: 2
     m_ConditionEvent: Crouching
     m_EventTreshold: 0
@@ -229,7 +229,7 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 3
     m_ConditionEvent: HorizontalVelocity
-    m_EventTreshold: 0.05
+    m_EventTreshold: 0.2
   - m_ConditionMode: 2
     m_ConditionEvent: Crouching
     m_EventTreshold: 0
@@ -257,7 +257,7 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 4
     m_ConditionEvent: HorizontalVelocity
-    m_EventTreshold: 0.05
+    m_EventTreshold: 0.2
   - m_ConditionMode: 1
     m_ConditionEvent: Crouching
     m_EventTreshold: 0
@@ -379,7 +379,7 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 3
     m_ConditionEvent: HorizontalVelocity
-    m_EventTreshold: 0.05
+    m_EventTreshold: 0.2
   - m_ConditionMode: 1
     m_ConditionEvent: Crouching
     m_EventTreshold: 0
@@ -441,7 +441,7 @@ AnimatorStateTransition:
     m_EventTreshold: 0
   - m_ConditionMode: 4
     m_ConditionEvent: HorizontalVelocity
-    m_EventTreshold: 0.05
+    m_EventTreshold: 0.2
   - m_ConditionMode: 2
     m_ConditionEvent: Falling
     m_EventTreshold: 0
@@ -499,7 +499,7 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 4
     m_ConditionEvent: HorizontalVelocity
-    m_EventTreshold: 0.05
+    m_EventTreshold: 0.2
   - m_ConditionMode: 2
     m_ConditionEvent: Crouching
     m_EventTreshold: 0
@@ -592,7 +592,7 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 4
     m_ConditionEvent: HorizontalVelocity
-    m_EventTreshold: 0.05
+    m_EventTreshold: 0.2
   - m_ConditionMode: 2
     m_ConditionEvent: Crouching
     m_EventTreshold: 0
@@ -620,7 +620,7 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 4
     m_ConditionEvent: HorizontalVelocity
-    m_EventTreshold: 0.05
+    m_EventTreshold: 0.2
   - m_ConditionMode: 2
     m_ConditionEvent: Crouching
     m_EventTreshold: 0
@@ -775,7 +775,7 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 3
     m_ConditionEvent: HorizontalVelocity
-    m_EventTreshold: 0.05
+    m_EventTreshold: 0.2
   - m_ConditionMode: 1
     m_ConditionEvent: Crouching
     m_EventTreshold: 0
@@ -806,7 +806,7 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 3
     m_ConditionEvent: HorizontalVelocity
-    m_EventTreshold: 0.05
+    m_EventTreshold: 0.2
   - m_ConditionMode: 1
     m_ConditionEvent: Crouching
     m_EventTreshold: 0
@@ -837,7 +837,7 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 3
     m_ConditionEvent: HorizontalVelocity
-    m_EventTreshold: 0.05
+    m_EventTreshold: 0.2
   - m_ConditionMode: 1
     m_ConditionEvent: Crouching
     m_EventTreshold: 0
@@ -868,7 +868,7 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 4
     m_ConditionEvent: HorizontalVelocity
-    m_EventTreshold: 0.05
+    m_EventTreshold: 0.2
   - m_ConditionMode: 1
     m_ConditionEvent: Crouching
     m_EventTreshold: 0
@@ -896,7 +896,7 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 3
     m_ConditionEvent: HorizontalVelocity
-    m_EventTreshold: 0.05
+    m_EventTreshold: 0.2
   - m_ConditionMode: 1
     m_ConditionEvent: Crouching
     m_EventTreshold: 0
@@ -924,7 +924,7 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 3
     m_ConditionEvent: HorizontalVelocity
-    m_EventTreshold: 0.05
+    m_EventTreshold: 0.2
   - m_ConditionMode: 1
     m_ConditionEvent: Crouching
     m_EventTreshold: 0
@@ -955,7 +955,7 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 4
     m_ConditionEvent: HorizontalVelocity
-    m_EventTreshold: 0.05
+    m_EventTreshold: 0.2
   - m_ConditionMode: 1
     m_ConditionEvent: Crouching
     m_EventTreshold: 0
@@ -1040,7 +1040,7 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 3
     m_ConditionEvent: HorizontalVelocity
-    m_EventTreshold: 0.05
+    m_EventTreshold: 0.2
   - m_ConditionMode: 2
     m_ConditionEvent: Crouching
     m_EventTreshold: 0
@@ -1068,7 +1068,7 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 4
     m_ConditionEvent: HorizontalVelocity
-    m_EventTreshold: 0.05
+    m_EventTreshold: 0.2
   - m_ConditionMode: 1
     m_ConditionEvent: Crouching
     m_EventTreshold: 0
@@ -1099,7 +1099,7 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 3
     m_ConditionEvent: HorizontalVelocity
-    m_EventTreshold: 0.05
+    m_EventTreshold: 0.2
   - m_ConditionMode: 2
     m_ConditionEvent: Crouching
     m_EventTreshold: 0
@@ -1164,7 +1164,7 @@ AnimatorStateTransition:
     m_EventTreshold: 0
   - m_ConditionMode: 4
     m_ConditionEvent: HorizontalVelocity
-    m_EventTreshold: 0.05
+    m_EventTreshold: 0.2
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -7990022138131216899}
   m_Solo: 0
@@ -1189,7 +1189,7 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 3
     m_ConditionEvent: HorizontalVelocity
-    m_EventTreshold: 0.05
+    m_EventTreshold: 0.2
   - m_ConditionMode: 2
     m_ConditionEvent: Crouching
     m_EventTreshold: 0
@@ -1223,7 +1223,7 @@ AnimatorStateTransition:
     m_EventTreshold: 0
   - m_ConditionMode: 4
     m_ConditionEvent: HorizontalVelocity
-    m_EventTreshold: 0.05
+    m_EventTreshold: 0.2
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 4624654205907640832}
   m_Solo: 0

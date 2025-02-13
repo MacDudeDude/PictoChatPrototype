@@ -45,8 +45,8 @@ TextureImporter:
   spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
-  alignment: 0
-  spritePivot: {x: 0.5, y: 0.5}
+  alignment: 7
+  spritePivot: {x: 0.5, y: 0}
   spritePixelsToUnits: 300
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
@@ -129,43 +129,43 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: spritesheet (65)_0
+      name: duck_crouch_lines_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 325
         height: 460
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a547065d631a8614fa92bce5cdbbe47e
-      internalID: 157418979
+      spriteID: 8ef70636b1e5d6b46bf48d053a54be83
+      internalID: -1075041874
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: spritesheet (65)_1
+      name: duck_crouch_lines_1
       rect:
         serializedVersion: 2
         x: 325
         y: 0
         width: 325
         height: 460
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: bf804ea397c6a014fa0ab29dca8b08f3
-      internalID: 1207697537
+      spriteID: b2164df69a8aded45977a8fab5b3229f
+      internalID: 907702724
       vertices: []
       indices: 
       edges: []
@@ -181,8 +181,8 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      spritesheet (65)_0: 157418979
-      spritesheet (65)_1: 1207697537
+      duck_crouch_lines_0: -1075041874
+      duck_crouch_lines_1: 907702724
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
