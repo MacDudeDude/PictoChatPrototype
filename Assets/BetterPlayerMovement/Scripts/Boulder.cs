@@ -5,8 +5,9 @@ using UnityEngine;
 public class Boulder : MonoBehaviour, IDraggable
 {
     public Rigidbody2D rb;
-    public float killCollisionSpeed;
     public LayerMask canKillLayers; // For performance reasons (won't try get componenent every single collision)
+    public Vector2 lastVelocity;
+    private float killCollisionSpeed;
 
     public void BeginDrag()
     {
@@ -24,11 +25,17 @@ public class Boulder : MonoBehaviour, IDraggable
         rb.velocity = dragEndVelocity;
     }
 
+    public void FixedUpdate()
+    {
+        lastVelocity = rb.velocity;
+    }
+
     public void OnCollisionEnter2D(Collision2D collision)
     {
         if(canKillLayers == (canKillLayers | (1 << collision.gameObject.layer)))
         {
-            if(collision.relativeVelocity.magnitude > killCollisionSpeed)
+            Debug.Log(lastVelocity.magnitude);
+            if(lastVelocity.magnitude > killCollisionSpeed)
             {
                 IKillable killable;
                 if(collision.transform.root.TryGetComponent(out killable))
