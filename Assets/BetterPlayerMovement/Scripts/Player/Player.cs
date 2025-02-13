@@ -11,6 +11,8 @@ public class Player : MonoBehaviour, IKillable
     public Rigidbody2D rb;
     public PlayerStateMachine StateMachine { get; set; }
 
+    private float killTimer;
+    private bool alive = true;
     private bool movementEnabled;
 
     private void Awake()
@@ -32,6 +34,8 @@ public class Player : MonoBehaviour, IKillable
     {
         if(movementEnabled)
             StateMachine.CurrentPlayerState.FrameUpdate();
+
+        HandleSelfDestruct();
     }
 
     private void FixedUpdate()
@@ -53,8 +57,26 @@ public class Player : MonoBehaviour, IKillable
         Kill();
     }
 
+    private void HandleSelfDestruct()
+    {
+        if(alive && Input.GetKey(KeyCode.R))
+        {
+            killTimer += Time.deltaTime;
+        }else
+        {
+            killTimer -= Time.deltaTime;
+        }
+
+        if (killTimer >= 2)
+            Kill();
+    }
+
     public void Kill()
     {
+        if (!alive)
+            return;
+
+        alive = false;
         if(RespawnPoint.Instance != null)
             RespawnPoint.Instance.QueRespawn(this);
     }
@@ -65,9 +87,11 @@ public class Player : MonoBehaviour, IKillable
         rb.simulated = false;
     }
 
-    public void EnableMovement()
+    public void EnableMovement(bool setAlive)
     {
         movementEnabled = true;
         rb.simulated = true;
+
+        alive = setAlive;
     }
 }
