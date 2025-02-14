@@ -645,8 +645,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a69d83a982933064384f0910050d1ba2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  drawer: {fileID: 1355456120}
-  dragger: {fileID: 1355456123}
+  drawer: {fileID: 0}
+  dragger: {fileID: 0}
 --- !u!1 &1407392183
 GameObject:
   m_ObjectHideFlags: 0

@@ -6,8 +6,8 @@ public class Boulder : MonoBehaviour, IDraggable
 {
     public Rigidbody2D rb;
     public LayerMask canKillLayers; // For performance reasons (won't try get componenent every single collision)
-    public Vector2 lastVelocity;
-    private float killCollisionSpeed;
+    public float killCollisionSpeed;
+    private Vector2 lastVelocity;
 
     public void BeginDrag()
     {
@@ -34,7 +34,6 @@ public class Boulder : MonoBehaviour, IDraggable
     {
         if(canKillLayers == (canKillLayers | (1 << collision.gameObject.layer)))
         {
-            Debug.Log(lastVelocity.magnitude);
             if(lastVelocity.magnitude > killCollisionSpeed)
             {
                 IKillable killable;
