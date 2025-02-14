@@ -14,7 +14,10 @@ public class HostToolsManager : MonoBehaviour
     public SelectedTool selectedTool;
     public MouseManager mouse;
     public PlayerDraw drawer;
-    public PlayerDragManager dragger; 
+
+    public int startingState;
+    public ToolState[] tools;
+    public ToolStateMachine StateMachine { get; set; }
 
     private static HostToolsManager _instance;
     public static HostToolsManager Instance { get { return _instance; } }
@@ -28,24 +31,22 @@ public class HostToolsManager : MonoBehaviour
         else
         {
             _instance = this;
+
+            StateMachine = new ToolStateMachine();
+            for (int i = 0; i < tools.Length; i++)
+            {
+                tools[i].Init(this);
+            }
         }
+    }
+
+    private void Start()
+    {
+        StateMachine.Initialize(tools[startingState]);
     }
 
     private void Update()
     {
-        switch (selectedTool)
-        {
-            case SelectedTool.Pen:
-                drawer.PenToolUpdate();
-                break;
-            case SelectedTool.Eraser:
-                drawer.EraseToolUpdate();
-                break;
-            case SelectedTool.Hand:
-                dragger.DragToolUpdate();
-                break;
-            default:
-                break;
-        }
+        StateMachine.CurrentToolState.FrameUpdate();
     }
 }

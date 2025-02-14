@@ -2,9 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerDragManager : MonoBehaviour
+public class PlayerDragTool : ToolState
 {
-    public Camera cam;
     public MouseManager grabber;
     public IDraggable grabbedObject;
     public Transform grabbedTransform;
@@ -13,11 +12,6 @@ public class PlayerDragManager : MonoBehaviour
 
     private Vector3 lastPos;
     private bool isDragging;
-
-    private void Awake()
-    {
-        cam = Camera.main;
-    }
 
     public void DragToolUpdate()
     {
