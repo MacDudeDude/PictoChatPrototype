@@ -19,7 +19,7 @@ public class PlayerDragManager : MonoBehaviour
         cam = Camera.main;
     }
 
-    private void Update()
+    public void DragToolUpdate()
     {
         if(!isDragging && Input.GetMouseButtonDown(0) && canDrag)
         {

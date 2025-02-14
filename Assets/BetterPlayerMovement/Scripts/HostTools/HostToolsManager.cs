@@ -4,6 +4,15 @@ using UnityEngine;
 
 public class HostToolsManager : MonoBehaviour
 {
+    public enum SelectedTool
+    {
+        Pen,
+        Eraser,
+        Hand
+    }
+
+    public SelectedTool selectedTool;
+    public MouseManager mouse;
     public PlayerDraw drawer;
     public PlayerDragManager dragger; 
 
@@ -19,6 +28,24 @@ public class HostToolsManager : MonoBehaviour
         else
         {
             _instance = this;
+        }
+    }
+
+    private void Update()
+    {
+        switch (selectedTool)
+        {
+            case SelectedTool.Pen:
+                drawer.PenToolUpdate();
+                break;
+            case SelectedTool.Eraser:
+                drawer.EraseToolUpdate();
+                break;
+            case SelectedTool.Hand:
+                dragger.DragToolUpdate();
+                break;
+            default:
+                break;
         }
     }
 }

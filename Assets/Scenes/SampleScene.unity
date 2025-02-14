@@ -566,21 +566,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2860070cf0572a44d8057645e7c69117, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  doDraw: 0
-  doErase: 0
   currentLayer: 0
   placeRadius: 1.1
   playAreaBoundsX: {x: 0, y: 0}
   playAreaBoundsY: {x: 0, y: 0}
+  mouseManager: {fileID: 1355456122}
   texManager: {fileID: 916048789}
   layersAmount: 3
   collisionLayer: 1
+  tileValues:
+  - {fileID: 0}
+  - {fileID: 11400000, guid: 49b2b84931f1bc64d816d81003ab91cf, type: 2}
   colorValues:
   - serializedVersion: 2
     rgba: 16777215
   - serializedVersion: 2
     rgba: 4278190080
-  tile: {fileID: 11400000, guid: 49b2b84931f1bc64d816d81003ab91cf, type: 2}
   grid: {fileID: 1534801706}
   tilemapGrid: {fileID: 1552339699}
   tilemapPrefab: {fileID: 7604062276924931468, guid: ea86279986b17864eb6147ab0c4e2f31, type: 3}
@@ -615,6 +616,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: feecaa0e57324664c8ab40aaf946a9f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverableLayers:
+    serializedVersion: 2
+    m_Bits: 35841
   hoveredObject: {fileID: 0}
 --- !u!114 &1355456123
 MonoBehaviour:
@@ -645,8 +649,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a69d83a982933064384f0910050d1ba2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  drawer: {fileID: 0}
-  dragger: {fileID: 0}
+  selectedTool: 0
+  mouse: {fileID: 1355456122}
+  drawer: {fileID: 1355456120}
+  dragger: {fileID: 1355456123}
 --- !u!1 &1407392183
 GameObject:
   m_ObjectHideFlags: 0

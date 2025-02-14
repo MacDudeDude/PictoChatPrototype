@@ -5,20 +5,20 @@ using UnityEngine.Tilemaps;
 
 public class PlayerDraw : MonoBehaviour
 {
-    public bool doDraw;
-    public bool doErase;
     public int currentLayer;
     public float placeRadius;
 
     public Vector2 playAreaBoundsX;
     public Vector2 playAreaBoundsY;
 
+    public MouseManager mouseManager;
     public TextureManager texManager;
     public int layersAmount;
     public int collisionLayer = 1;
+
+    public Tile[] tileValues;
     public Color32[] colorValues;
 
-    public Tile tile;
     public Grid grid;
     public Grid tilemapGrid;
     public GameObject tilemapPrefab;
@@ -45,7 +45,7 @@ public class PlayerDraw : MonoBehaviour
     void Start()
     {
         cam = Camera.main;
-        ppu = Mathf.RoundToInt(tile.sprite.pixelsPerUnit);
+        ppu = Mathf.RoundToInt(tileValues[1].sprite.pixelsPerUnit);
 
         updatedTilesPos = new List<Vector3Int>[rows * collumns];
         updatedTilesTile = new List<TileBase>[rows * collumns];
@@ -118,7 +118,7 @@ public class PlayerDraw : MonoBehaviour
         //Bottom outline
         for (int x = 0; x < width + 2; x++) {
             positions[x] = new Vector3Int(x - 1, -1, 0);
-            tiles[x] = tile;
+            tiles[x] = tileValues[1];
         }
         playareaOutline.SetTiles(positions, tiles);
 
@@ -126,7 +126,7 @@ public class PlayerDraw : MonoBehaviour
         for (int x = 0; x < width + 2; x++)
         {
             positions[x] = new Vector3Int(x - 1, height, 0);
-            tiles[x] = tile;
+            tiles[x] = tileValues[1];
         }
         playareaOutline.SetTiles(positions, tiles);
 
@@ -137,7 +137,7 @@ public class PlayerDraw : MonoBehaviour
         for (int x = 0; x < height + 2; x++)
         {
             positions[x] = new Vector3Int(-1, x - 1, 0);
-            tiles[x] = tile;
+            tiles[x] = tileValues[1];
         }
         playareaOutline.SetTiles(positions, tiles);
 
@@ -145,27 +145,50 @@ public class PlayerDraw : MonoBehaviour
         for (int x = 0; x < height + 2; x++)
         {
             positions[x] = new Vector3Int(width, x - 1, 0);
-            tiles[x] = tile;
+            tiles[x] = tileValues[1];
         }
         playareaOutline.SetTiles(positions, tiles);
     }
-
-    // Update is called once per frame
-    void Update()
+    public void PenToolUpdate()
     {
-        if(doDraw)
-            Adding();
+        if (Input.GetMouseButtonDown(0))
+            lastMousePosition = cam.ScreenToWorldPoint(Input.mousePosition);
 
-        if(doErase)
-            Removing();
-
-        if(Input.GetKeyDown(KeyCode.T))
+        if (Input.GetMouseButton(0))
         {
-            ClearAllTiles();
-        }
-        //currentGridPos = grid.WorldToCell(cam.ScreenToWorldPoint(Input.mousePosition));
+            Vector2 mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+            
+            if(mouseManager.GetObjectBetweenTwoPoints(mousePos, lastMousePosition) == null)
+            {
+                Vector3Int gridStartpoint = grid.WorldToCell(lastMousePosition);
+                Vector3Int gridEndpoint = grid.WorldToCell(mousePos);
+                DrawLine(gridStartpoint, gridEndpoint, placeRadius, 1, currentLayer);
+            }
 
-        if(tilemapUpdated)
+            lastMousePosition = mousePos;
+        }
+    }
+
+    public void EraseToolUpdate()
+    {
+        if (Input.GetMouseButtonDown(0))
+            lastMousePosition = cam.ScreenToWorldPoint(Input.mousePosition);
+
+        if (Input.GetMouseButton(0))
+        {
+            Vector2 mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+            Vector3Int gridStartpoint = grid.WorldToCell(lastMousePosition);
+            Vector3Int gridEndpoint = grid.WorldToCell(mousePos);
+
+            DrawLine(gridStartpoint, gridEndpoint, placeRadius, 0, currentLayer);
+
+            lastMousePosition = mousePos;
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if (tilemapUpdated)
         {
             UpdateTiles();
         }
@@ -202,7 +225,7 @@ public class PlayerDraw : MonoBehaviour
                     Vector3 worldPos = grid.CellToWorld(currentGridPos);
                     Vector3Int currentTileMapPos = tilemapGrid.WorldToCell(worldPos);
 
-                    QueTile(currentTileMapPos.x, currentTileMapPos.y, currentGridPos, null, 0);
+                    QueTile(currentTileMapPos.x, currentTileMapPos.y, currentGridPos, null, 0, currentLayer);
                 }
             }
         }
@@ -210,119 +233,57 @@ public class PlayerDraw : MonoBehaviour
         tilemapUpdated = true;
     }
 
-    private void Adding()
-    {
-        if (Input.GetMouseButtonDown(0))
-            lastMousePosition = cam.ScreenToWorldPoint(Input.mousePosition);
-
-        if (Input.GetMouseButton(0))
-        {
-            float currentPlaceRadius = placeRadius * (1f / ppu);
-
-            int gridRadius = Mathf.CeilToInt(currentPlaceRadius / (1f / ppu));
-            float squaredRadius = Mathf.Pow(currentPlaceRadius, 2);
-
-            Vector2 mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
-            Vector3Int gridStartpoint = grid.WorldToCell(lastMousePosition);
-            Vector3Int gridEndpoint = grid.WorldToCell(mousePos);
-            mousePos = grid.CellToWorld(gridEndpoint);
-
-            List<Vector2Int> line = GenerateLine(gridStartpoint.x, gridStartpoint.y, gridEndpoint.x, gridEndpoint.y);
-            for (int i = 0; i < line.Count; i++)
-            {
-                Vector3Int centerGridPos = (Vector3Int)line[i];
-                Vector2 centerGridWorldPos = grid.CellToWorld(centerGridPos);
-                for (int x = -gridRadius; x <= gridRadius; x++)
-                {
-                    for (int y = -gridRadius; y <= gridRadius; y++)
-                    {
-                        Vector3Int currentGridPos = new Vector3Int(centerGridPos.x + x, centerGridPos.y + y);
-                        Vector2 worldPos = grid.CellToWorld(currentGridPos);
-
-                        if ((worldPos - centerGridWorldPos).sqrMagnitude <= squaredRadius)
-                        {
-                            if (currentGridPos.x < 0 || currentGridPos.y < 0 || currentGridPos.x >= width || currentGridPos.y >= height)
-                                continue;
-
-                            Vector3Int currentTileMapPos = tilemapGrid.WorldToCell(worldPos);
-
-                            if (pixelgrid[currentLayer][currentGridPos.x, currentGridPos.y] == 1)
-                                continue;
-
-                            QueTile(currentTileMapPos.x, currentTileMapPos.y, currentGridPos, tile, 1);
-                        }
-                    }
-                }
-            }
-
-            lastMousePosition = mousePos;
-        }
-    }
-
-    private void QueTile(int x, int y, Vector3Int pos, Tile tile, int value)
+    private void QueTile(int x, int y, Vector3Int pos, Tile tile, int value, int layer)
     {
         int i = To1DIndex(x, y);
 
-        if(currentLayer == collisionLayer)
+        if(layer == collisionLayer)
         {
             updatedTilesPos[i].Add(pos);
             updatedTilesTile[i].Add(tile);
         }
 
-        pixelgrid[currentLayer][pos.x, pos.y] = value;
+        pixelgrid[layer][pos.x, pos.y] = value;
 
         i = (pos.y * width) + pos.x;
-        textureColors[currentLayer][i] = colorValues[value];
+        textureColors[layer][i] = colorValues[value];
 
         tilemapUpdated = true;
     }
 
-    private void Removing()
+    public void DrawLine(Vector3Int gridStartPoint, Vector3Int gridEndPoint, float radius, int value, int layer)
     {
-        if (Input.GetMouseButtonDown(1))
-            lastMousePosition = cam.ScreenToWorldPoint(Input.mousePosition);
+        float currentPlaceRadius = radius * (1f / ppu);
 
-        if (Input.GetMouseButton(1))
+        int gridRadius = Mathf.CeilToInt(currentPlaceRadius / (1f / ppu));
+        float squaredRadius = Mathf.Pow(currentPlaceRadius, 2);
+
+        List<Vector2Int> line = GenerateLine(gridStartPoint.x, gridStartPoint.y, gridEndPoint.x, gridEndPoint.y);
+        for (int i = 0; i < line.Count; i++)
         {
-            float currentPlaceRadius = placeRadius * (1f / ppu);
-
-            int gridRadius = Mathf.CeilToInt(currentPlaceRadius / (1f / ppu));
-            float squaredRadius = Mathf.Pow(currentPlaceRadius, 2);
-
-            Vector2 mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
-            Vector3Int gridStartpoint = grid.WorldToCell(lastMousePosition);
-            Vector3Int gridEndpoint = grid.WorldToCell(mousePos);
-            mousePos = grid.CellToWorld(gridEndpoint);
-
-            List<Vector2Int> line = GenerateLine(gridStartpoint.x, gridStartpoint.y, gridEndpoint.x, gridEndpoint.y);
-            for (int i = 0; i < line.Count; i++)
+            Vector3Int centerGridPos = (Vector3Int)line[i];
+            Vector2 centerGridWorldPos = grid.CellToWorld(centerGridPos);
+            for (int x = -gridRadius; x <= gridRadius; x++)
             {
-                Vector3Int centerGridPos = (Vector3Int)line[i];
-                Vector2 centerGridWorldPos = grid.CellToWorld(centerGridPos);
-                for (int x = -gridRadius; x <= gridRadius; x++)
+                for (int y = -gridRadius; y <= gridRadius; y++)
                 {
-                    for (int y = -gridRadius; y <= gridRadius; y++)
+                    Vector3Int currentGridPos = new Vector3Int(centerGridPos.x + x, centerGridPos.y + y);
+                    Vector2 worldPos = grid.CellToWorld(currentGridPos);
+
+                    if ((worldPos - centerGridWorldPos).sqrMagnitude <= squaredRadius)
                     {
-                        Vector3Int currentGridPos = new Vector3Int(centerGridPos.x + x, centerGridPos.y + y);
-                        Vector2 worldPos = grid.CellToWorld(currentGridPos);
+                        if (currentGridPos.x < 0 || currentGridPos.y < 0 || currentGridPos.x >= width || currentGridPos.y >= height)
+                            continue;
 
-                        if ((worldPos - centerGridWorldPos).sqrMagnitude <= squaredRadius)
-                        {
-                            if (currentGridPos.x < 0 || currentGridPos.y < 0 || currentGridPos.x >= width || currentGridPos.y >= height)
-                                continue;
+                        Vector3Int currentTileMapPos = tilemapGrid.WorldToCell(worldPos);
 
-                            Vector3Int currentTileMapPos = tilemapGrid.WorldToCell(worldPos);
+                        if (pixelgrid[layer][currentGridPos.x, currentGridPos.y] == value)
+                            continue;
 
-                            if (pixelgrid[currentLayer][currentGridPos.x, currentGridPos.y] == 0)
-                                continue;
-
-                            QueTile(currentTileMapPos.x, currentTileMapPos.y, currentGridPos, null, 0);
-                        }
+                        QueTile(currentTileMapPos.x, currentTileMapPos.y, currentGridPos, tileValues[value], value, layer);
                     }
                 }
             }
-
-            lastMousePosition = mousePos;
         }
     }
 
