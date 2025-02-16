@@ -49,7 +49,7 @@ public class RespawnPoint : MonoBehaviour, IDraggable
         player.transform.position = transform.position;
         player.transform.rotation = transform.rotation;
 
-        yield return Tween.Scale(player.transform, new Vector3(positiveScale ? 0.6f : -0.6f, 0.6f, 0.6f), 0.1f).ToYieldInstruction();
+        yield return Tween.Scale(player.transform, new Vector3(positiveScale ? 0.6f : -0.6f, 0.6f, 0.6f), 1f).ToYieldInstruction();
 
         player.EnableMovement(false);
 
