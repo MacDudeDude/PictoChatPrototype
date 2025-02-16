@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using FishNet.Object;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class PlayerDraw : MonoBehaviour
+public class PlayerDraw : NetworkBehaviour
 {
     public int currentLayer;
     public float placeRadius;
@@ -86,7 +87,7 @@ public class PlayerDraw : MonoBehaviour
         playAreaBoundsY.y = height * (1f / ppu);
     }
 
-    // Generate box colliders are around the play area, only problem is that it's too good and better than the tilemaps which creates a noticeable difference
+    /* Generate box colliders are around the play area, only problem is that it's too good and better than the tilemaps which creates a noticeable difference
     public void GenerateBoundryColliders()
     {
         List<Vector2> boundryOffsets = new List<Vector2>();
@@ -107,7 +108,7 @@ public class PlayerDraw : MonoBehaviour
             bottomCol.transform.localScale = new Vector3(width * ppu, height * ppu, 1);
         }
     }
-
+    */
     public void SetOutlineTiles()
     {
         playareaOutline = Instantiate(tilemapPrefab, Vector3.zero, Quaternion.identity, grid.transform).GetComponent<Tilemap>();
@@ -149,6 +150,18 @@ public class PlayerDraw : MonoBehaviour
         }
         playareaOutline.SetTiles(positions, tiles);
     }
+
+    [ServerRpc]
+    public void DrawLineServerRpc(Vector3Int startPoint, Vector3Int endPoint, float radius, int value, int layer)
+    {
+        DrawLineObserversRpc(startPoint, endPoint, radius, value, layer);
+    }
+    [ObserversRpc]
+    public void DrawLineObserversRpc(Vector3Int startPoint, Vector3Int endPoint, float radius, int value, int layer)
+    {
+        DrawLine(startPoint, endPoint, radius, value, layer);
+    }
+
     public void PenToolUpdate()
     {
         if (Input.GetMouseButtonDown(0))
@@ -162,7 +175,7 @@ public class PlayerDraw : MonoBehaviour
             {
                 Vector3Int gridStartpoint = grid.WorldToCell(lastMousePosition);
                 Vector3Int gridEndpoint = grid.WorldToCell(mousePos);
-                DrawLine(gridStartpoint, gridEndpoint, placeRadius, 1, currentLayer);
+                DrawLineServerRpc(gridStartpoint, gridEndpoint, placeRadius, 1, currentLayer);
             }
 
             lastMousePosition = mousePos;
@@ -180,7 +193,7 @@ public class PlayerDraw : MonoBehaviour
             Vector3Int gridStartpoint = grid.WorldToCell(lastMousePosition);
             Vector3Int gridEndpoint = grid.WorldToCell(mousePos);
 
-            DrawLine(gridStartpoint, gridEndpoint, placeRadius, 0, currentLayer);
+            DrawLineServerRpc(gridStartpoint, gridEndpoint, placeRadius, 0, currentLayer);
 
             lastMousePosition = mousePos;
         }
