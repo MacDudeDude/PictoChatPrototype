@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using FishNet.Object;
-using UnityEngine;
 using FishNet.Connection;
-using Facepunch.Steamworks;
+using FishNet.Object.Synchronizing;
+
+using UnityEngine;
+using Steamworks;
 
 public class Player : NetworkBehaviour, IKillable, IDraggable
 {
@@ -18,8 +20,7 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     private bool alive = true;
     private bool movementEnabled;
 
-    [SyncVar]
-    public string steamName;
+    private readonly SyncVar<string> steamName = new SyncVar<string>();
 
     public override void OnStartClient()
     {
