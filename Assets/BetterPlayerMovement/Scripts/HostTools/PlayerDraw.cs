@@ -45,9 +45,9 @@ public class PlayerDraw : NetworkBehaviour
     private List<TileBase>[] updatedTilesTile;
     private bool tilemapUpdated;
 
-    public override void OnStartClient()
+    public override void OnStartNetwork()
     {
-        if (!IsOwner && NetworkObject.Owner == null)
+        if (!base.Owner.IsLocalClient && NetworkObject.Owner == null)
         {
             var firstClient = NetworkManager.ServerManager.Clients.FirstOrDefault();
             if (firstClient.Value != null)
