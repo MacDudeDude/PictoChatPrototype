@@ -166,11 +166,7 @@ public class PlayerDraw : NetworkBehaviour
         playareaOutline.SetTiles(positions, tiles);
     }
 
-    [ServerRpc]
-    public void DrawLineServerRpc(Vector3Int startPoint, Vector3Int endPoint, float radius, int value, int layer)
-    {
-        DrawLineObserversRpc(startPoint, endPoint, radius, value, layer);
-    }
+    
     [ObserversRpc]
     public void DrawLineObserversRpc(Vector3Int startPoint, Vector3Int endPoint, float radius, int value, int layer)
     {
@@ -193,7 +189,7 @@ public class PlayerDraw : NetworkBehaviour
             {
                 Vector3Int gridStartpoint = grid.WorldToCell(lastMousePosition);
                 Vector3Int gridEndpoint = grid.WorldToCell(mousePos);
-                DrawLineServerRpc(gridStartpoint, gridEndpoint, placeRadius, 1, currentLayer);
+                DrawLineObserversRpc(gridStartpoint, gridEndpoint, placeRadius, 1, currentLayer);
             }
 
             lastMousePosition = mousePos;
@@ -214,7 +210,7 @@ public class PlayerDraw : NetworkBehaviour
             Vector3Int gridStartpoint = grid.WorldToCell(lastMousePosition);
             Vector3Int gridEndpoint = grid.WorldToCell(mousePos);
 
-            DrawLineServerRpc(gridStartpoint, gridEndpoint, placeRadius, 0, currentLayer);
+            DrawLineObserversRpc(gridStartpoint, gridEndpoint, placeRadius, 0, currentLayer);
 
             lastMousePosition = mousePos;
         }

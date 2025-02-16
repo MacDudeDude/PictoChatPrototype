@@ -958,7 +958,7 @@ MonoBehaviour:
   _serverBindAddress: 
   _port: 27015
   _maximumClients: 16
-  _clientAddress: 76561198066273818
+  _clientAddress: 
   _timeout: 25
 --- !u!1 &1534801705
 GameObject:
