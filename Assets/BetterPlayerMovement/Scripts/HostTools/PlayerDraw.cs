@@ -50,6 +50,7 @@ public class PlayerDraw : NetworkBehaviour
         // Loop over clients and assign ownership to the first non-host client.
         foreach (var clientPair in NetworkManager.ServerManager.Clients)
         {
+            Debug.Log("Client: " + clientPair.Value);
             if (clientPair.Value.IsLocalClient)
             {
                 NetworkObject.GiveOwnership(clientPair.Value);
