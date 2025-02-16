@@ -6,6 +6,9 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using FishNet.Managing;
 using System.Linq;
+using FishNet.Broadcast;
+using FishNet.Transporting;
+using FishNet;
 
 public class PlayerDraw : NetworkBehaviour
 {
@@ -58,8 +61,30 @@ public class PlayerDraw : NetworkBehaviour
         }
     }
 
+    public override void OnStartServer()
+    {
+        base.OnStartServer();
+        InstanceFinder.ServerManager.OnRemoteConnectionState += OnClientConnected;
+        CreateGrid();
+    }
+
+    private void OnClientConnected(NetworkConnection conn, RemoteConnectionStateArgs state)
+    {
+        if (state.ConnectionState == RemoteConnectionState.Started)
+        {
+            SendGridData(conn, pixelgrid.Count().ToString());
+        }
+    }
+
+    [TargetRpc]
+    private void SendGridData(NetworkConnection target, string message)
+    {
+        Debug.Log($"Received message from server: {message}");
+        CreateGrid();
+    }
+
     // Start is called before the first frame update
-    void Start()
+    void CreateGrid()
     {
         cam = Camera.main;
         ppu = Mathf.RoundToInt(tileValues[1].sprite.pixelsPerUnit);
@@ -81,7 +106,6 @@ public class PlayerDraw : NetworkBehaviour
                 tilemaps[x, y] = tempMap;
             }
         }
-
 
         width *= rows;
         height *= collumns;
@@ -166,7 +190,6 @@ public class PlayerDraw : NetworkBehaviour
         }
         playareaOutline.SetTiles(positions, tiles);
     }
-
     
     [ObserversRpc]
     public void DrawLineObserversRpc(Vector3Int startPoint, Vector3Int endPoint, float radius, int value, Color32 color, int layer)

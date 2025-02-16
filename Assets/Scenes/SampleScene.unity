@@ -732,7 +732,7 @@ MonoBehaviour:
   placeRadius: 1.1
   currentcolor:
     serializedVersion: 2
-    rgba: 4278190335
+    rgba: 4278190080
   playAreaBoundsX: {x: 0, y: 0}
   playAreaBoundsY: {x: 0, y: 0}
   mouseManager: {fileID: 1355456122}
