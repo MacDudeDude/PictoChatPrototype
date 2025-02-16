@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using FishNet.Managing;
+using FishNet.Transporting;
+using FishyFacepunch;
 using Steamworks;
 using Steamworks.Data;
 using TMPro;
@@ -16,6 +18,9 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private GameObject lobbyEntryPrefab;
     [SerializeField] private string gameSceneName = "Game";
 
+    private FishyFacepunch.FishyFacepunch _transport;
+
+
     private NetworkManager _networkManager;
     private List<Lobby> _currentLobbies = new List<Lobby>();
 
@@ -28,6 +33,7 @@ public class MainMenuManager : MonoBehaviour
 
         // Get NetworkManager reference
         _networkManager = FindFirstObjectByType<NetworkManager>();
+        _transport = FindObjectOfType<FishyFacepunch.FishyFacepunch>();
         // Setup Steam callbacks
         SteamMatchmaking.OnLobbyEntered += OnLobbyEntered;
         SteamFriends.OnGameLobbyJoinRequested += OnGameLobbyJoinRequested;
@@ -48,8 +54,7 @@ public class MainMenuManager : MonoBehaviour
         // Start server
         _networkManager.ServerManager.StartConnection();
         _networkManager.ClientManager.StartConnection();
-        // Change scene
-        //UnityEngine.SceneManagement.SceneManager.LoadScene(gameSceneName);
+
 
 
 
@@ -76,6 +81,7 @@ public class MainMenuManager : MonoBehaviour
 
         foreach (var lobby in lobbies)
         {
+            Debug.Log("Lobby: " + lobby.Id);
             _currentLobbies.Add(lobby);
 
             // Create UI entry
@@ -97,8 +103,9 @@ public class MainMenuManager : MonoBehaviour
     private void OnLobbyEntered(Lobby lobby)
     {
         // Start client only (server is already running on host)
-        if (!_networkManager.IsServerStarted)
+        if (_networkManager.IsServerStarted)
         {
+            _transport.SetClientAddress(lobby.Id.ToString());
             _networkManager.ClientManager.StartConnection();
         }
 
