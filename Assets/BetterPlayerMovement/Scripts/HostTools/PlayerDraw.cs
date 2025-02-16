@@ -70,15 +70,17 @@ public class PlayerDraw : NetworkBehaviour
 
     private void OnClientConnected(NetworkConnection conn, RemoteConnectionStateArgs state)
     {
-        if (state.ConnectionState == RemoteConnectionState.Started)
+        Debug.Log(conn + " " + IsOwner);
+        if (state.ConnectionState == RemoteConnectionState.Started && !IsOwner)
         {
-            SendGridData(conn, pixelgrid.Count().ToString());
+            RpcSendGridData(conn, pixelgrid.Count().ToString());
         }
     }
 
     [TargetRpc]
-    private void SendGridData(NetworkConnection target, string message)
+    private void RpcSendGridData(NetworkConnection conn, string message)
     {
+        Debug.LogWarning("asd");
         Debug.Log($"Received message from server: {message}");
         CreateGrid();
     }

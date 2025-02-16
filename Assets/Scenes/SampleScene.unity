@@ -732,7 +732,7 @@ MonoBehaviour:
   placeRadius: 1.1
   currentcolor:
     serializedVersion: 2
-    rgba: 4278190080
+    rgba: 0
   playAreaBoundsX: {x: 0, y: 0}
   playAreaBoundsY: {x: 0, y: 0}
   mouseManager: {fileID: 1355456122}
@@ -956,7 +956,7 @@ MonoBehaviour:
   _serverBindAddress: 
   _port: 27015
   _maximumClients: 16
-  _clientAddress: 76561198066273818
+  _clientAddress: 
   _timeout: 25
 --- !u!1 &1534801705
 GameObject:
