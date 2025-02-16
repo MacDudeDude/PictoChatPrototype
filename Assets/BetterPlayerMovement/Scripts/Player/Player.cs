@@ -33,7 +33,10 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
 
     void Update()
     {
-        if(movementEnabled)
+        if (!IsOwner)
+            return;
+
+        if (movementEnabled)
             StateMachine.CurrentPlayerState.FrameUpdate();
 
         HandleSelfDestruct();
@@ -41,7 +44,10 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
 
     private void FixedUpdate()
     {
-        if(movementEnabled)
+        if (!IsOwner)
+            return;
+
+        if (movementEnabled)
             StateMachine.CurrentPlayerState.PhysicsUpdate();
     }
 
