@@ -4,7 +4,7 @@ using UnityEngine;
 using FishNet.Object;
 using FishNet.Managing;
 using System.Linq;
-public class HostToolsManager : NetworkBehaviour
+public class HostToolsManager : MonoBehaviour
 {
     public enum SelectedTool
     {

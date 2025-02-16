@@ -179,6 +179,9 @@ public class PlayerDraw : NetworkBehaviour
 
     public void PenToolUpdate()
     {
+        if (!IsOwner)
+            return;
+
         if (Input.GetMouseButtonDown(0))
             lastMousePosition = cam.ScreenToWorldPoint(Input.mousePosition);
 
@@ -199,6 +202,9 @@ public class PlayerDraw : NetworkBehaviour
 
     public void EraseToolUpdate()
     {
+        if (!IsOwner)
+            return;
+
         if (Input.GetMouseButtonDown(0))
             lastMousePosition = cam.ScreenToWorldPoint(Input.mousePosition);
 
