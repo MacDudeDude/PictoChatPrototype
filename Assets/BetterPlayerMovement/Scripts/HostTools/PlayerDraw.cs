@@ -1,8 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using FishNet.Connection;
 using FishNet.Object;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using FishNet.Managing;
+using System.Linq;
 
 public class PlayerDraw : NetworkBehaviour
 {
@@ -42,6 +45,17 @@ public class PlayerDraw : NetworkBehaviour
     private List<TileBase>[] updatedTilesTile;
     private bool tilemapUpdated;
 
+    public override void OnStartClient()
+    {
+        if (!IsOwner && NetworkObject.Owner == null)
+        {
+            var firstClient = NetworkManager.ServerManager.Clients.FirstOrDefault();
+            if (firstClient.Value != null)
+            {
+                NetworkObject.GiveOwnership(firstClient.Value);
+            }
+        }
+    }
     // Start is called before the first frame update
     void Start()
     {
