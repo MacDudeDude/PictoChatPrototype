@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class HostToolsManager : MonoBehaviour
+using FishNet.Object;
+using FishNet.Managing;
+using System.Linq;
+public class HostToolsManager : NetworkBehaviour
 {
     public enum SelectedTool
     {
@@ -10,6 +12,7 @@ public class HostToolsManager : MonoBehaviour
         Eraser,
         Hand
     }
+
 
     public SelectedTool selectedTool;
     public MouseManager mouse;

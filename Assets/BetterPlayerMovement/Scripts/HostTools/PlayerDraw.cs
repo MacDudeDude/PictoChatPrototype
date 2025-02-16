@@ -45,14 +45,17 @@ public class PlayerDraw : NetworkBehaviour
     private List<TileBase>[] updatedTilesTile;
     private bool tilemapUpdated;
 
-    public override void OnStartNetwork()
+    public override void OnStartServer()
     {
-        if (!base.Owner.IsLocalClient && NetworkObject.Owner == null)
+        base.OnStartServer();
+        
+        // Loop over clients and assign ownership to the first non-host client.
+        foreach (var clientPair in NetworkManager.ServerManager.Clients)
         {
-            var firstClient = NetworkManager.ServerManager.Clients.FirstOrDefault();
-            if (firstClient.Value != null)
+            if (!clientPair.Value.IsLocalClient)
             {
-                NetworkObject.GiveOwnership(firstClient.Value);
+                NetworkObject.GiveOwnership(clientPair.Value);
+                break;
             }
         }
     }
