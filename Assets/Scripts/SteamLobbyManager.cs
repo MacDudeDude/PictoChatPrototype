@@ -31,16 +31,8 @@ public class SteamLobbyManager : NetworkBehaviour
         SteamClient.RunCallbacks();
     }
 
-    public override void OnStartServer()
-    {
-        base.OnStartServer();
-        _ = CreateLobby();
-    }
-
     private async Task CreateLobby()
     {
-        if (!IsServerInitialized)
-            return;
 
         // Create the lobby and await the result.
         var lobbyResult = await SteamMatchmaking.CreateLobbyAsync(maxPlayers);
@@ -51,10 +43,6 @@ public class SteamLobbyManager : NetworkBehaviour
             // Add the host to the connected players list.
             ConnectedPlayers.Add(SteamClient.SteamId);
 
-            // Subscribe to the global lobby callbacks.
-            SteamMatchmaking.OnLobbyMemberJoined += OnMemberJoined;
-            SteamMatchmaking.OnLobbyMemberLeave += OnMemberLeave;
-            Debug.Log("Registered lobby callbacks");
         }
         else
         {
@@ -62,52 +50,52 @@ public class SteamLobbyManager : NetworkBehaviour
         }
     }
 
-    // Global callback when a member joins a lobby.
-    private void OnMemberJoined(Lobby lobby, Friend friend)
+    /// <summary>
+    /// Joins a lobby using the specified Steam lobby ID.
+    /// </summary>
+    /// <param name="lobbyId">The Steam lobby ID (as ulong) to join.</param>
+    public async Task JoinLobbyAsync(ulong lobbyId)
     {
-        // Check to make sure this event is for our lobby.
-        if (CurrentLobby == null || lobby.Id != CurrentLobby.Value.Id)
-            return;
+        Debug.Log("Attempting to join lobby with ID: " + lobbyId);
 
-        Debug.Log("Member joined: " + friend.Id);
-        if (IsServerInitialized)
+        var joinResult = await SteamMatchmaking.JoinLobbyAsync(lobbyId);
+        if (joinResult.HasValue)
         {
-            ConnectedPlayers.Add(friend.Id);
-            UpdatePlayerListClientRpc(ConnectedPlayers.ToArray());
+            CurrentLobby = joinResult.Value;
+            Debug.Log("Successfully joined lobby with ID: " + CurrentLobby.Value.Id);
+
+            // Add your SteamId to the ConnectedPlayers list if not already present.
+            if (!ConnectedPlayers.Contains(SteamClient.SteamId))
+                ConnectedPlayers.Add(SteamClient.SteamId);
+        }
+        else
+        {
+            Debug.LogError("Failed to join lobby with ID: " + lobbyId);
         }
     }
 
-    // Global callback when a member leaves a lobby.
-    private void OnMemberLeave(Lobby lobby, Friend friend)
+    /// <summary>
+    /// Searches for available lobbies.
+    /// </summary>
+    /// <returns>A list of found lobbies.</returns>
+    public async Task<List<Lobby>> SearchLobbiesAsync()
     {
-        if (CurrentLobby == null || lobby.Id != CurrentLobby.Value.Id)
-            return;
+        Debug.Log("Starting lobby search...");
+        var lobbyQuery = SteamMatchmaking.LobbyList;
 
-        Debug.Log("Member left: " + friend.Id);
-        if (IsServerInitialized)
+        lobbyQuery.WithMaxResults(5);
+        lobbyQuery.WithSlotsAvailable(1);
+
+        var lobbies = await lobbyQuery.RequestAsync();
+        if (lobbies != null && lobbies.Length > 0)
         {
-            ConnectedPlayers.Remove(friend.Id);
-            UpdatePlayerListClientRpc(ConnectedPlayers.ToArray());
+            Debug.Log("Found " + lobbies.Length + " lobby/lobbies.");
+            return new List<Lobby>(lobbies);
         }
-    }
-
-    [ServerRpc]
-    public void UpdatePlayerListServerRpc(SteamId[] players)
-    {
-        ConnectedPlayers = new List<SteamId>(players);
-        UpdatePlayerListClientRpc(players);
-    }
-
-    [ObserversRpc]
-    private void UpdatePlayerListClientRpc(SteamId[] players)
-    {
-        ConnectedPlayers = new List<SteamId>(players);
-    }
-
-    private void OnDestroy()
-    {
-        // Unsubscribe from the global events.
-        SteamMatchmaking.OnLobbyMemberJoined -= OnMemberJoined;
-        SteamMatchmaking.OnLobbyMemberLeave -= OnMemberLeave;
+        else
+        {
+            Debug.Log("No lobbies found.");
+            return new List<Lobby>();
+        }
     }
 }

@@ -20,25 +20,6 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     private bool alive = true;
     private bool movementEnabled;
 
-    private readonly SyncVar<string> steamName = new SyncVar<string>();
-
-    public override void OnStartClient()
-    {
-        base.OnStartClient();
-        if (IsOwner)
-        {
-            if (SteamClient.IsValid)
-            {
-                SetSteamNameServerRpc(SteamClient.Name);
-            }
-        }
-    }
-
-    [ServerRpc]
-    public void SetSteamNameServerRpc(string name)
-    {
-        Debug.Log("Setting steam name: " + name);
-    }
 
     private void Awake()
     {
@@ -77,7 +58,7 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-        if(collision.contactCount > 20)
+        if (collision.contactCount > 20)
         {
             Kill();
         }
@@ -90,10 +71,11 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
 
     private void HandleSelfDestruct()
     {
-        if(alive && Input.GetKey(KeyCode.R))
+        if (alive && Input.GetKey(KeyCode.R))
         {
             killTimer += Time.deltaTime;
-        }else
+        }
+        else
         {
             killTimer -= Time.deltaTime;
         }
@@ -110,7 +92,7 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
             return;
 
         alive = false;
-        if(RespawnPoint.Instance != null)
+        if (RespawnPoint.Instance != null)
             RespawnPoint.Instance.QueRespawn(this);
     }
 
