@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using FishNet.Object;
 using UnityEngine;
+using FishNet.Connection;
+using Facepunch.Steamworks;
 
 public class Player : NetworkBehaviour, IKillable, IDraggable
 {
@@ -15,6 +17,27 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     private float killTimer;
     private bool alive = true;
     private bool movementEnabled;
+
+    [SyncVar]
+    public string steamName;
+
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+        if (IsOwner)
+        {
+            if (SteamClient.IsValid)
+            {
+                SetSteamNameServerRpc(SteamClient.Name);
+            }
+        }
+    }
+
+    [ServerRpc]
+    public void SetSteamNameServerRpc(string name)
+    {
+        Debug.Log("Setting steam name: " + name);
+    }
 
     private void Awake()
     {
