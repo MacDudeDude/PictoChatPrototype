@@ -730,6 +730,9 @@ MonoBehaviour:
   _networkObjectCache: {fileID: 0}
   currentLayer: 0
   placeRadius: 1.1
+  currentcolor:
+    serializedVersion: 2
+    rgba: 4278190335
   playAreaBoundsX: {x: 0, y: 0}
   playAreaBoundsY: {x: 0, y: 0}
   mouseManager: {fileID: 1355456122}
@@ -739,11 +742,6 @@ MonoBehaviour:
   tileValues:
   - {fileID: 0}
   - {fileID: 11400000, guid: 49b2b84931f1bc64d816d81003ab91cf, type: 2}
-  colorValues:
-  - serializedVersion: 2
-    rgba: 16777215
-  - serializedVersion: 2
-    rgba: 4278190080
   grid: {fileID: 1534801706}
   tilemapGrid: {fileID: 1552339699}
   tilemapPrefab: {fileID: 7604062276924931468, guid: ea86279986b17864eb6147ab0c4e2f31, type: 3}
@@ -958,7 +956,7 @@ MonoBehaviour:
   _serverBindAddress: 
   _port: 27015
   _maximumClients: 16
-  _clientAddress: 
+  _clientAddress: 76561198066273818
   _timeout: 25
 --- !u!1 &1534801705
 GameObject:

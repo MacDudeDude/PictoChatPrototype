@@ -11,6 +11,7 @@ public class PlayerDraw : NetworkBehaviour
 {
     public int currentLayer;
     public float placeRadius;
+    public Color32 currentcolor;
 
     public Vector2 playAreaBoundsX;
     public Vector2 playAreaBoundsY;
@@ -21,7 +22,6 @@ public class PlayerDraw : NetworkBehaviour
     public int collisionLayer = 1;
 
     public Tile[] tileValues;
-    public Color32[] colorValues;
 
     public Grid grid;
     public Grid tilemapGrid;
@@ -57,6 +57,7 @@ public class PlayerDraw : NetworkBehaviour
             }
         }
     }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -168,9 +169,9 @@ public class PlayerDraw : NetworkBehaviour
 
     
     [ObserversRpc]
-    public void DrawLineObserversRpc(Vector3Int startPoint, Vector3Int endPoint, float radius, int value, int layer)
+    public void DrawLineObserversRpc(Vector3Int startPoint, Vector3Int endPoint, float radius, int value, Color32 color, int layer)
     {
-        DrawLine(startPoint, endPoint, radius, value, layer);
+        DrawLine(startPoint, endPoint, radius, value, color, layer);
     }
 
     public void PenToolUpdate()
@@ -189,7 +190,7 @@ public class PlayerDraw : NetworkBehaviour
             {
                 Vector3Int gridStartpoint = grid.WorldToCell(lastMousePosition);
                 Vector3Int gridEndpoint = grid.WorldToCell(mousePos);
-                DrawLineObserversRpc(gridStartpoint, gridEndpoint, placeRadius, 1, currentLayer);
+                DrawLineObserversRpc(gridStartpoint, gridEndpoint, placeRadius, 1, currentcolor, currentLayer);
             }
 
             lastMousePosition = mousePos;
@@ -210,7 +211,7 @@ public class PlayerDraw : NetworkBehaviour
             Vector3Int gridStartpoint = grid.WorldToCell(lastMousePosition);
             Vector3Int gridEndpoint = grid.WorldToCell(mousePos);
 
-            DrawLineObserversRpc(gridStartpoint, gridEndpoint, placeRadius, 0, currentLayer);
+            DrawLineObserversRpc(gridStartpoint, gridEndpoint, placeRadius, 0, Color.clear, currentLayer);
 
             lastMousePosition = mousePos;
         }
@@ -255,7 +256,7 @@ public class PlayerDraw : NetworkBehaviour
                     Vector3 worldPos = grid.CellToWorld(currentGridPos);
                     Vector3Int currentTileMapPos = tilemapGrid.WorldToCell(worldPos);
 
-                    QueTile(currentTileMapPos.x, currentTileMapPos.y, currentGridPos, null, 0, currentLayer);
+                    QueTile(currentTileMapPos.x, currentTileMapPos.y, currentGridPos, null, 0, Color.clear, currentLayer);
                 }
             }
         }
@@ -263,7 +264,7 @@ public class PlayerDraw : NetworkBehaviour
         tilemapUpdated = true;
     }
 
-    private void QueTile(int x, int y, Vector3Int pos, Tile tile, int value, int layer)
+    private void QueTile(int x, int y, Vector3Int pos, Tile tile, int value, Color32 color, int layer)
     {
         int i = To1DIndex(x, y);
 
@@ -276,12 +277,12 @@ public class PlayerDraw : NetworkBehaviour
         pixelgrid[layer][pos.x, pos.y] = value;
 
         i = (pos.y * width) + pos.x;
-        textureColors[layer][i] = colorValues[value];
+        textureColors[layer][i] = color;
 
         tilemapUpdated = true;
     }
 
-    public void DrawLine(Vector3Int gridStartPoint, Vector3Int gridEndPoint, float radius, int value, int layer)
+    public void DrawLine(Vector3Int gridStartPoint, Vector3Int gridEndPoint, float radius, int value, Color32 color, int layer)
     {
         float currentPlaceRadius = radius * (1f / ppu);
 
@@ -310,7 +311,7 @@ public class PlayerDraw : NetworkBehaviour
                         if (pixelgrid[layer][currentGridPos.x, currentGridPos.y] == value)
                             continue;
 
-                        QueTile(currentTileMapPos.x, currentTileMapPos.y, currentGridPos, tileValues[value], value, layer);
+                        QueTile(currentTileMapPos.x, currentTileMapPos.y, currentGridPos, tileValues[value], value, color, layer);
                     }
                 }
             }
