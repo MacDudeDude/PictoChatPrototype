@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour, IKillable, IDraggable
+public class Player : NetworkBehaviour, IKillable, IDraggable
 {
     public Animator animator;
     public Transform spritesHolder;
