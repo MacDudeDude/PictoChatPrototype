@@ -77,7 +77,7 @@ public class PlayerDraw : NetworkBehaviour
     }
 
     [TargetRpc]
-    private void SendGridData(NetworkConnection target, string message)
+    private void SendGridData(NetworkConnection conn, string message)
     {
         Debug.Log($"Received message from server: {message}");
         CreateGrid();
