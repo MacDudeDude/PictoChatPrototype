@@ -2,19 +2,40 @@ using UnityEngine;
 using Steamworks;
 using Steamworks.Data;
 using System.Threading.Tasks;
-using FishNet.Object;
 using System.Collections.Generic;
+using FishNet.Managing;
 
-public class SteamLobbyManager : NetworkBehaviour
+/// <summary>
+/// Manages Steam lobby functionality including creation, joining, and searching for lobbies.
+/// Integrates with FishNet networking to handle multiplayer connections.
+/// </summary>
+public class SteamLobbyManager : MonoBehaviour
 {
+    /// <summary>
+    /// Singleton instance of the SteamLobbyManager.
+    /// </summary>
     public static SteamLobbyManager Instance { get; private set; }
+
     [SerializeField]
     private int maxPlayers = 4;
+
+    /// <summary>
+    /// The currently joined Steam lobby, if any.
+    /// </summary>
     public Lobby? CurrentLobby { get; private set; }
 
-    // List for connected SteamIds.
+    /// <summary>
+    /// List of Steam IDs for players currently connected to the lobby.
+    /// </summary>
     public List<SteamId> ConnectedPlayers { get; private set; } = new List<SteamId>();
 
+    private NetworkManager _networkManager;
+    private FishyFacepunch.FishyFacepunch _transport;
+    [SerializeField] private string gameSceneName = "Game";
+
+    /// <summary>
+    /// Initializes the singleton instance and sets up Steam callbacks.
+    /// </summary>
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -23,37 +44,47 @@ public class SteamLobbyManager : NetworkBehaviour
             return;
         }
         Instance = this;
+
+        //Get NetworkManager reference
+        _networkManager = FindFirstObjectByType<NetworkManager>();
+        _transport = FindObjectOfType<FishyFacepunch.FishyFacepunch>();
+        // Setup Steam callbacks
+        SteamMatchmaking.OnLobbyEntered += OnLobbyEntered;
+        SteamFriends.OnGameLobbyJoinRequested += OnGameLobbyJoinRequested;
     }
 
-    // Process Steam callbacks every frame.
+    /// <summary>
+    /// Processes Steam callbacks every frame.
+    /// </summary>
     void Update()
     {
         SteamClient.RunCallbacks();
     }
 
-    private async Task CreateLobby()
+    /// <summary>
+    /// Creates a new Steam lobby and starts the server.
+    /// </summary>
+    /// <returns>A Task representing the asynchronous operation.</returns>
+    public async Task CreateLobbyAsync()
     {
-
-        // Create the lobby and await the result.
-        var lobbyResult = await SteamMatchmaking.CreateLobbyAsync(maxPlayers);
-        if (lobbyResult.HasValue)
+        var createLobbyResult = await SteamMatchmaking.CreateLobbyAsync();
+        if (!createLobbyResult.HasValue)
         {
-            CurrentLobby = lobbyResult.Value;
-            Debug.Log("Lobby created with ID: " + CurrentLobby?.Id);
-            // Add the host to the connected players list.
-            ConnectedPlayers.Add(SteamClient.SteamId);
+            Debug.LogError("Failed to create lobby");
+            return;
+        }
+        // Start server
+        _networkManager.ServerManager.StartConnection();
 
-        }
-        else
-        {
-            Debug.LogError("Failed to create lobby!");
-        }
+        var lobby = createLobbyResult.Value;
+        Debug.Log("Lobby created: " + lobby.Id);
     }
 
     /// <summary>
     /// Joins a lobby using the specified Steam lobby ID.
     /// </summary>
-    /// <param name="lobbyId">The Steam lobby ID (as ulong) to join.</param>
+    /// <param name="lobbyId">The Steam lobby ID to join.</param>
+    /// <returns>A Task representing the asynchronous operation.</returns>
     public async Task JoinLobbyAsync(ulong lobbyId)
     {
         Debug.Log("Attempting to join lobby with ID: " + lobbyId);
@@ -62,11 +93,8 @@ public class SteamLobbyManager : NetworkBehaviour
         if (joinResult.HasValue)
         {
             CurrentLobby = joinResult.Value;
+            _transport.SetClientAddress(CurrentLobby.Value.Id.ToString());
             Debug.Log("Successfully joined lobby with ID: " + CurrentLobby.Value.Id);
-
-            // Add your SteamId to the ConnectedPlayers list if not already present.
-            if (!ConnectedPlayers.Contains(SteamClient.SteamId))
-                ConnectedPlayers.Add(SteamClient.SteamId);
         }
         else
         {
@@ -75,9 +103,9 @@ public class SteamLobbyManager : NetworkBehaviour
     }
 
     /// <summary>
-    /// Searches for available lobbies.
+    /// Searches for available Steam lobbies.
     /// </summary>
-    /// <returns>A list of found lobbies.</returns>
+    /// <returns>A Task that returns a list of found lobbies.</returns>
     public async Task<List<Lobby>> SearchLobbiesAsync()
     {
         Debug.Log("Starting lobby search...");
@@ -97,5 +125,46 @@ public class SteamLobbyManager : NetworkBehaviour
             Debug.Log("No lobbies found.");
             return new List<Lobby>();
         }
+    }
+
+    /// <summary>
+    /// Callback triggered when successfully entering a lobby.
+    /// Sets up the client connection and loads the game scene.
+    /// </summary>
+    /// <param name="lobby">The lobby that was entered.</param>
+    private void OnLobbyEntered(Lobby lobby)
+    {
+        CurrentLobby = lobby;
+        _transport.SetClientAddress(lobby.Id.ToString());
+        _networkManager.ClientManager.StartConnection();
+
+        // Change scene
+        UnityEngine.SceneManagement.SceneManager.LoadScene(gameSceneName);
+    }
+
+    /// <summary>
+    /// Callback triggered when a game lobby join is requested (e.g., through Steam overlay).
+    /// Sets up the client connection and loads the game scene.
+    /// </summary>
+    /// <param name="lobby">The lobby to join.</param>
+    /// <param name="id">The Steam ID of the player requesting to join.</param>
+    private void OnGameLobbyJoinRequested(Lobby lobby, SteamId id)
+    {
+        CurrentLobby = lobby;
+        _transport.SetClientAddress(lobby.Id.ToString());
+        _networkManager.ClientManager.StartConnection();
+
+        // Change scene
+        UnityEngine.SceneManagement.SceneManager.LoadScene(gameSceneName);
+    }
+
+    /// <summary>
+    /// Cleans up Steam callbacks when the object is destroyed.
+    /// </summary>
+    private void OnDestroy()
+    {
+        // Cleanup Steam callbacks
+        SteamMatchmaking.OnLobbyEntered -= OnLobbyEntered;
+        SteamFriends.OnGameLobbyJoinRequested -= OnGameLobbyJoinRequested;
     }
 }

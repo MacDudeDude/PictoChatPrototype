@@ -1,63 +1,42 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using FishNet.Managing;
-using FishNet.Transporting;
-using FishyFacepunch;
-using Steamworks;
 using Steamworks.Data;
 using TMPro;
+using UnityEngine.UI;
+
 
 public class MainMenuManager : MonoBehaviour
 {
     [SerializeField] private Button createLobbyButton;
+    [SerializeField] private Button joinLobbyMenuButton;
+    [SerializeField] private Button searchLobbyButton;
     [SerializeField] private Button joinLobbyButton;
+
     [SerializeField] private Button exitButton;
     [SerializeField] private GameObject lobbyListPanel;
+    [SerializeField] private GameObject joinLobbyPanel;
+    [SerializeField] private TMP_InputField joinLobbyField;
     [SerializeField] private Transform lobbyListContent;
     [SerializeField] private GameObject lobbyEntryPrefab;
     [SerializeField] private string gameSceneName = "Game";
+    [SerializeField] private SteamLobbyManager _steamLobbyManager;
 
-    private FishyFacepunch.FishyFacepunch _transport;
-
-
-    private NetworkManager _networkManager;
     private List<Lobby> _currentLobbies = new List<Lobby>();
 
     private void Start()
     {
         // Initialize buttons
         createLobbyButton.onClick.AddListener(CreateLobby);
-        joinLobbyButton.onClick.AddListener(ShowLobbyList);
+        searchLobbyButton.onClick.AddListener(ShowLobbyList);
+        joinLobbyMenuButton.onClick.AddListener(ShowJoinLobby);
         exitButton.onClick.AddListener(ExitGame);
+        joinLobbyButton.onClick.AddListener(JoinLobby);
 
-        // Get NetworkManager reference
-        _networkManager = FindFirstObjectByType<NetworkManager>();
-        _transport = FindObjectOfType<FishyFacepunch.FishyFacepunch>();
-        // Setup Steam callbacks
-        SteamMatchmaking.OnLobbyEntered += OnLobbyEntered;
-        SteamFriends.OnGameLobbyJoinRequested += OnGameLobbyJoinRequested;
     }
 
     private async void CreateLobby()
     {
-        // Create Steam lobby
-        var createLobbyResult = await SteamMatchmaking.CreateLobbyAsync();
-        if (!createLobbyResult.HasValue)
-        {
-            Debug.LogError("Failed to create lobby");
-            return;
-        }
-
-        var lobby = createLobbyResult.Value;
-        Debug.Log("Lobby created: " + lobby.Id);
-        // Start server
-        _networkManager.ServerManager.StartConnection();
-        _networkManager.ClientManager.StartConnection();
-
-
-
-
+        await _steamLobbyManager.CreateLobbyAsync();
     }
 
     private async void ShowLobbyList()
@@ -68,66 +47,56 @@ public class MainMenuManager : MonoBehaviour
 
         lobbyListPanel.SetActive(true);
 
-        // Clear existing entries
-        foreach (Transform child in lobbyListContent)
-        {
-            Destroy(child.gameObject);
-        }
-        _currentLobbies.Clear();
 
         // Get lobby list
-        var lobbies = await SteamMatchmaking.LobbyList.RequestAsync();
+        var lobbies = await _steamLobbyManager.SearchLobbiesAsync();
         if (lobbies == null) return;
 
         foreach (var lobby in lobbies)
         {
-            Debug.Log("Lobby: " + lobby.Id);
+            Debug.Log($"Found lobby: {lobby.Id} ({lobby.MemberCount} players)");
             _currentLobbies.Add(lobby);
 
-            // Create UI entry
-            var entry = Instantiate(lobbyEntryPrefab, lobbyListContent);
-            var button = entry.GetComponent<Button>();
-            var text = entry.GetComponentInChildren<TextMeshProUGUI>();
+            // Instantiate lobby entry prefab
+            GameObject lobbyEntryObj = Instantiate(lobbyEntryPrefab, lobbyListContent);
 
-            text.text = $"Lobby {lobby.Id}";
-            button.onClick.AddListener(() => JoinLobby(lobby));
+            // Get references to UI elements 
+            Button lobbyButton = lobbyEntryObj.GetComponent<Button>();
+            TextMeshProUGUI lobbyNameText = lobbyEntryObj.transform.Find("LobbyName").GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI lobbyMemmberText = lobbyEntryObj.transform.Find("MemberCount").GetComponent<TextMeshProUGUI>();
+
+            // Set lobby info
+            lobbyNameText.text = $"Lobby #{lobby.Id}";
+            lobbyMemmberText.text = $"{lobby.MemberCount} / {lobby.MaxMembers}";
+
+            // Add click handler
+            lobbyButton.onClick.AddListener(async () => await _steamLobbyManager.JoinLobbyAsync(lobby.Id));
         }
     }
 
-    private void JoinLobby(Lobby lobby)
+    private void ShowJoinLobby()
     {
-        lobby.Join();
-        lobbyListPanel.SetActive(false);
+        createLobbyButton.gameObject.SetActive(false);
+        searchLobbyButton.gameObject.SetActive(false);
+        joinLobbyMenuButton.gameObject.SetActive(false);
+        exitButton.gameObject.SetActive(false);
+
+        joinLobbyPanel.SetActive(true);
+
+        joinLobbyField.text = "";
     }
 
-    private void OnLobbyEntered(Lobby lobby)
+    private async void JoinLobby()
     {
-        // Start client only (server is already running on host)
-        if (_networkManager.IsServerStarted)
-        {
-            _transport.SetClientAddress(lobby.Id.ToString());
-            _networkManager.ClientManager.StartConnection();
-        }
-
-        // Change scene
-        UnityEngine.SceneManagement.SceneManager.LoadScene(gameSceneName);
+        await _steamLobbyManager.JoinLobbyAsync(ulong.Parse(joinLobbyField.text));
     }
 
-    private void OnGameLobbyJoinRequested(Lobby lobby, SteamId id)
-    {
-        lobby.Join();
-    }
 
     private void ExitGame()
     {
         Application.Quit();
     }
 
-    private void OnDestroy()
-    {
-        // Cleanup Steam callbacks
-        SteamMatchmaking.OnLobbyEntered -= OnLobbyEntered;
-        SteamFriends.OnGameLobbyJoinRequested -= OnGameLobbyJoinRequested;
-    }
+
 }
 
