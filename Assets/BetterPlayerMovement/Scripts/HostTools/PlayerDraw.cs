@@ -27,6 +27,9 @@ public struct DrawCommand
 
     /// <summary>Layer to draw on</summary>
     public int layer;
+
+    /// <summary>Color drawn</summary>
+    public Color32 color;
 }
 
 /// <summary>
@@ -279,7 +282,8 @@ public class PlayerDraw : NetworkBehaviour
             endPoint = endPoint,
             radius = radius,
             value = value,
-            layer = layer
+            layer = layer,
+            color = color
         });
 
         DrawLineObserversRpc(startPoint, endPoint, radius, value, layer, color);
@@ -533,7 +537,7 @@ public class PlayerDraw : NetworkBehaviour
         // Replay each stored line command on the target client.
         foreach (var cmd in commands)
         {
-            DrawLine(cmd.startPoint, cmd.endPoint, cmd.radius, cmd.value, cmd.layer, Color.black);
+            DrawLine(cmd.startPoint, cmd.endPoint, cmd.radius, cmd.value, cmd.layer, cmd.color);
         }
     }
 
