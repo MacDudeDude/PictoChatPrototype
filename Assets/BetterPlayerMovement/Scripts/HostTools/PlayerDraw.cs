@@ -7,42 +7,86 @@ using UnityEngine.Tilemaps;
 using FishNet.Managing;
 using System.Linq;
 
+/// <summary>
+/// Represents a drawing command with position, size and layer information
+/// </summary>
 [System.Serializable]
 public struct DrawCommand
 {
+    /// <summary>Starting grid position of the draw command</summary>
     public Vector3Int startPoint;
+
+    /// <summary>Ending grid position of the draw command</summary> 
     public Vector3Int endPoint;
+
+    /// <summary>Radius of the drawing brush</summary>
     public float radius;
+
+    /// <summary>Value representing the tile/color to draw</summary>
     public int value;
+
+    /// <summary>Layer to draw on</summary>
     public int layer;
 }
 
+/// <summary>
+/// Handles networked drawing functionality for players in a multiplayer game.
+/// Allows players to draw on a shared tilemap grid that syncs across the network.
+/// </summary>
 public class PlayerDraw : NetworkBehaviour
 {
+    /// <summary>Currently selected layer to draw on</summary>
     public int currentLayer;
+
+    /// <summary>Radius of the drawing brush</summary>
     public float placeRadius;
 
+    /// <summary>X bounds of the playable drawing area</summary>
     public Vector2 playAreaBoundsX;
+
+    /// <summary>Y bounds of the playable drawing area</summary>
     public Vector2 playAreaBoundsY;
 
+    /// <summary>Reference to the mouse input manager</summary>
     public MouseManager mouseManager;
+
+    /// <summary>Reference to the texture manager</summary>
     public TextureManager texManager;
+
+    /// <summary>Total number of drawing layers</summary>
     public int layersAmount;
+
+    /// <summary>Layer used for collision detection</summary>
     public int collisionLayer = 1;
 
+    /// <summary>Array of tile types that can be placed</summary>
     public Tile[] tileValues;
+
+    /// <summary>Array of colors corresponding to tile values</summary>
     public Color32[] colorValues;
 
+    /// <summary>Main Unity grid for world positioning</summary>
     public Grid grid;
+
+    /// <summary>Grid for tilemap positioning</summary>
     public Grid tilemapGrid;
+
+    /// <summary>Prefab for creating new tilemaps</summary>
     public GameObject tilemapPrefab;
 
+    /// <summary>Number of rows in the tilemap grid</summary>
     public int rows;
+
+    /// <summary>Number of columns in the tilemap grid</summary>
     public int collumns;
+
+    /// <summary>Width of a single tilemap section</summary>
     public int width;
+
+    /// <summary>Height of a single tilemap section</summary>
     public int height;
 
-    private int ppu;
+    private int ppu; // Pixels per unit
     private Vector2 lastMousePosition;
     private Tilemap[,] tilemaps;
     private Tilemap playareaOutline;
@@ -55,8 +99,12 @@ public class PlayerDraw : NetworkBehaviour
     private List<TileBase>[] updatedTilesTile;
     private bool tilemapUpdated;
 
+    /// <summary>List of all drawing commands for replay to new clients</summary>
     private List<DrawCommand> storedCommands = new List<DrawCommand>();
 
+    /// <summary>
+    /// Called when client starts. Sets up ownership and requests stored commands.
+    /// </summary>
     public override void OnStartClient()
     {
         base.OnStartClient();
@@ -75,27 +123,37 @@ public class PlayerDraw : NetworkBehaviour
         RequestStoredCommandsServerRpc();
     }
 
+    /// <summary>
+    /// Changes the current artist by their ID
+    /// </summary>
     public void ChangeArtist(string artistId)
     {
         ChangeArtistServerRpc(artistId);
     }
 
+    /// <summary>
+    /// Server RPC to change the current artist
+    /// </summary>
     [ServerRpc]
     private void ChangeArtistServerRpc(string artistId)
     {
-
         ChangeArtistObserversRpc(artistId);
         NetworkConnection client = SteamPlayerManager.Instance.GetNetworkConnection(ulong.Parse(artistId));
         NetworkObject.GiveOwnership(client);
     }
 
+    /// <summary>
+    /// Observers RPC to notify all clients of artist change
+    /// </summary>
     [ObserversRpc(RunLocally = true)]
     private void ChangeArtistObserversRpc(string artistId)
     {
         SteamLobbyManager.Instance.ChangeArtist(artistId);
     }
 
-    // Start is called before the first frame update
+    /// <summary>
+    /// Initializes the drawing system, setting up tilemaps and textures
+    /// </summary>
     void Start()
     {
         cam = Camera.main;
@@ -162,6 +220,10 @@ public class PlayerDraw : NetworkBehaviour
         }
     }
     */
+
+    /// <summary>
+    /// Creates outline tiles around the play area boundary
+    /// </summary>
     public void SetOutlineTiles()
     {
         playareaOutline = Instantiate(tilemapPrefab, Vector3.zero, Quaternion.identity, grid.transform).GetComponent<Tilemap>();
@@ -205,6 +267,9 @@ public class PlayerDraw : NetworkBehaviour
         playareaOutline.SetTiles(positions, tiles);
     }
 
+    /// <summary>
+    /// Server RPC to draw a line between two points
+    /// </summary>
     [ServerRpc(RequireOwnership = true)]
     public void DrawLineServerRpc(Vector3Int startPoint, Vector3Int endPoint, float radius, int value, int layer)
     {
@@ -220,12 +285,18 @@ public class PlayerDraw : NetworkBehaviour
         DrawLineObserversRpc(startPoint, endPoint, radius, value, layer);
     }
 
+    /// <summary>
+    /// Observers RPC to sync line drawing across all clients
+    /// </summary>
     [ObserversRpc]
     public void DrawLineObserversRpc(Vector3Int startPoint, Vector3Int endPoint, float radius, int value, int layer)
     {
         DrawLine(startPoint, endPoint, radius, value, layer);
     }
 
+    /// <summary>
+    /// Updates pen tool drawing based on mouse input
+    /// </summary>
     public void PenToolUpdate()
     {
         if (!IsOwner)
@@ -249,6 +320,9 @@ public class PlayerDraw : NetworkBehaviour
         }
     }
 
+    /// <summary>
+    /// Updates eraser tool based on mouse input
+    /// </summary>
     public void EraseToolUpdate()
     {
         if (!IsOwner)
@@ -269,6 +343,9 @@ public class PlayerDraw : NetworkBehaviour
         }
     }
 
+    /// <summary>
+    /// Fixed update loop to handle tile updates
+    /// </summary>
     private void FixedUpdate()
     {
         if (tilemapUpdated)
@@ -277,6 +354,9 @@ public class PlayerDraw : NetworkBehaviour
         }
     }
 
+    /// <summary>
+    /// Updates all modified tiles and textures
+    /// </summary>
     public void UpdateTiles()
     {
         for (int i = 0; i < updatedTilesPos.Length; i++)
@@ -296,6 +376,9 @@ public class PlayerDraw : NetworkBehaviour
         tilemapUpdated = false;
     }
 
+    /// <summary>
+    /// Clears all tiles from the current layer
+    /// </summary>
     public void ClearAllTiles()
     {
         for (int x = 0; x < width; x++)
@@ -316,6 +399,9 @@ public class PlayerDraw : NetworkBehaviour
         tilemapUpdated = true;
     }
 
+    /// <summary>
+    /// Queues a tile update at the specified position
+    /// </summary>
     private void QueTile(int x, int y, Vector3Int pos, Tile tile, int value, int layer)
     {
         int i = To1DIndex(x, y);
@@ -334,6 +420,9 @@ public class PlayerDraw : NetworkBehaviour
         tilemapUpdated = true;
     }
 
+    /// <summary>
+    /// Draws a line between two points with given radius and value
+    /// </summary>
     public void DrawLine(Vector3Int gridStartPoint, Vector3Int gridEndPoint, float radius, int value, int layer)
     {
         float currentPlaceRadius = radius * (1f / ppu);
@@ -370,11 +459,17 @@ public class PlayerDraw : NetworkBehaviour
         }
     }
 
+    /// <summary>
+    /// Converts 2D coordinates to 1D index
+    /// </summary>
     public int To1DIndex(int x, int y)
     {
         return y * rows + x;
     }
 
+    /// <summary>
+    /// Converts 1D index to 2D coordinates
+    /// </summary>
     public (int x, int y) To2DIndex(int i)
     {
         int x = i % rows;
@@ -382,6 +477,9 @@ public class PlayerDraw : NetworkBehaviour
         return (x, y);
     }
 
+    /// <summary>
+    /// Generates points for a line between two coordinates using Bresenham's line algorithm
+    /// </summary>
     public List<Vector2Int> GenerateLine(int x, int y, int x2, int y2)
     {
         List<Vector2Int> linePositions = new List<Vector2Int>();
@@ -422,8 +520,9 @@ public class PlayerDraw : NetworkBehaviour
         return linePositions;
     }
 
-    // This TargetRpc will be used to send stored commands 
-    // to a given client (the one that just joined).
+    /// <summary>
+    /// Target RPC to send stored drawing commands to a specific client
+    /// </summary>
     [TargetRpc]
     private void TargetSendStoredCommands(NetworkConnection target, DrawCommand[] commands)
     {
@@ -434,8 +533,9 @@ public class PlayerDraw : NetworkBehaviour
         }
     }
 
-    // A ServerRpc for a client to request all stored commands.
-    // Note: With FishNet the sender can be automatically associated with the calling connection.
+    /// <summary>
+    /// Server RPC for a client to request all stored drawing commands
+    /// </summary>
     [ServerRpc(RequireOwnership = false)]
     public void RequestStoredCommandsServerRpc(NetworkConnection sender = null)
     {
