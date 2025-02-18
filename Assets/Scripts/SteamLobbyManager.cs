@@ -51,6 +51,8 @@ public class SteamLobbyManager : MonoBehaviour
         // Setup Steam callbacks
         SteamMatchmaking.OnLobbyEntered += OnLobbyEntered;
         SteamFriends.OnGameLobbyJoinRequested += OnGameLobbyJoinRequested;
+
+        DontDestroyOnLoad(gameObject);
     }
 
     /// <summary>
@@ -74,11 +76,13 @@ public class SteamLobbyManager : MonoBehaviour
             return;
         }
         createLobbyResult.Value.SetGameServer(SteamClient.SteamId);
+
         // Start server
         _networkManager.ServerManager.StartConnection();
 
         var lobby = createLobbyResult.Value;
-        Debug.Log("Lobby data: " + lobby.GetData(""));
+        lobby.SetData("artist", SteamClient.SteamId.ToString());
+        Debug.Log("Lobby created: " + lobby.Id);
     }
 
     /// <summary>
@@ -176,6 +180,22 @@ public class SteamLobbyManager : MonoBehaviour
         {
             Debug.LogError("Failed to join lobby with ID: " + lobby.Id);
         }
+    }
+
+    public string getArtist()
+    {
+        var artist = CurrentLobby.Value.GetData("artist");
+        return artist;
+    }
+
+    public List<Friend> getMembers()
+    {
+        List<Friend> members = new List<Friend>();
+        foreach (var member in CurrentLobby.Value.Members)
+        {
+            members.Add(member);
+        }
+        return members;
     }
 
     /// <summary>
