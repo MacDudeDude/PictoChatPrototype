@@ -571,13 +571,13 @@ public class PlayerDraw : NetworkBehaviour
             }
             else
             {
-                compressed.Append(colors[i - 1].ToString()).Append("x").Append(count).Append(".");
+                compressed.Append(EncodeColor32(colors[i - 1])).Append("x").Append(count).Append(".");
                 count = 1;
             }
         }
 
         // Append the last color group
-        compressed.Append(colors[^1].ToString()).Append("x").Append(count);
+        compressed.Append(EncodeColor32(colors[^1])).Append("x").Append(count);
 
         return compressed.ToString();
     }
@@ -592,7 +592,7 @@ public class PlayerDraw : NetworkBehaviour
             if (string.IsNullOrEmpty(part)) continue;
 
             string[] colorAndCount = part.Split('x');
-            Color32 color = ParseColor32(colorAndCount[0]);
+            Color32 color = DecodeColor32(colorAndCount[0]);
             int count = int.Parse(colorAndCount[1]);
 
             for (int i = 0; i < count; i++)
@@ -604,9 +604,14 @@ public class PlayerDraw : NetworkBehaviour
         return decompressed.ToArray();
     }
 
-    private Color32 ParseColor32(string colorString)
+    private string EncodeColor32(Color32 color)
     {
-        string[] rgba = colorString.Trim('(', ')').Split(',');
+        return $"{color.r},{color.g},{color.b},{color.a}";
+    }
+
+    private Color32 DecodeColor32(string colorString)
+    {
+        string[] rgba = colorString.Split(',');
         return new Color32(
             byte.Parse(rgba[0]),
             byte.Parse(rgba[1]),
