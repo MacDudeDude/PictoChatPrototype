@@ -7,6 +7,16 @@ using UnityEngine.Tilemaps;
 using FishNet.Managing;
 using System.Linq;
 
+[System.Serializable]
+public struct DrawCommand
+{
+    public Vector3Int startPoint;
+    public Vector3Int endPoint;
+    public float radius;
+    public int value;
+    public int layer;
+}
+
 public class PlayerDraw : NetworkBehaviour
 {
     public int currentLayer;
@@ -45,8 +55,12 @@ public class PlayerDraw : NetworkBehaviour
     private List<TileBase>[] updatedTilesTile;
     private bool tilemapUpdated;
 
+    private List<DrawCommand> storedCommands = new List<DrawCommand>();
+
     public override void OnStartClient()
     {
+        base.OnStartClient();
+
         foreach (var clientPair in NetworkManager.ServerManager.Clients)
         {
             if (clientPair.Value.IsLocalClient)
@@ -55,6 +69,10 @@ public class PlayerDraw : NetworkBehaviour
                 break;
             }
         }
+
+        // After joining, ask the server to send the stored draw commands.
+        // (This method will trigger a TargetRpc back to this client.)
+        RequestStoredCommandsServerRpc();
     }
 
     public void ChangeArtist(string artistId)
@@ -190,6 +208,15 @@ public class PlayerDraw : NetworkBehaviour
     [ServerRpc(RequireOwnership = true)]
     public void DrawLineServerRpc(Vector3Int startPoint, Vector3Int endPoint, float radius, int value, int layer)
     {
+        storedCommands.Add(new DrawCommand
+        {
+            startPoint = startPoint,
+            endPoint = endPoint,
+            radius = radius,
+            value = value,
+            layer = layer
+        });
+
         DrawLineObserversRpc(startPoint, endPoint, radius, value, layer);
     }
 
@@ -393,5 +420,25 @@ public class PlayerDraw : NetworkBehaviour
         }
 
         return linePositions;
+    }
+
+    // This TargetRpc will be used to send stored commands 
+    // to a given client (the one that just joined).
+    [TargetRpc]
+    private void TargetSendStoredCommands(NetworkConnection target, DrawCommand[] commands)
+    {
+        // Replay each stored line command on the target client.
+        foreach (var cmd in commands)
+        {
+            DrawLine(cmd.startPoint, cmd.endPoint, cmd.radius, cmd.value, cmd.layer);
+        }
+    }
+
+    // A ServerRpc for a client to request all stored commands.
+    // Note: With FishNet the sender can be automatically associated with the calling connection.
+    [ServerRpc(RequireOwnership = false)]
+    public void RequestStoredCommandsServerRpc(NetworkConnection sender = null)
+    {
+        TargetSendStoredCommands(sender, storedCommands.ToArray());
     }
 }
