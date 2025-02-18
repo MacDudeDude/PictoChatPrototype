@@ -73,7 +73,7 @@ public class SteamLobbyManager : MonoBehaviour
         var createLobbyResult = await SteamMatchmaking.CreateLobbyAsync();
         if (!createLobbyResult.HasValue)
         {
-            Debug.LogError("Failed to create lobby");
+            Debug.LogError("[SteamLobbyManager] Failed to create lobby");
             return;
         }
         createLobbyResult.Value.SetGameServer(SteamClient.SteamId);
@@ -83,7 +83,7 @@ public class SteamLobbyManager : MonoBehaviour
 
         string lobbyCode = "55";
         lobby.SetData("lobbyCode_deletethispartlater", lobbyCode);
-        Debug.Log("Lobby created: " + lobby.Id + " Lobbey Code: " + lobbyCode);
+        Debug.Log("[SteamLobbyManager] Lobby created: " + lobby.Id + " Lobbey Code: " + lobbyCode);
     }
 
     /// <summary>
@@ -93,16 +93,16 @@ public class SteamLobbyManager : MonoBehaviour
     /// <returns>A Task representing the asynchronous operation.</returns>
     public async Task JoinLobbyAsync(ulong lobbyId)
     {
-        Debug.Log("Attempting to join lobby with ID: " + lobbyId);
+        Debug.Log("[SteamLobbyManager] Attempting to join lobby with ID: " + lobbyId);
         var joinResult = await SteamMatchmaking.JoinLobbyAsync(lobbyId);
         if (joinResult.HasValue)
         {
             CurrentLobby = joinResult.Value;
-            Debug.Log("Successfully joined lobby with ID: " + CurrentLobby.Value.Id);
+            Debug.Log("[SteamLobbyManager] Successfully joined lobby with ID: " + CurrentLobby.Value.Id);
         }
         else
         {
-            Debug.LogError("Failed to join lobby with ID: " + lobbyId);
+            Debug.LogError("[SteamLobbyManager] Failed to join lobby with ID: " + lobbyId);
         }
     }
 
@@ -113,7 +113,7 @@ public class SteamLobbyManager : MonoBehaviour
     /// <returns>A Task representing the asynchronous operation.</returns>
     public async Task JoinLobbyWithCodeAsync(string lobbyCode)
     {
-        Debug.Log("Attempting to join lobby with Code: " + lobbyCode);
+        Debug.Log("[SteamLobbyManager] Attempting to join lobby with Code: " + lobbyCode);
 
         var lobbyQuery = SteamMatchmaking.LobbyList;
         lobbyQuery.WithMaxResults(1);
@@ -126,15 +126,16 @@ public class SteamLobbyManager : MonoBehaviour
             if (joinResult.HasValue)
             {
                 CurrentLobby = joinResult.Value;
-                Debug.Log("Successfully joined lobby with ID: " + CurrentLobby.Value.Id);
+                Debug.Log("[SteamLobbyManager] Successfully joined lobby with ID: " + CurrentLobby.Value.Id);
             }
             else
             {
-                Debug.LogError("Failed to join lobby with Code: " + lobbyCode);
+                Debug.LogError("[SteamLobbyManager] Failed to join lobby with Code: " + lobbyCode);
             }
-        }else
+        }
+        else
         {
-            Debug.LogError("Failed to find lobbey with Code: " + lobbyCode);
+            Debug.LogError("[SteamLobbyManager] Failed to find lobbey with Code: " + lobbyCode);
         }
     }
 
@@ -144,19 +145,19 @@ public class SteamLobbyManager : MonoBehaviour
     /// <returns>A Task that returns a list of found lobbies.</returns>
     public async Task<List<Lobby>> SearchLobbiesAsync()
     {
-        Debug.Log("Starting lobby search...");
+        Debug.Log("[SteamLobbyManager] Starting lobby search...");
         var lobbyQuery = SteamMatchmaking.LobbyList;
         lobbyQuery.WithMaxResults(5);
         lobbyQuery.WithSlotsAvailable(1);
         var lobbies = await lobbyQuery.RequestAsync();
         if (lobbies != null && lobbies.Length > 0)
         {
-            Debug.Log("Found " + lobbies.Length + " lobby/lobbies.");
+            Debug.Log("[SteamLobbyManager] Found " + lobbies.Length + " lobby/lobbies.");
             return new List<Lobby>(lobbies);
         }
         else
         {
-            Debug.Log("No lobbies found.");
+            Debug.Log("[SteamLobbyManager] No lobbies found.");
             return new List<Lobby>();
         }
     }
@@ -175,16 +176,16 @@ public class SteamLobbyManager : MonoBehaviour
         if (lobby.GetGameServer(ref ip, ref port, ref steamId))
         {
             _transport.SetClientAddress(steamId.ToString());
-            Debug.Log("Transport address set to: " + steamId.ToString());
+            Debug.Log("[SteamLobbyManager] Transport address set to: " + steamId.ToString());
         }
         else
         {
-            Debug.LogError("Failed to get game server data from lobby");
+            Debug.LogError("[SteamLobbyManager] Failed to get game server data from lobby");
             return;
         }
-        Debug.Log("Lobby entered: " + lobby.Id);
+        Debug.Log("[SteamLobbyManager] Lobby entered: " + lobby.Id);
         InstanceFinder.ClientManager.StartConnection();
-        Debug.Log("Client manager started");
+        Debug.Log("[SteamLobbyManager] Client manager started");
         UnityEngine.SceneManagement.SceneManager.LoadScene(gameSceneName);
     }
 
@@ -196,30 +197,42 @@ public class SteamLobbyManager : MonoBehaviour
     /// <param name="id">The Steam ID of the friend whose lobby is being joined.</param>
     private async void OnGameLobbyJoinRequested(Lobby lobby, SteamId id)
     {
-        Debug.Log("Attempting to join lobby with ID: " + lobby.Id);
+        Debug.Log("[SteamLobbyManager] Attempting to join lobby with ID: " + lobby.Id);
         var joinResult = await SteamMatchmaking.JoinLobbyAsync(lobby.Id);
         if (joinResult.HasValue)
         {
             CurrentLobby = joinResult.Value;
-            Debug.Log("Successfully joined lobby with ID: " + CurrentLobby.Value.Id);
+            Debug.Log("[SteamLobbyManager] Successfully joined lobby with ID: " + CurrentLobby.Value.Id);
         }
         else
         {
-            Debug.LogError("Failed to join lobby with ID: " + lobby.Id);
+            Debug.LogError("[SteamLobbyManager] Failed to join lobby with ID: " + lobby.Id);
         }
     }
 
+    /// <summary>
+    /// Gets the currently selected artist ID from the lobby metadata.
+    /// </summary>
+    /// <returns>The artist ID stored in the lobby data, or null if not set.</returns>
     public string getArtist()
     {
         var artist = CurrentLobby.Value.GetData("artist");
         return artist;
     }
 
+    /// <summary>
+    /// Updates the selected artist ID in the lobby metadata.
+    /// </summary>
+    /// <param name="artistId">The new artist ID to set for the lobby.</param>
     public void ChangeArtist(string artistId)
     {
         CurrentLobby.Value.SetData("artist", artistId);
     }
 
+    /// <summary>
+    /// Gets a list of all Steam friends currently in the lobby.
+    /// </summary>
+    /// <returns>A List of Friend objects representing the lobby members.</returns>
     public List<Friend> getMembers()
     {
         List<Friend> members = new List<Friend>();
@@ -231,13 +244,17 @@ public class SteamLobbyManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Handles client connection/disconnection events
+    /// Handles client connection/disconnection events.
+    /// Logs when clients disconnect from the game server.
+    /// Player management is handled separately by the SteamPlayerManager.
     /// </summary>
+    /// <param name="connection">The network connection that changed state.</param>
+    /// <param name="args">Contains information about the connection state change.</param>
     private void HandleConnectionState(NetworkConnection connection, RemoteConnectionStateArgs args)
     {
         if (args.ConnectionState != RemoteConnectionState.Started)
         {
-            Debug.Log($"Client disconnected. Connection ID: {connection.ClientId}");
+            Debug.Log($"[SteamLobbyManager] Client disconnected. Connection ID: {connection.ClientId}");
             // Note: Player management (removal, etc.) is handled by SteamPlayerManager.
         }
     }
