@@ -1,13 +1,24 @@
-
 using UnityEngine;
 using TMPro;
+using FishNet;
+using FishNet.Managing;
+using UnityEngine.UI;
+
 public class PlayerMenu : MonoBehaviour
 {
     [SerializeField] private GameObject playerMenu;
     [SerializeField] private TextMeshProUGUI[] playerTexts;
+    [SerializeField] private Button[] playerButtons;
+    [SerializeField] private PlayerDraw playerDraw;
 
     void Start()
     {
+        // Get buttons from the text components
+        playerButtons = new Button[playerTexts.Length];
+        for (int i = 0; i < playerTexts.Length; i++)
+        {
+            playerButtons[i] = playerTexts[i].GetComponent<Button>();
+        }
         updatePlayerMenu();
     }
 
@@ -27,9 +38,13 @@ public class PlayerMenu : MonoBehaviour
         var artistId = SteamLobbyManager.Instance.getArtist();
 
         // Hide all text fields initially
-        foreach (var text in playerTexts)
+        for (int i = 0; i < playerTexts.Length; i++)
         {
-            text.gameObject.SetActive(false);
+            playerTexts[i].gameObject.SetActive(false);
+            if (playerButtons[i] != null)
+            {
+                playerButtons[i].onClick.RemoveAllListeners();
+            }
         }
 
         // Update active players
@@ -47,6 +62,20 @@ public class PlayerMenu : MonoBehaviour
                 playerTexts[i].text = member.Name;
             }
             playerTexts[i].gameObject.SetActive(true);
+
+            // Add click listener
+            if (playerButtons[i] != null)
+            {
+                var memberId = member.Id.ToString();
+                playerButtons[i].onClick.AddListener(() =>
+                {
+                    playerDraw.ChangeArtist(memberId);
+                });
+            }
+        }
+        foreach (var client in InstanceFinder.ServerManager.Clients)
+        {
+            Debug.Log($"Client ID:{client.Key} - {client.Value}");
         }
     }
 }

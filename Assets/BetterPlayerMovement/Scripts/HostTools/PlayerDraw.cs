@@ -57,6 +57,15 @@ public class PlayerDraw : NetworkBehaviour
             }
         }
     }
+    public void ChangeArtist(string artistId)
+    {
+        NetworkConnection client = SteamLobbyManager.Instance.GetNetworkConnection(ulong.Parse(artistId));
+        if (IsOwner)
+        {
+            NetworkObject.GiveOwnership(client);
+            SteamLobbyManager.Instance.ChangeArtist(artistId);
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
