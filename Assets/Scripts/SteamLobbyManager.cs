@@ -80,7 +80,10 @@ public class SteamLobbyManager : MonoBehaviour
         InstanceFinder.ServerManager.StartConnection();
         var lobby = createLobbyResult.Value;
         lobby.SetData("artist", SteamClient.SteamId.ToString());
-        Debug.Log("Lobby created: " + lobby.Id);
+
+        string lobbyCode = "55";
+        lobby.SetData("lobbyCode_deletethispartlater", lobbyCode);
+        Debug.Log("Lobby created: " + lobby.Id + " Lobbey Code: " + lobbyCode);
     }
 
     /// <summary>
@@ -100,6 +103,38 @@ public class SteamLobbyManager : MonoBehaviour
         else
         {
             Debug.LogError("Failed to join lobby with ID: " + lobbyId);
+        }
+    }
+
+    /// <summary>
+    /// Joins a lobby using the specified Steam lobby Code.
+    /// </summary>
+    /// <param name="lobbyId">The Steam lobby ID to join.</param>
+    /// <returns>A Task representing the asynchronous operation.</returns>
+    public async Task JoinLobbyWithCodeAsync(string lobbyCode)
+    {
+        Debug.Log("Attempting to join lobby with Code: " + lobbyCode);
+
+        var lobbyQuery = SteamMatchmaking.LobbyList;
+        lobbyQuery.WithMaxResults(1);
+        lobbyQuery.WithSlotsAvailable(1);
+        lobbyQuery.WithKeyValue("lobbyCode_deletethispartlater", lobbyCode);
+        var lobbies = await lobbyQuery.RequestAsync();
+        if (lobbies != null && lobbies.Length > 0)
+        {
+            var joinResult = await SteamMatchmaking.JoinLobbyAsync(lobbies[0].Id);
+            if (joinResult.HasValue)
+            {
+                CurrentLobby = joinResult.Value;
+                Debug.Log("Successfully joined lobby with ID: " + CurrentLobby.Value.Id);
+            }
+            else
+            {
+                Debug.LogError("Failed to join lobby with Code: " + lobbyCode);
+            }
+        }else
+        {
+            Debug.LogError("Failed to find lobbey with Code: " + lobbyCode);
         }
     }
 

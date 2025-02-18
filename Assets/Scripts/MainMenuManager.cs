@@ -88,7 +88,8 @@ public class MainMenuManager : MonoBehaviour
 
     private async void JoinLobby()
     {
-        await _steamLobbyManager.JoinLobbyAsync(ulong.Parse(joinLobbyField.text));
+        //await _steamLobbyManager.JoinLobbyAsync(ulong.Parse(joinLobbyField.text));
+        await _steamLobbyManager.JoinLobbyWithCodeAsync(joinLobbyField.text);
     }
 
 
