@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using FishNet;
 using FishNet.Transporting;
 using FishNet.Connection;
+using FishNet.Object.Synchronizing;
 
 /// <summary>
 /// Manages Steam lobby functionality including creation, joining, and searching for lobbies.
@@ -26,20 +27,20 @@ public class SteamLobbyManager : MonoBehaviour
     /// </summary>
     public Lobby? CurrentLobby { get; private set; }
 
-
     private FishyFacepunch.FishyFacepunch _transport;
     [SerializeField] private string gameSceneName = "Game";
 
     /// <summary>
-    /// Maps Steam IDs to NetworkConnections and vice versa
+    /// SyncDictionaries mapping Steam IDs to connection ClientIds and vice versa.
+    /// These use the FishNet SyncDictionary for automatic synchronization.
     /// </summary>
-    private Dictionary<ulong, NetworkConnection> _steamToNetworkConnection = new Dictionary<ulong, NetworkConnection>();
-    private Dictionary<NetworkConnection, ulong> _networkConnectionToSteam = new Dictionary<NetworkConnection, ulong>();
+    private readonly SyncDictionary<ulong, int> _steamToConnectionSync = new SyncDictionary<ulong, int>();
+    private readonly SyncDictionary<int, ulong> _connectionToSteamSync = new SyncDictionary<int, ulong>();
 
     /// <summary>
-    /// Gets all currently connected Steam IDs
+    /// Gets all currently connected Steam IDs.
     /// </summary>
-    public IEnumerable<ulong> ConnectedSteamIds => _steamToNetworkConnection.Keys;
+    public IEnumerable<ulong> ConnectedSteamIds => _steamToConnectionSync.Keys;
 
     /// <summary>
     /// Initializes the singleton instance and sets up Steam callbacks.
@@ -227,7 +228,7 @@ public class SteamLobbyManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Registers a new connection with its Steam ID
+    /// Registers a new connection with its Steam ID using the connection's ClientId.
     /// </summary>
     public void RegisterConnection(NetworkConnection connection, ulong steamId)
     {
@@ -237,60 +238,70 @@ public class SteamLobbyManager : MonoBehaviour
             return;
         }
 
-        _steamToNetworkConnection[steamId] = connection;
-        _networkConnectionToSteam[connection] = steamId;
-        Debug.Log($"Registered new connection - Steam ID: {steamId}, Connection ID: {connection.ClientId}");
+        int clientId = connection.ClientId;
+        _steamToConnectionSync[steamId] = clientId;
+        _connectionToSteamSync[clientId] = steamId;
+        Debug.Log($"Registered new connection - Steam ID: {steamId}, Connection ID: {clientId}");
     }
 
     /// <summary>
-    /// Removes a connection when client disconnects
+    /// Removes a connection when a client disconnects.
     /// </summary>
     public void RemoveConnection(NetworkConnection connection)
     {
-        if (_networkConnectionToSteam.TryGetValue(connection, out ulong steamId))
+        int clientId = connection.ClientId;
+        if (_connectionToSteamSync.TryGetValue(clientId, out ulong steamId))
         {
-            _steamToNetworkConnection.Remove(steamId);
-            _networkConnectionToSteam.Remove(connection);
-            Debug.Log($"Removed connection - Steam ID: {steamId}, Connection ID: {connection.ClientId}");
+            _steamToConnectionSync.Remove(steamId);
+            _connectionToSteamSync.Remove(clientId);
+            Debug.Log($"Removed connection - Steam ID: {steamId}, Connection ID: {clientId}");
         }
         else
         {
-            Debug.LogWarning($"Attempted to remove connection {connection.ClientId} but no Steam ID mapping found");
+            Debug.LogWarning($"Attempted to remove connection {clientId} but no Steam ID mapping found");
         }
     }
 
     /// <summary>
-    /// Gets NetworkConnection by Steam ID
+    /// Gets the NetworkConnection by Steam ID using the server's client dictionary.
     /// </summary>
     public NetworkConnection GetNetworkConnection(ulong steamId)
     {
-        _steamToNetworkConnection.TryGetValue(steamId, out NetworkConnection connection);
-        if (connection == null)
+        if (_steamToConnectionSync.TryGetValue(steamId, out int clientId))
         {
-            Debug.LogWarning($"No NetworkConnection found for Steam ID: {steamId}");
+            if (InstanceFinder.ServerManager.Clients.TryGetValue(clientId, out NetworkConnection connection))
+            {
+                Debug.Log($"Found NetworkConnection {connection.ClientId} for Steam ID: {steamId}");
+                return connection;
+            }
+            else
+            {
+                Debug.LogWarning($"No NetworkConnection found for Client ID: {clientId} associated with Steam ID: {steamId}");
+            }
         }
         else
         {
-            Debug.Log($"Found NetworkConnection {connection.ClientId} for Steam ID: {steamId}");
+            Debug.LogWarning($"No mapping found for Steam ID: {steamId}");
         }
-        return connection;
+        return null;
     }
 
     /// <summary>
-    /// Gets Steam ID by NetworkConnection
+    /// Gets the Steam ID by a given NetworkConnection.
     /// </summary>
     public ulong GetSteamId(NetworkConnection connection)
     {
-        _networkConnectionToSteam.TryGetValue(connection, out ulong steamId);
-        if (steamId == 0)
+        int clientId = connection.ClientId;
+        if (_connectionToSteamSync.TryGetValue(clientId, out ulong steamId))
         {
-            Debug.LogWarning($"No Steam ID found for connection: {connection.ClientId}");
+            Debug.Log($"Found Steam ID {steamId} for Connection ID: {clientId}");
+            return steamId;
         }
         else
         {
-            Debug.Log($"Found Steam ID {steamId} for connection: {connection.ClientId}");
+            Debug.LogWarning($"No Steam ID found for connection: {clientId}");
+            return 0;
         }
-        return steamId;
     }
 
     /// <summary>
