@@ -1044,7 +1044,6 @@ MonoBehaviour:
   joinLobbyField: {fileID: 896521726}
   lobbyListContent: {fileID: 154103714}
   lobbyEntryPrefab: {fileID: 4464540164729181461, guid: b166b2b472e272c4096ec59104ff82b7, type: 3}
-  gameSceneName: LobbyTest
   _steamLobbyManager: {fileID: 1192145375}
 --- !u!4 &947462437
 Transform:
@@ -1227,7 +1226,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SteamPlayerManager: {fileID: -1968948866105213758, guid: bc0c86c2d2e8a104e89fc33ffde096e5, type: 3}
   maxPlayers: 4
-  gameSceneName: LobbyTest
+  gameSceneName: MainLobby
 --- !u!4 &1192145376
 Transform:
   m_ObjectHideFlags: 0
