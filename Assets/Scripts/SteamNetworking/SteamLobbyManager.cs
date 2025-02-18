@@ -70,7 +70,7 @@ public class SteamLobbyManager : MonoBehaviour
     /// <returns>A Task representing the asynchronous operation.</returns>
     public async Task CreateLobbyAsync()
     {
-        var createLobbyResult = await SteamMatchmaking.CreateLobbyAsync();
+        var createLobbyResult = await SteamMatchmaking.CreateLobbyAsync(maxPlayers);
         if (!createLobbyResult.HasValue)
         {
             Debug.LogError("[SteamLobbyManager] Failed to create lobby");

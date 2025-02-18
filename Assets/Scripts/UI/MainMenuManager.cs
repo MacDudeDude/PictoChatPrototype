@@ -18,7 +18,6 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private TMP_InputField joinLobbyField;
     [SerializeField] private Transform lobbyListContent;
     [SerializeField] private GameObject lobbyEntryPrefab;
-    [SerializeField] private string gameSceneName = "Game";
     [SerializeField] private SteamLobbyManager _steamLobbyManager;
 
     private List<Lobby> _currentLobbies = new List<Lobby>();
