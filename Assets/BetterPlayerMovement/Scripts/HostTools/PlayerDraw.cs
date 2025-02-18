@@ -69,10 +69,7 @@ public class PlayerDraw : NetworkBehaviour
 
         ChangeArtistObserversRpc(artistId);
         NetworkConnection client = SteamPlayerManager.Instance.GetNetworkConnection(ulong.Parse(artistId));
-        if (IsOwner)
-        {
-            NetworkObject.GiveOwnership(client);
-        }
+        NetworkObject.GiveOwnership(client);
     }
 
     [ObserversRpc(RunLocally = true)]
