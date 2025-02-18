@@ -4,6 +4,8 @@ using TMPro;
 public class PlayerMenu : MonoBehaviour
 {
     [SerializeField] private GameObject playerMenu;
+    [SerializeField] private TextMeshProUGUI[] playerTexts;
+
     void Start()
     {
         updatePlayerMenu();
@@ -17,31 +19,34 @@ public class PlayerMenu : MonoBehaviour
             playerMenu.SetActive(!playerMenu.activeSelf);
             updatePlayerMenu();
         }
-
     }
 
     public void updatePlayerMenu()
     {
         var members = SteamLobbyManager.Instance.getMembers();
         var artistId = SteamLobbyManager.Instance.getArtist();
-        foreach (var member in members)
+
+        // Hide all text fields initially
+        foreach (var text in playerTexts)
         {
+            text.gameObject.SetActive(false);
+        }
+
+        // Update active players
+        for (int i = 0; i < members.Count && i < playerTexts.Length; i++)
+        {
+            var member = members[i];
             Debug.Log($"Member {member.Name}");
-            // Assuming the text objects are named "Text1", "Text2", etc.
-            int memberIndex = members.IndexOf(member);
-            GameObject textObject = GameObject.Find($"Player{memberIndex + 1}");
-            if (textObject != null)
+
+            if (member.Id.ToString() == artistId)
             {
-                if (member.Id.ToString() == artistId)
-                {
-                    textObject.GetComponent<TextMeshProUGUI>().text = member.Name + " (Artist)";
-                }
-                else
-                {
-                    textObject.GetComponent<TextMeshProUGUI>().text = member.Name;
-                }
-                textObject.SetActive(true);
+                playerTexts[i].text = member.Name + " (Artist)";
             }
+            else
+            {
+                playerTexts[i].text = member.Name;
+            }
+            playerTexts[i].gameObject.SetActive(true);
         }
     }
 }
