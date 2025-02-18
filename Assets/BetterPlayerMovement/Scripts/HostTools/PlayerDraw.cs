@@ -528,7 +528,7 @@ public class PlayerDraw : NetworkBehaviour
     /// Target RPC to send stored drawing commands to a specific client
     /// </summary>
     [TargetRpc]
-    private void TargetSendStoredCommands(NetworkConnection target, int[,] pixels, Color32[] colors)
+    private void TargetSendStoredCommands(NetworkConnection target, Color32[] colors)
     {
         var unflattendedColors = ArrayFlattener.Unflatten(colors, width, height);
         for (int x = 0; x < width; x++)
@@ -537,7 +537,11 @@ public class PlayerDraw : NetworkBehaviour
             {
                 Vector3 worldPos = grid.CellToWorld(new Vector3Int(x, y));
                 Vector3Int currentTileMapPos = tilemapGrid.WorldToCell(worldPos);
-                QueTile(currentTileMapPos.x, currentTileMapPos.y, new Vector3Int(x, y), tileValues[pixels[x, y]], pixels[x, y], collisionLayer, unflattendedColors[x, y]);
+
+                if(unflattendedColors[x, y].a != 0)
+                {
+                    QueTile(currentTileMapPos.x, currentTileMapPos.y, new Vector3Int(x, y), tileValues[1], 1, collisionLayer, unflattendedColors[x, y]);
+                }
             }
         }
     }
@@ -548,6 +552,6 @@ public class PlayerDraw : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void RequestStoredCommandsServerRpc(NetworkConnection sender = null)
     {
-        TargetSendStoredCommands(sender, pixelgrid[collisionLayer], textureColors[collisionLayer]);
+        TargetSendStoredCommands(sender, textureColors[collisionLayer]);
     }
 }
