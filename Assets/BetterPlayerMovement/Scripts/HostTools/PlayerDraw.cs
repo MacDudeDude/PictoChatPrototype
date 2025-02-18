@@ -63,7 +63,7 @@ public class PlayerDraw : NetworkBehaviour
         ChangeArtistServerRpc(artistId);
     }
 
-    [ServerRpc(RequireOwnership = true)]
+    [ServerRpc]
     private void ChangeArtistServerRpc(string artistId)
     {
 
