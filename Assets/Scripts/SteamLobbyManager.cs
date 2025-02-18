@@ -6,11 +6,11 @@ using System.Collections.Generic;
 using FishNet;
 using FishNet.Transporting;
 using FishNet.Connection;
-using FishNet.Object.Synchronizing;
+using FishNet.Object;
 
 /// <summary>
 /// Manages Steam lobby functionality including creation, joining, and searching for lobbies.
-/// Integrates with FishNet networking to handle multiplayer connections.
+/// This object is not a network object so that lobby management remains independent of FishNet's network synchronization.
 /// </summary>
 public class SteamLobbyManager : MonoBehaviour
 {
@@ -18,6 +18,9 @@ public class SteamLobbyManager : MonoBehaviour
     /// Singleton instance of the SteamLobbyManager.
     /// </summary>
     public static SteamLobbyManager Instance { get; private set; }
+
+    [SerializeField]
+    private NetworkObject SteamPlayerManager;
 
     [SerializeField]
     private int maxPlayers = 4;
@@ -31,18 +34,6 @@ public class SteamLobbyManager : MonoBehaviour
     [SerializeField] private string gameSceneName = "Game";
 
     /// <summary>
-    /// SyncDictionaries mapping Steam IDs to connection ClientIds and vice versa.
-    /// These use the FishNet SyncDictionary for automatic synchronization.
-    /// </summary>
-    private readonly SyncDictionary<ulong, int> _steamToConnectionSync = new SyncDictionary<ulong, int>();
-    private readonly SyncDictionary<int, ulong> _connectionToSteamSync = new SyncDictionary<int, ulong>();
-
-    /// <summary>
-    /// Gets all currently connected Steam IDs.
-    /// </summary>
-    public IEnumerable<ulong> ConnectedSteamIds => _steamToConnectionSync.Keys;
-
-    /// <summary>
     /// Initializes the singleton instance and sets up Steam callbacks.
     /// </summary>
     private void Awake()
@@ -53,17 +44,16 @@ public class SteamLobbyManager : MonoBehaviour
             return;
         }
         Instance = this;
+        GameObject managerInstance = Instantiate(SteamPlayerManager.gameObject);
+        InstanceFinder.ServerManager.Spawn(managerInstance);
 
-        //Get transport reference
+
         _transport = FindObjectOfType<FishyFacepunch.FishyFacepunch>();
         // Setup Steam callbacks
         SteamMatchmaking.OnLobbyEntered += OnLobbyEntered;
         SteamFriends.OnGameLobbyJoinRequested += OnGameLobbyJoinRequested;
-
-        // Subscribe to FishNet connection events
+        // Subscribe to FishNet connection events (player management is now handled separately)
         InstanceFinder.ServerManager.OnRemoteConnectionState += HandleConnectionState;
-
-        DontDestroyOnLoad(gameObject);
     }
 
     /// <summary>
@@ -87,10 +77,7 @@ public class SteamLobbyManager : MonoBehaviour
             return;
         }
         createLobbyResult.Value.SetGameServer(SteamClient.SteamId);
-
-        // Start server
         InstanceFinder.ServerManager.StartConnection();
-
         var lobby = createLobbyResult.Value;
         lobby.SetData("artist", SteamClient.SteamId.ToString());
         Debug.Log("Lobby created: " + lobby.Id);
@@ -104,7 +91,6 @@ public class SteamLobbyManager : MonoBehaviour
     public async Task JoinLobbyAsync(ulong lobbyId)
     {
         Debug.Log("Attempting to join lobby with ID: " + lobbyId);
-
         var joinResult = await SteamMatchmaking.JoinLobbyAsync(lobbyId);
         if (joinResult.HasValue)
         {
@@ -125,10 +111,8 @@ public class SteamLobbyManager : MonoBehaviour
     {
         Debug.Log("Starting lobby search...");
         var lobbyQuery = SteamMatchmaking.LobbyList;
-
         lobbyQuery.WithMaxResults(5);
         lobbyQuery.WithSlotsAvailable(1);
-
         var lobbies = await lobbyQuery.RequestAsync();
         if (lobbies != null && lobbies.Length > 0)
         {
@@ -166,9 +150,6 @@ public class SteamLobbyManager : MonoBehaviour
         Debug.Log("Lobby entered: " + lobby.Id);
         InstanceFinder.ClientManager.StartConnection();
         Debug.Log("Client manager started");
-
-
-        // Change scene
         UnityEngine.SceneManagement.SceneManager.LoadScene(gameSceneName);
     }
 
@@ -181,7 +162,6 @@ public class SteamLobbyManager : MonoBehaviour
     private async void OnGameLobbyJoinRequested(Lobby lobby, SteamId id)
     {
         Debug.Log("Attempting to join lobby with ID: " + lobby.Id);
-
         var joinResult = await SteamMatchmaking.JoinLobbyAsync(lobby.Id);
         if (joinResult.HasValue)
         {
@@ -222,85 +202,8 @@ public class SteamLobbyManager : MonoBehaviour
     {
         if (args.ConnectionState != RemoteConnectionState.Started)
         {
-            Debug.Log($"Client disconnected. Removing connection {connection.ClientId}");
-            RemoveConnection(connection);
-        }
-    }
-
-    /// <summary>
-    /// Registers a new connection with its Steam ID using the connection's ClientId.
-    /// </summary>
-    public void RegisterConnection(NetworkConnection connection, ulong steamId)
-    {
-        if (!InstanceFinder.IsServerStarted)
-        {
-            Debug.LogWarning("Attempted to register connection but server is not started");
-            return;
-        }
-
-        int clientId = connection.ClientId;
-        _steamToConnectionSync[steamId] = clientId;
-        _connectionToSteamSync[clientId] = steamId;
-        Debug.Log($"Registered new connection - Steam ID: {steamId}, Connection ID: {clientId}");
-    }
-
-    /// <summary>
-    /// Removes a connection when a client disconnects.
-    /// </summary>
-    public void RemoveConnection(NetworkConnection connection)
-    {
-        int clientId = connection.ClientId;
-        if (_connectionToSteamSync.TryGetValue(clientId, out ulong steamId))
-        {
-            _steamToConnectionSync.Remove(steamId);
-            _connectionToSteamSync.Remove(clientId);
-            Debug.Log($"Removed connection - Steam ID: {steamId}, Connection ID: {clientId}");
-        }
-        else
-        {
-            Debug.LogWarning($"Attempted to remove connection {clientId} but no Steam ID mapping found");
-        }
-    }
-
-    /// <summary>
-    /// Gets the NetworkConnection by Steam ID using the server's client dictionary.
-    /// </summary>
-    public NetworkConnection GetNetworkConnection(ulong steamId)
-    {
-        if (_steamToConnectionSync.TryGetValue(steamId, out int clientId))
-        {
-            if (InstanceFinder.ServerManager.Clients.TryGetValue(clientId, out NetworkConnection connection))
-            {
-                Debug.Log($"Found NetworkConnection {connection.ClientId} for Steam ID: {steamId}");
-                return connection;
-            }
-            else
-            {
-                Debug.LogWarning($"No NetworkConnection found for Client ID: {clientId} associated with Steam ID: {steamId}");
-            }
-        }
-        else
-        {
-            Debug.LogWarning($"No mapping found for Steam ID: {steamId}");
-        }
-        return null;
-    }
-
-    /// <summary>
-    /// Gets the Steam ID by a given NetworkConnection.
-    /// </summary>
-    public ulong GetSteamId(NetworkConnection connection)
-    {
-        int clientId = connection.ClientId;
-        if (_connectionToSteamSync.TryGetValue(clientId, out ulong steamId))
-        {
-            Debug.Log($"Found Steam ID {steamId} for Connection ID: {clientId}");
-            return steamId;
-        }
-        else
-        {
-            Debug.LogWarning($"No Steam ID found for connection: {clientId}");
-            return 0;
+            Debug.Log($"Client disconnected. Connection ID: {connection.ClientId}");
+            // Note: Player management (removal, etc.) is handled by SteamPlayerManager.
         }
     }
 
