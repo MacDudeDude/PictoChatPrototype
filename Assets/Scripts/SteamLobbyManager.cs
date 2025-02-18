@@ -73,11 +73,12 @@ public class SteamLobbyManager : MonoBehaviour
             Debug.LogError("Failed to create lobby");
             return;
         }
+        createLobbyResult.Value.SetGameServer(SteamClient.SteamId);
         // Start server
         _networkManager.ServerManager.StartConnection();
 
         var lobby = createLobbyResult.Value;
-        Debug.Log("Lobby owner: " + lobby.Owner);
+        Debug.Log("Lobby data: " + lobby.GetData(""));
     }
 
     /// <summary>
@@ -93,7 +94,6 @@ public class SteamLobbyManager : MonoBehaviour
         if (joinResult.HasValue)
         {
             CurrentLobby = joinResult.Value;
-            _transport.SetClientAddress(CurrentLobby.Value.Id.ToString());
             Debug.Log("Successfully joined lobby with ID: " + CurrentLobby.Value.Id);
         }
         else
@@ -135,9 +135,20 @@ public class SteamLobbyManager : MonoBehaviour
     private void OnLobbyEntered(Lobby lobby)
     {
         CurrentLobby = lobby;
-        _transport.SetClientAddress(lobby.Owner.Id.ToString());
+        uint ip = 0;
+        ushort port = 0;
+        SteamId steamId = default;
+        if (lobby.GetGameServer(ref ip, ref port, ref steamId))
+        {
+            _transport.SetClientAddress(steamId.ToString());
+            Debug.Log("Transport address set to: " + steamId.ToString());
+        }
+        else
+        {
+            Debug.LogError("Failed to get game server data from lobby");
+            return;
+        }
         Debug.Log("Lobby entered: " + lobby.Id);
-        Debug.Log("Transport address set to: " + _transport.GetClientAddress());
         _networkManager.ClientManager.StartConnection();
         Debug.Log("Client manager started");
 
@@ -147,18 +158,24 @@ public class SteamLobbyManager : MonoBehaviour
 
     /// <summary>
     /// Callback triggered when a game lobby join is requested (e.g., through Steam overlay).
-    /// Sets up the client connection and loads the game scene.
+    /// Attempts to join the requested lobby.
     /// </summary>
     /// <param name="lobby">The lobby to join.</param>
-    /// <param name="id">The Steam ID of the player requesting to join.</param>
-    private void OnGameLobbyJoinRequested(Lobby lobby, SteamId id)
+    /// <param name="id">The Steam ID of the friend whose lobby is being joined.</param>
+    private async void OnGameLobbyJoinRequested(Lobby lobby, SteamId id)
     {
-        CurrentLobby = lobby;
-        _transport.SetClientAddress(lobby.Id.ToString());
-        _networkManager.ClientManager.StartConnection();
+        Debug.Log("Attempting to join lobby with ID: " + lobby.Id);
 
-        // Change scene
-        UnityEngine.SceneManagement.SceneManager.LoadScene(gameSceneName);
+        var joinResult = await SteamMatchmaking.JoinLobbyAsync(lobby.Id);
+        if (joinResult.HasValue)
+        {
+            CurrentLobby = joinResult.Value;
+            Debug.Log("Successfully joined lobby with ID: " + CurrentLobby.Value.Id);
+        }
+        else
+        {
+            Debug.LogError("Failed to join lobby with ID: " + lobby.Id);
+        }
     }
 
     /// <summary>
