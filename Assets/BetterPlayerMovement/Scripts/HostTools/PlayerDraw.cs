@@ -10,24 +10,24 @@ using System.Linq;
 /// <summary>
 /// Represents a drawing command with position, size and layer information
 /// </summary>
-[System.Serializable]
-public struct DrawCommand
-{
-    /// <summary>Starting grid position of the draw command</summary>
-    public Vector3Int startPoint;
+//[System.Serializable]
+//public struct DrawCommand
+//{
+//    /// <summary>Starting grid position of the draw command</summary>
+//    public Vector3Int startPoint;
 
-    /// <summary>Ending grid position of the draw command</summary> 
-    public Vector3Int endPoint;
+//    /// <summary>Ending grid position of the draw command</summary> 
+//    public Vector3Int endPoint;
 
-    /// <summary>Radius of the drawing brush</summary>
-    public float radius;
+//    /// <summary>Radius of the drawing brush</summary>
+//    public float radius;
 
-    /// <summary>Value representing the tile/color to draw</summary>
-    public int value;
+//    /// <summary>Value representing the tile/color to draw</summary>
+//    public int value;
 
-    /// <summary>Layer to draw on</summary>
-    public int layer;
-}
+//    /// <summary>Layer to draw on</summary>
+//    public int layer;
+//}
 
 /// <summary>
 /// Handles networked drawing functionality for players in a multiplayer game.
@@ -100,7 +100,7 @@ public class PlayerDraw : NetworkBehaviour
     private bool tilemapUpdated;
 
     /// <summary>List of all drawing commands for replay to new clients</summary>
-    private List<DrawCommand> storedCommands = new List<DrawCommand>();
+    //private List<DrawCommand> storedCommands = new List<DrawCommand>();
 
     /// <summary>
     /// Called when client starts. Sets up ownership and requests stored commands.
@@ -273,14 +273,14 @@ public class PlayerDraw : NetworkBehaviour
     [ServerRpc(RequireOwnership = true)]
     public void DrawLineServerRpc(Vector3Int startPoint, Vector3Int endPoint, float radius, int value, int layer, Color32 color)
     {
-        storedCommands.Add(new DrawCommand
-        {
-            startPoint = startPoint,
-            endPoint = endPoint,
-            radius = radius,
-            value = value,
-            layer = layer
-        });
+        //storedCommands.Add(new DrawCommand
+        //{
+        //    startPoint = startPoint,
+        //    endPoint = endPoint,
+        //    radius = radius,
+        //    value = value,
+        //    layer = layer
+        //});
 
         DrawLineObserversRpc(startPoint, endPoint, radius, value, layer, color);
     }
@@ -528,12 +528,17 @@ public class PlayerDraw : NetworkBehaviour
     /// Target RPC to send stored drawing commands to a specific client
     /// </summary>
     [TargetRpc]
-    private void TargetSendStoredCommands(NetworkConnection target, DrawCommand[] commands)
+    private void TargetSendStoredCommands(NetworkConnection target, int[,] pixels, Color32[] colors)
     {
-        // Replay each stored line command on the target client.
-        foreach (var cmd in commands)
+        var unflattendedColors = ArrayFlattener.Unflatten(colors, width, height);
+        for (int x = 0; x < width; x++)
         {
-            DrawLine(cmd.startPoint, cmd.endPoint, cmd.radius, cmd.value, cmd.layer, Color.black);
+            for (int y = 0; y < height; y++)
+            {
+                Vector3 worldPos = grid.CellToWorld(new Vector3Int(x, y));
+                Vector3Int currentTileMapPos = tilemapGrid.WorldToCell(worldPos);
+                QueTile(currentTileMapPos.x, currentTileMapPos.y, new Vector3Int(x, y), tileValues[pixels[x, y]], pixels[x, y], collisionLayer, unflattendedColors[x, y]);
+            }
         }
     }
 
@@ -543,6 +548,6 @@ public class PlayerDraw : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void RequestStoredCommandsServerRpc(NetworkConnection sender = null)
     {
-        TargetSendStoredCommands(sender, storedCommands.ToArray());
+        TargetSendStoredCommands(sender, pixelgrid[collisionLayer], textureColors[collisionLayer]);
     }
 }
