@@ -136,7 +136,10 @@ public class SteamLobbyManager : MonoBehaviour
     {
         CurrentLobby = lobby;
         _transport.SetClientAddress(lobby.Id.ToString());
+        Debug.Log("Lobby entered: " + lobby.Id);
+        Debug.Log("Transport address set to: " + _transport.GetClientAddress());
         _networkManager.ClientManager.StartConnection();
+        Debug.Log("Client manager started");
 
         // Change scene
         UnityEngine.SceneManagement.SceneManager.LoadScene(gameSceneName);
