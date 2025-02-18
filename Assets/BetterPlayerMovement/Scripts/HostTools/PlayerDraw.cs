@@ -60,18 +60,24 @@ public class PlayerDraw : NetworkBehaviour
 
     public void ChangeArtist(string artistId)
     {
-        SteamLobbyManager.Instance.ChangeArtist(artistId);
         ChangeArtistServerRpc(artistId);
-    }
-
-    [ServerRpc(RequireOwnership = true)]
-    private void ChangeArtistServerRpc(string artistId)
-    {
         NetworkConnection client = SteamLobbyManager.Instance.GetNetworkConnection(ulong.Parse(artistId));
         if (IsOwner)
         {
             NetworkObject.GiveOwnership(client);
         }
+    }
+
+    [ServerRpc(RequireOwnership = true)]
+    private void ChangeArtistServerRpc(string artistId)
+    {
+        ChangeArtistObserversRpc(artistId);
+    }
+
+    [ObserversRpc]
+    private void ChangeArtistObserversRpc(string artistId)
+    {
+        SteamLobbyManager.Instance.ChangeArtist(artistId);
     }
 
     // Start is called before the first frame update
