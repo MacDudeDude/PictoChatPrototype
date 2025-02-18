@@ -47,7 +47,6 @@ public class PlayerDraw : NetworkBehaviour
 
     public override void OnStartClient()
     {
-        // Loop over clients and assign ownership to the first non-host client.
         foreach (var clientPair in NetworkManager.ServerManager.Clients)
         {
             if (clientPair.Value.IsLocalClient)
@@ -57,6 +56,27 @@ public class PlayerDraw : NetworkBehaviour
             }
         }
     }
+
+    public void ChangeArtist(string artistId)
+    {
+        ChangeArtistServerRpc(artistId);
+    }
+
+    [ServerRpc]
+    private void ChangeArtistServerRpc(string artistId)
+    {
+
+        ChangeArtistObserversRpc(artistId);
+        NetworkConnection client = SteamPlayerManager.Instance.GetNetworkConnection(ulong.Parse(artistId));
+        NetworkObject.GiveOwnership(client);
+    }
+
+    [ObserversRpc(RunLocally = true)]
+    private void ChangeArtistObserversRpc(string artistId)
+    {
+        SteamLobbyManager.Instance.ChangeArtist(artistId);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -132,7 +152,8 @@ public class PlayerDraw : NetworkBehaviour
         TileBase[] tiles = new TileBase[width + 2];
 
         //Bottom outline
-        for (int x = 0; x < width + 2; x++) {
+        for (int x = 0; x < width + 2; x++)
+        {
             positions[x] = new Vector3Int(x - 1, -1, 0);
             tiles[x] = tileValues[1];
         }
@@ -166,7 +187,12 @@ public class PlayerDraw : NetworkBehaviour
         playareaOutline.SetTiles(positions, tiles);
     }
 
-    
+    [ServerRpc(RequireOwnership = true)]
+    public void DrawLineServerRpc(Vector3Int startPoint, Vector3Int endPoint, float radius, int value, int layer)
+    {
+        DrawLineObserversRpc(startPoint, endPoint, radius, value, layer);
+    }
+
     [ObserversRpc]
     public void DrawLineObserversRpc(Vector3Int startPoint, Vector3Int endPoint, float radius, int value, int layer)
     {
@@ -184,12 +210,12 @@ public class PlayerDraw : NetworkBehaviour
         if (Input.GetMouseButton(0))
         {
             Vector2 mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
-            
-            if(mouseManager.GetObjectBetweenTwoPoints(mousePos, lastMousePosition) == null)
+
+            if (mouseManager.GetObjectBetweenTwoPoints(mousePos, lastMousePosition) == null)
             {
                 Vector3Int gridStartpoint = grid.WorldToCell(lastMousePosition);
                 Vector3Int gridEndpoint = grid.WorldToCell(mousePos);
-                DrawLineObserversRpc(gridStartpoint, gridEndpoint, placeRadius, 1, currentLayer);
+                DrawLineServerRpc(gridStartpoint, gridEndpoint, placeRadius, 1, currentLayer);
             }
 
             lastMousePosition = mousePos;
@@ -210,7 +236,7 @@ public class PlayerDraw : NetworkBehaviour
             Vector3Int gridStartpoint = grid.WorldToCell(lastMousePosition);
             Vector3Int gridEndpoint = grid.WorldToCell(mousePos);
 
-            DrawLineObserversRpc(gridStartpoint, gridEndpoint, placeRadius, 0, currentLayer);
+            DrawLineServerRpc(gridStartpoint, gridEndpoint, placeRadius, 0, currentLayer);
 
             lastMousePosition = mousePos;
         }
@@ -228,7 +254,7 @@ public class PlayerDraw : NetworkBehaviour
     {
         for (int i = 0; i < updatedTilesPos.Length; i++)
         {
-            if(updatedTilesPos[i].Count > 0)
+            if (updatedTilesPos[i].Count > 0)
             {
                 (int x, int y) = To2DIndex(i);
                 tilemaps[x, y].SetTiles(updatedTilesPos[i].ToArray(), updatedTilesTile[i].ToArray());
@@ -267,7 +293,7 @@ public class PlayerDraw : NetworkBehaviour
     {
         int i = To1DIndex(x, y);
 
-        if(layer == collisionLayer)
+        if (layer == collisionLayer)
         {
             updatedTilesPos[i].Add(pos);
             updatedTilesTile[i].Add(tile);
