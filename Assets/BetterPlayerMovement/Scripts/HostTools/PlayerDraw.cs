@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using FishNet.Managing;
 using System.Linq;
+using System.Text;
 
 /// <summary>
 /// Represents a drawing command with position, size and layer information
@@ -531,21 +532,20 @@ public class PlayerDraw : NetworkBehaviour
     private void TargetSendStoredCommands(NetworkConnection target, string gridString)
     {
         Debug.Log(gridString);
+        var baseColors = ArrayFlattener.Unflatten(DecompressGridString(gridString), width, height);
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                if(baseColors[x, y].a != 0)
+                {
+                    Vector3 worldPos = grid.CellToWorld(new Vector3Int(x, y));
+                    Vector3Int currentTileMapPos = tilemapGrid.WorldToCell(worldPos);
 
-        //var unflattendedColors = ArrayFlattener.Unflatten(colors, width, height);
-        //for (int x = 0; x < width; x++)
-        //{
-        //    for (int y = 0; y < height; y++)
-        //    {
-        //        Vector3 worldPos = grid.CellToWorld(new Vector3Int(x, y));
-        //        Vector3Int currentTileMapPos = tilemapGrid.WorldToCell(worldPos);
-
-        //        if(unflattendedColors[x, y].a != 0)
-        //        {
-        //            QueTile(currentTileMapPos.x, currentTileMapPos.y, new Vector3Int(x, y), tileValues[1], 1, collisionLayer, unflattendedColors[x, y]);
-        //        }
-        //    }
-        //}
+                    QueTile(currentTileMapPos.x, currentTileMapPos.y, new Vector3Int(x, y), tileValues[1], 1, collisionLayer, baseColors[x, y]);
+                }
+            }
+        }
     }
 
     /// <summary>
@@ -554,6 +554,64 @@ public class PlayerDraw : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void RequestStoredCommandsServerRpc(NetworkConnection sender = null)
     {
-        TargetSendStoredCommands(sender, "asdawdasdawdasdawdasdwaadsalkdwqhdqkjbdkasjbdkajwbdqkjbdskqjbqdkjqbwdkjqbdkjb");
+        TargetSendStoredCommands(sender, CompressGridString());
+    }
+
+    private string CompressGridString()
+    {
+        StringBuilder compressed = new StringBuilder();
+        Color32[] colors = textureColors[collisionLayer];
+
+        int count = 1;
+        for (int i = 1; i < colors.Length; i++)
+        {
+            if (colors[i].Equals(colors[i - 1]))
+            {
+                count++;
+            }
+            else
+            {
+                compressed.Append(colors[i - 1].ToString()).Append("x").Append(count).Append(".");
+                count = 1;
+            }
+        }
+
+        // Append the last color group
+        compressed.Append(colors[^1].ToString()).Append("x").Append(count);
+
+        return compressed.ToString();
+    }
+
+    private Color32[] DecompressGridString(string compressed)
+    {
+        string[] parts = compressed.Split('.');
+        List<Color32> decompressed = new List<Color32>();
+
+        foreach (string part in parts)
+        {
+            if (string.IsNullOrEmpty(part)) continue;
+
+            string[] colorAndCount = part.Split('x');
+            Color32 color = ParseColor32(colorAndCount[0]);
+            int count = int.Parse(colorAndCount[1]);
+
+            for (int i = 0; i < count; i++)
+            {
+                decompressed.Add(color);
+            }
+        }
+
+        return decompressed.ToArray();
+    }
+
+    private Color32 ParseColor32(string colorString)
+    {
+        string[] rgba = colorString.Trim('(', ')').Split(',');
+        return new Color32(
+            byte.Parse(rgba[0]),
+            byte.Parse(rgba[1]),
+            byte.Parse(rgba[2]),
+            byte.Parse(rgba[3])
+        );
     }
 }
