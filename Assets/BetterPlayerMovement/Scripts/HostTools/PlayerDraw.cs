@@ -62,8 +62,8 @@ public class PlayerDraw : NetworkBehaviour
     /// <summary>Array of tile types that can be placed</summary>
     public Tile[] tileValues;
 
-    /// <summary>Array of colors corresponding to tile values</summary>
-    public Color32[] colorValues;
+    /// <summary>The current drawing color</summary>
+    public Color32 currentcolor;
 
     /// <summary>Main Unity grid for world positioning</summary>
     public Grid grid;
@@ -271,7 +271,7 @@ public class PlayerDraw : NetworkBehaviour
     /// Server RPC to draw a line between two points
     /// </summary>
     [ServerRpc(RequireOwnership = true)]
-    public void DrawLineServerRpc(Vector3Int startPoint, Vector3Int endPoint, float radius, int value, int layer)
+    public void DrawLineServerRpc(Vector3Int startPoint, Vector3Int endPoint, float radius, int value, int layer, Color32 color)
     {
         storedCommands.Add(new DrawCommand
         {
@@ -282,16 +282,16 @@ public class PlayerDraw : NetworkBehaviour
             layer = layer
         });
 
-        DrawLineObserversRpc(startPoint, endPoint, radius, value, layer);
+        DrawLineObserversRpc(startPoint, endPoint, radius, value, layer, color);
     }
 
     /// <summary>
     /// Observers RPC to sync line drawing across all clients
     /// </summary>
     [ObserversRpc]
-    public void DrawLineObserversRpc(Vector3Int startPoint, Vector3Int endPoint, float radius, int value, int layer)
+    public void DrawLineObserversRpc(Vector3Int startPoint, Vector3Int endPoint, float radius, int value, int layer, Color32 color)
     {
-        DrawLine(startPoint, endPoint, radius, value, layer);
+        DrawLine(startPoint, endPoint, radius, value, layer, color);
     }
 
     /// <summary>
@@ -313,7 +313,7 @@ public class PlayerDraw : NetworkBehaviour
             {
                 Vector3Int gridStartpoint = grid.WorldToCell(lastMousePosition);
                 Vector3Int gridEndpoint = grid.WorldToCell(mousePos);
-                DrawLineServerRpc(gridStartpoint, gridEndpoint, placeRadius, 1, currentLayer);
+                DrawLineServerRpc(gridStartpoint, gridEndpoint, placeRadius, 1, currentLayer, currentcolor);
             }
 
             lastMousePosition = mousePos;
@@ -337,7 +337,7 @@ public class PlayerDraw : NetworkBehaviour
             Vector3Int gridStartpoint = grid.WorldToCell(lastMousePosition);
             Vector3Int gridEndpoint = grid.WorldToCell(mousePos);
 
-            DrawLineServerRpc(gridStartpoint, gridEndpoint, placeRadius, 0, currentLayer);
+            DrawLineServerRpc(gridStartpoint, gridEndpoint, placeRadius, 0, currentLayer, Color.clear);
 
             lastMousePosition = mousePos;
         }
@@ -391,7 +391,7 @@ public class PlayerDraw : NetworkBehaviour
                     Vector3 worldPos = grid.CellToWorld(currentGridPos);
                     Vector3Int currentTileMapPos = tilemapGrid.WorldToCell(worldPos);
 
-                    QueTile(currentTileMapPos.x, currentTileMapPos.y, currentGridPos, null, 0, currentLayer);
+                    QueTile(currentTileMapPos.x, currentTileMapPos.y, currentGridPos, null, 0, currentLayer, Color.clear);
                 }
             }
         }
@@ -402,20 +402,23 @@ public class PlayerDraw : NetworkBehaviour
     /// <summary>
     /// Queues a tile update at the specified position
     /// </summary>
-    private void QueTile(int x, int y, Vector3Int pos, Tile tile, int value, int layer)
+    private void QueTile(int x, int y, Vector3Int pos, Tile tile, int value, int layer, Color32 color)
     {
         int i = To1DIndex(x, y);
 
         if (layer == collisionLayer)
         {
-            updatedTilesPos[i].Add(pos);
-            updatedTilesTile[i].Add(tile);
+            if(pixelgrid[layer][pos.x, pos.y] != value) // We only need to update the collision tilemap if the value is different
+            {
+                updatedTilesPos[i].Add(pos);
+                updatedTilesTile[i].Add(tile);
+            }
         }
 
         pixelgrid[layer][pos.x, pos.y] = value;
 
         i = (pos.y * width) + pos.x;
-        textureColors[layer][i] = colorValues[value];
+        textureColors[layer][i] = color;
 
         tilemapUpdated = true;
     }
@@ -423,7 +426,7 @@ public class PlayerDraw : NetworkBehaviour
     /// <summary>
     /// Draws a line between two points with given radius and value
     /// </summary>
-    public void DrawLine(Vector3Int gridStartPoint, Vector3Int gridEndPoint, float radius, int value, int layer)
+    public void DrawLine(Vector3Int gridStartPoint, Vector3Int gridEndPoint, float radius, int value, int layer, Color32 color)
     {
         float currentPlaceRadius = radius * (1f / ppu);
 
@@ -449,10 +452,11 @@ public class PlayerDraw : NetworkBehaviour
 
                         Vector3Int currentTileMapPos = tilemapGrid.WorldToCell(worldPos);
 
-                        if (pixelgrid[layer][currentGridPos.x, currentGridPos.y] == value)
-                            continue;
+                        // Changed to doing this in the que tile function
+                        //if (pixelgrid[layer][currentGridPos.x, currentGridPos.y] == value)
+                        //    continue;
 
-                        QueTile(currentTileMapPos.x, currentTileMapPos.y, currentGridPos, tileValues[value], value, layer);
+                        QueTile(currentTileMapPos.x, currentTileMapPos.y, currentGridPos, tileValues[value], value, layer, color);
                     }
                 }
             }
@@ -529,7 +533,7 @@ public class PlayerDraw : NetworkBehaviour
         // Replay each stored line command on the target client.
         foreach (var cmd in commands)
         {
-            DrawLine(cmd.startPoint, cmd.endPoint, cmd.radius, cmd.value, cmd.layer);
+            DrawLine(cmd.startPoint, cmd.endPoint, cmd.radius, cmd.value, cmd.layer, Color.black);
         }
     }
 
