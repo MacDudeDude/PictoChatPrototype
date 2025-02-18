@@ -77,7 +77,7 @@ public class SteamLobbyManager : MonoBehaviour
         _networkManager.ServerManager.StartConnection();
 
         var lobby = createLobbyResult.Value;
-        Debug.Log("Lobby created: " + lobby.Id);
+        Debug.Log("Lobby owner: " + lobby.Owner);
     }
 
     /// <summary>
@@ -135,7 +135,7 @@ public class SteamLobbyManager : MonoBehaviour
     private void OnLobbyEntered(Lobby lobby)
     {
         CurrentLobby = lobby;
-        _transport.SetClientAddress(lobby.Id.ToString());
+        _transport.SetClientAddress(lobby.Owner.Id.ToString());
         Debug.Log("Lobby entered: " + lobby.Id);
         Debug.Log("Transport address set to: " + _transport.GetClientAddress());
         _networkManager.ClientManager.StartConnection();
