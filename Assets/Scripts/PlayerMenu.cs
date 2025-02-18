@@ -69,7 +69,7 @@ public class PlayerMenu : MonoBehaviour
                 var memberId = member.Id.ToString();
                 playerButtons[i].onClick.AddListener(() =>
                 {
-                    playerDraw.ChangeArtistServerRpc(memberId);
+                    playerDraw.ChangeArtist(memberId);
                 });
             }
         }

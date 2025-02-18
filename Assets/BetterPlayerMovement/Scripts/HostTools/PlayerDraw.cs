@@ -57,14 +57,20 @@ public class PlayerDraw : NetworkBehaviour
             }
         }
     }
+
+    public void ChangeArtist(string artistId)
+    {
+        SteamLobbyManager.Instance.ChangeArtist(artistId);
+        ChangeArtistServerRpc(artistId);
+    }
+
     [ServerRpc(RequireOwnership = true)]
-    public void ChangeArtistServerRpc(string artistId)
+    private void ChangeArtistServerRpc(string artistId)
     {
         NetworkConnection client = SteamLobbyManager.Instance.GetNetworkConnection(ulong.Parse(artistId));
         if (IsOwner)
         {
             NetworkObject.GiveOwnership(client);
-            SteamLobbyManager.Instance.ChangeArtist(artistId);
         }
     }
 
