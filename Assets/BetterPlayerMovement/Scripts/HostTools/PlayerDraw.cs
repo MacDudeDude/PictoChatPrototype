@@ -49,7 +49,6 @@ public class PlayerDraw : NetworkBehaviour
     {
         foreach (var clientPair in NetworkManager.ServerManager.Clients)
         {
-            Debug.Log("Client: " + clientPair.Value);
             if (clientPair.Value.IsLocalClient)
             {
                 NetworkObject.GiveOwnership(clientPair.Value);

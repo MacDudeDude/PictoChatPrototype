@@ -51,7 +51,6 @@ public class PlayerMenu : MonoBehaviour
         for (int i = 0; i < members.Count && i < playerTexts.Length; i++)
         {
             var member = members[i];
-            Debug.Log($"Member {member.Name}");
 
             if (member.Id.ToString() == artistId)
             {
@@ -73,9 +72,6 @@ public class PlayerMenu : MonoBehaviour
                 });
             }
         }
-        foreach (var client in InstanceFinder.ServerManager.Clients)
-        {
-            Debug.Log($"Client ID:{client.Key} - {client.Value}");
-        }
+
     }
 }
