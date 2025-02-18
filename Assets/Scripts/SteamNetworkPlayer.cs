@@ -1,6 +1,6 @@
 using FishNet.Object;
 using Steamworks;
-
+using UnityEngine;
 public class SteamNetworkPlayer : NetworkBehaviour
 {
     public override void OnStartClient()
@@ -19,6 +19,7 @@ public class SteamNetworkPlayer : NetworkBehaviour
     private void SendSteamIdServerRpc(ulong steamId)
     {
         // Register this connection with the Steam ID
+        Debug.Log("Registering connection with Steam ID: " + steamId);
         SteamLobbyManager.Instance.RegisterConnection(Owner, steamId);
     }
 }

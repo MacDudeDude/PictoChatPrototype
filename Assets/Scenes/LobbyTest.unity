@@ -912,6 +912,8 @@ MonoBehaviour:
   - {fileID: 2008457297}
   - {fileID: 469078656}
   - {fileID: 2010747676}
+  playerButtons: []
+  playerDraw: {fileID: 1505891879}
 --- !u!4 &1341854678
 Transform:
   m_ObjectHideFlags: 0

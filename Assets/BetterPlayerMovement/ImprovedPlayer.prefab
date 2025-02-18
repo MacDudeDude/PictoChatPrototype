@@ -196,6 +196,7 @@ GameObject:
   - component: {fileID: 5121102187584088596}
   - component: {fileID: 3142875464113743011}
   - component: {fileID: 3472747510755587910}
+  - component: {fileID: 4944431471925512791}
   m_Layer: 10
   m_Name: ImprovedPlayer
   m_TagString: Untagged
@@ -424,6 +425,21 @@ MonoBehaviour:
     X: 0
     Y: 0
     Z: 0
+--- !u!114 &4944431471925512791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5121102187584088597}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee31d540de0ac074eab4e6f471d5ebc2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 3142875464113743011}
+  _networkObjectCache: {fileID: 0}
 --- !u!1 &5121102187716458249
 GameObject:
   m_ObjectHideFlags: 0
