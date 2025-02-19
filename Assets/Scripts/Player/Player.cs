@@ -132,12 +132,14 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     public void BeginDrag()
     {
         DisableMovement();
+        RequestTransferOwnershipForDragServerRpc();
     }
 
     public void EndDrag(Vector3 dragEndVelocity)
     {
         rb.velocity = dragEndVelocity;
         EnableMovement(true);
+        RequestReturnOwnershipServerRpc();
     }
     /// <summary>
     /// Transfers ownership of this Player to a new owner.
@@ -145,10 +147,10 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     /// </summary>
     /// <param name="newOwner">The clientId of the new owner (dragging client).</param>
     [ServerRpc(RequireOwnership = false)]
-    public void RequestTransferOwnershipForDragServerRpc(NetworkConnection newOwner)
+    public void RequestTransferOwnershipForDragServerRpc()
     {
         _originalOwner = Owner;
-        GetComponent<NetworkObject>().GiveOwnership(newOwner);
+        GetComponent<NetworkObject>().RemoveOwnership();
     }
 
     /// <summary>
@@ -170,7 +172,6 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     {
         // Set the new position on the server.
         transform.position = newPosition;
-        // Broadcast the new position to every observer.
 
     }
 
