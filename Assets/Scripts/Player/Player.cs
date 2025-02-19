@@ -22,7 +22,14 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     private bool alive = true;
     private bool movementEnabled;
 
+    // Field to store the original owner's clientId.
+    private NetworkConnection _originalOwner = null;
 
+    public override void OnStartServer()
+    {
+        base.OnStartServer();
+        _originalOwner = Owner;
+    }
     private void Awake()
     {
         StateMachine = new PlayerStateMachine();
@@ -132,15 +139,39 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
         rb.velocity = dragEndVelocity;
         EnableMovement(true);
     }
+    /// <summary>
+    /// Transfers ownership of this Player to a new owner.
+    /// This method can be called from a non-owner via RPC.
+    /// </summary>
+    /// <param name="newOwner">The clientId of the new owner (dragging client).</param>
+    [ServerRpc(RequireOwnership = false)]
+    public void RequestTransferOwnershipForDragServerRpc(NetworkConnection newOwner)
+    {
+        _originalOwner = Owner;
+        GetComponent<NetworkObject>().GiveOwnership(newOwner);
+    }
 
+    /// <summary>
+    /// Returns ownership of this Player to the original owner.
+    /// This method can be called from a non-owner via RPC.
+    /// </summary>
+    [ServerRpc(RequireOwnership = false)]
+    public void RequestReturnOwnershipServerRpc()
+    {
+        if (_originalOwner != null && Owner != _originalOwner)
+        {
+            GetComponent<NetworkObject>().GiveOwnership(_originalOwner);
+            // Optionally, clear the stored original owner.
+            _originalOwner = null;
+        }
+    }
     [ServerRpc]
     public void DragUpdateServerRpc(Vector3 newPosition, float deltaTime)
     {
-        UpdatePositionRpc(newPosition);
-    }
-    [ObserversRpc]
-    public void UpdatePositionRpc(Vector3 newPosition)
-    {
+        // Set the new position on the server.
         transform.position = newPosition;
+        // Broadcast the new position to every observer.
+
     }
+
 }
