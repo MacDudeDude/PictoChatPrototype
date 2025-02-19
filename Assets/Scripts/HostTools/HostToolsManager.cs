@@ -47,6 +47,7 @@ public class HostToolsManager : NetworkBehaviour
 
     private void Start()
     {
+        Debug.Log("[HostToolsManager] Owner: " + Owner);
         StateMachine.Initialize(tools[startingState]);
     }
 
