@@ -26,11 +26,6 @@ public class PlayerDragTool : ToolState
                 {
                     if (player.CanDrag())
                     {
-                        if (!player.IsOwner)
-                        {
-                            player.GetComponent<NetworkObject>()
-                                  .ChangeOwnership(FishNet.Managing.ClientManager.LocalConnection.ClientId);
-                        }
 
                         grabbedObject = player;
                         grabbedTransform = clickedOn.transform.root;
