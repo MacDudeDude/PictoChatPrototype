@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using FishNet;
 using FishNet.Transporting;
-using FishNet.Connection;
 using FishNet.Object;
 using System;
 using FishNet.Managing.Scened;
@@ -63,8 +62,8 @@ public class SteamLobbyManager : MonoBehaviour
         // Setup Steam callbacks
         SteamMatchmaking.OnLobbyEntered += OnLobbyEntered;
         SteamFriends.OnGameLobbyJoinRequested += OnGameLobbyJoinRequested;
-        // Subscribe to FishNet connection events (player management is now handled separately)
-        InstanceFinder.ServerManager.OnRemoteConnectionState += HandleConnectionState;
+
+        InstanceFinder.ClientManager.OnClientConnectionState += OnClientConnectionState;
     }
 
     /// <summary>
@@ -91,10 +90,10 @@ public class SteamLobbyManager : MonoBehaviour
         InstanceFinder.ServerManager.StartConnection();
         var lobby = createLobbyResult.Value;
         lobby.SetData("artist", SteamClient.SteamId.ToString());
+        lobby.SetJoinable(true);
+        lobby.SetPublic();
 
-        string lobbyCode = "55";
-        lobby.SetData("lobbyCode_deletethispartlater", lobbyCode);
-        Debug.Log("[SteamLobbyManager] Lobby created: " + lobby.Id + " Lobbey Code: " + lobbyCode);
+        Debug.Log("[SteamLobbyManager] Lobby created: " + lobby.Id);
     }
 
     /// <summary>
@@ -204,6 +203,18 @@ public class SteamLobbyManager : MonoBehaviour
 
     }
 
+    public void LeaveLobby()
+    {
+        CurrentLobby.Value.Leave();
+        CurrentLobby = null;
+    }
+    private void OnClientConnectionState(ClientConnectionStateArgs args)
+    {
+        if (args.ConnectionState == LocalConnectionState.Stopped)
+        {
+            LeaveLobby();
+        }
+    }
     /// <summary>
     /// Callback triggered when a game lobby join is requested (e.g., through Steam overlay).
     /// Attempts to join the requested lobby.
@@ -274,21 +285,6 @@ public class SteamLobbyManager : MonoBehaviour
         return members;
     }
 
-    /// <summary>
-    /// Handles client connection/disconnection events.
-    /// Logs when clients disconnect from the game server.
-    /// Player management is handled separately by the SteamPlayerManager.
-    /// </summary>
-    /// <param name="connection">The network connection that changed state.</param>
-    /// <param name="args">Contains information about the connection state change.</param>
-    private void HandleConnectionState(NetworkConnection connection, RemoteConnectionStateArgs args)
-    {
-        if (args.ConnectionState != RemoteConnectionState.Started)
-        {
-            Debug.Log($"[SteamLobbyManager] Client disconnected. Connection ID: {connection.ClientId}");
-            // Note: Player management (removal, etc.) is handled by SteamPlayerManager.
-        }
-    }
 
     /// <summary>
     /// Cleans up Steam callbacks when the object is destroyed.
@@ -299,10 +295,5 @@ public class SteamLobbyManager : MonoBehaviour
         SteamMatchmaking.OnLobbyEntered -= OnLobbyEntered;
         SteamFriends.OnGameLobbyJoinRequested -= OnGameLobbyJoinRequested;
 
-        // Unsubscribe from FishNet connection events
-        if (InstanceFinder.ServerManager != null)
-        {
-            InstanceFinder.ServerManager.OnRemoteConnectionState -= HandleConnectionState;
-        }
     }
 }
