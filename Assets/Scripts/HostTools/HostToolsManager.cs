@@ -47,7 +47,6 @@ public class HostToolsManager : MonoBehaviour
 
     private void Start()
     {
-        drawer = FindObjectOfType<PlayerDraw>();
         StateMachine.Initialize(tools[startingState]);
     }
 
