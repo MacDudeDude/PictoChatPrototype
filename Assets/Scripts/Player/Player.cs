@@ -149,7 +149,9 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     [ServerRpc(RequireOwnership = false)]
     public void RequestTransferOwnershipForDragServerRpc()
     {
+        Debug.Log("[Player] Request Transfer Ownership For Drag ServerRpc");
         _originalOwner = Owner;
+        Debug.Log("[Player] Original Owner: " + _originalOwner);
         GetComponent<NetworkObject>().RemoveOwnership();
     }
 
@@ -163,8 +165,7 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
         if (_originalOwner != null && Owner != _originalOwner)
         {
             GetComponent<NetworkObject>().GiveOwnership(_originalOwner);
-            // Optionally, clear the stored original owner.
-            _originalOwner = null;
+            Debug.Log("[Player] Giving back ownership to original Owner: " + _originalOwner);
         }
     }
     [ServerRpc]
