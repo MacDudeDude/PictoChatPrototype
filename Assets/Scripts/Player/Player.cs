@@ -9,6 +9,7 @@ using Steamworks;
 
 public class Player : NetworkBehaviour, IKillable, IDraggable
 {
+
     public Animator animator;
     public Transform spritesHolder;
     public int startingState;
@@ -30,6 +31,7 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
             PlayerStates[i].Init(this, StateMachine);
         }
     }
+
 
     private void Start()
     {

@@ -412,7 +412,7 @@ public class PlayerDraw : NetworkBehaviour
 
         if (layer == collisionLayer)
         {
-            if(pixelgrid[layer][pos.x, pos.y] != value) // We only need to update the collision tilemap if the value is different
+            if (pixelgrid[layer][pos.x, pos.y] != value) // We only need to update the collision tilemap if the value is different
             {
                 updatedTilesPos[i].Add(pos);
                 updatedTilesTile[i].Add(tile);

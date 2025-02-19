@@ -14,8 +14,9 @@ public class SpawnManager : MonoBehaviour
     private NetworkObject prespawnedPlayer;
     [SerializeField]
     private NetworkObject playerPrefab;
-    [SerializeField]
-    private NetworkObject artistPrefab;
+    private PlayerDraw artist;
+
+    private List<GameObject> players = new List<GameObject>();
 
     private void Start()
     {
@@ -74,22 +75,18 @@ public class SpawnManager : MonoBehaviour
     {
         SpawnPlayer(steamId, conn);
     }
-    private void SpawnPlayer(ulong steamId, NetworkConnection conn)
+    private void SpawnPlayer(ulong steamId = 0, NetworkConnection conn = null)
     {
         ulong artistId = ulong.Parse(SteamLobbyManager.Instance.GetArtist());
         NetworkConnection artistConn = SteamPlayerManager.Instance.GetNetworkConnection(artistId);
-        if (conn == artistConn)
-        {
-            Debug.Log("[SpawnManager] Spawning artist with owner: " + conn);
-            GameObject artistInstance = Instantiate(artistPrefab.gameObject);
-            InstanceFinder.ServerManager.Spawn(artistInstance, conn);
-        }
-        else
+        if (conn != artistConn)
         {
             Debug.Log("[SpawnManager] Spawning player with owner: " + conn);
             GameObject playerInstance = Instantiate(playerPrefab.gameObject);
             InstanceFinder.ServerManager.Spawn(playerInstance, conn);
+            players.Add(playerInstance);
         }
+
     }
 
     private void RespawnPlayers(string newArtistId = null)
@@ -107,20 +104,18 @@ public class SpawnManager : MonoBehaviour
             artistConn = SteamPlayerManager.Instance.GetNetworkConnection(artistId);
         }
 
+        DespawnPlayers();
         foreach (var conn in InstanceFinder.ServerManager.Clients)
         {
-            if (conn.Value == artistConn)
-            {
-                Debug.Log("[SpawnManager] Respawning artist with owner: " + conn.Value);
-                GameObject artistInstance = Instantiate(artistPrefab.gameObject);
-                InstanceFinder.ServerManager.Spawn(artistInstance, conn.Value);
-            }
-            else
-            {
-                Debug.Log("[SpawnManager] Respawning player with owner: " + conn.Value);
-                GameObject playerInstance = Instantiate(playerPrefab.gameObject);
-                InstanceFinder.ServerManager.Spawn(playerInstance, conn.Value);
-            }
+            SpawnPlayer(0, conn.Value);
+        }
+    }
+
+    private void DespawnPlayers()
+    {
+        foreach (var player in players)
+        {
+            InstanceFinder.ServerManager.Despawn(player);
         }
     }
 
