@@ -4,6 +4,8 @@ using UnityEngine;
 using FishNet.Object;
 using FishNet.Managing;
 using System.Linq;
+using FishNet.Connection;
+
 public class HostToolsManager : NetworkBehaviour
 {
     public enum SelectedTool
@@ -44,10 +46,23 @@ public class HostToolsManager : NetworkBehaviour
             }
         }
     }
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
 
+        foreach (var clientPair in NetworkManager.ServerManager.Clients)
+        {
+            if (clientPair.Value.IsLocalClient)
+            {
+                NetworkObject.GiveOwnership(clientPair.Value);
+                break;
+            }
+        }
+
+    }
     private void Start()
     {
-        Debug.Log("[HostToolsManager] Owner: " + Owner);
+
         StateMachine.Initialize(tools[startingState]);
     }
 
@@ -56,5 +71,30 @@ public class HostToolsManager : NetworkBehaviour
         if (!IsOwner)
             return;
         StateMachine.CurrentToolState.FrameUpdate();
+    }
+
+
+    /// <summary>
+    /// Changes the current artist by their ID
+    /// </summary>
+    public void ChangeArtist(string artistId)
+    {
+        ChangeArtistServerRpc(artistId);
+    }
+
+    [ServerRpc]
+    private void ChangeArtistServerRpc(string artistId)
+    {
+        ChangeArtistObserversRpc(artistId);
+        NetworkConnection client = SteamPlayerManager.Instance.GetNetworkConnection(ulong.Parse(artistId));
+        NetworkObject.GiveOwnership(client);
+    }
+    /// <summary>
+    /// Observers RPC to notify all clients of artist change
+    /// </summary>
+    [ObserversRpc(RunLocally = true)]
+    private void ChangeArtistObserversRpc(string artistId)
+    {
+        SteamLobbyManager.Instance.ChangeArtist(artistId);
     }
 }

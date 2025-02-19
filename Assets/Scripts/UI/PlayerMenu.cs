@@ -10,6 +10,7 @@ public class PlayerMenu : MonoBehaviour
     [SerializeField] private TextMeshProUGUI[] playerTexts;
     [SerializeField] private Button[] playerButtons;
     [SerializeField] private PlayerDraw playerDraw;
+    [SerializeField] private HostToolsManager hostToolsManager;
 
     void Start()
     {
@@ -69,6 +70,7 @@ public class PlayerMenu : MonoBehaviour
                 playerButtons[i].onClick.AddListener(() =>
                 {
                     playerDraw.ChangeArtist(memberId);
+                    hostToolsManager.ChangeArtist(memberId);
                 });
             }
         }
