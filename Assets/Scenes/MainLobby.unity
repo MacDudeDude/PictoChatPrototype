@@ -627,7 +627,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2965bdab4dcd4cf41a5a6810947ab3cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grabber: {fileID: 0}
+  grabber: {fileID: 1359775944}
   grabbedTransform: {fileID: 0}
   canDrag: 1
   dragSpeed: 30
@@ -646,7 +646,7 @@ MonoBehaviour:
   selectedTool: 0
   mouse: {fileID: 1359775944}
   drawer: {fileID: 1359775942}
-  startingState: 0
+  startingState: 2
   tools:
   - {fileID: 785704018}
   - {fileID: 785704017}

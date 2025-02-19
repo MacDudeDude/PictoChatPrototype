@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using FishNet.Object;
 
 public class PlayerDragTool : ToolState
 {
@@ -9,27 +10,32 @@ public class PlayerDragTool : ToolState
     public Transform grabbedTransform;
     public bool canDrag;
     public float dragSpeed = 30;
+    public Camera cam;
 
     private Vector3 lastPos;
     private bool isDragging;
 
     public void DragToolUpdate()
     {
-        if(!isDragging && Input.GetMouseButtonDown(0) && canDrag)
+        if (!isDragging && Input.GetMouseButtonDown(0) && canDrag)
         {
             GameObject clickedOn = grabber.GetHoveredObject();
-            if(clickedOn != null)
+            if (clickedOn != null)
             {
-                IDraggable draggableObject;
-                if(clickedOn.transform.root.TryGetComponent(out draggableObject))
+                if (clickedOn.transform.root.TryGetComponent(out Player player))
                 {
-                    if (draggableObject.CanDrag())
+                    if (player.CanDrag())
                     {
-                        grabbedObject = draggableObject;
+                        if (!player.IsOwner)
+                        {
+                            player.GetComponent<NetworkObject>()
+                                  .ChangeOwnership(FishNet.Managing.ClientManager.LocalConnection.ClientId);
+                        }
+
+                        grabbedObject = player;
                         grabbedTransform = clickedOn.transform.root;
 
                         grabbedObject.BeginDrag();
-
                         lastPos = grabbedTransform.position;
                         isDragging = true;
                     }
@@ -37,14 +43,19 @@ public class PlayerDragTool : ToolState
             }
         }
 
-        if(isDragging)
+        if (isDragging)
         {
-            if(grabbedObject != null)
+            if (grabbedObject != null)
             {
-                if(grabbedObject.CanDrag() && canDrag)
+                if (grabbedObject.CanDrag() && canDrag)
                 {
                     Vector2 newPos = cam.ScreenToWorldPoint(Input.mousePosition);
-                    grabbedTransform.transform.position = Vector3.Lerp(grabbedTransform.transform.position, newPos, Time.deltaTime * dragSpeed);
+
+                    if (grabbedObject is Player player)
+                    {
+                        Vector3 blendedPos = Vector3.Lerp(grabbedTransform.position, newPos, Time.deltaTime * dragSpeed);
+                        player.DragUpdateServerRpc(blendedPos, Time.deltaTime);
+                    }
                 }
                 else
                 {
@@ -57,17 +68,18 @@ public class PlayerDragTool : ToolState
             }
         }
 
-        if(isDragging && Input.GetMouseButtonUp(0))
+        if (isDragging && Input.GetMouseButtonUp(0))
         {
-            if(grabbedObject != null)
+            if (grabbedObject != null)
             {
-                grabbedObject.EndDrag((grabbedTransform.transform.position - lastPos) / Time.deltaTime);
+                Vector3 dragVelocity = (grabbedTransform.position - lastPos) / Time.deltaTime;
+                grabbedObject.EndDrag(dragVelocity);
                 ClearDragReferences();
             }
         }
 
-        if(grabbedTransform != null)
-            lastPos = grabbedTransform.transform.position;
+        if (grabbedTransform != null)
+            lastPos = grabbedTransform.position;
     }
 
     private void ClearDragReferences()

@@ -132,4 +132,10 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
         rb.velocity = dragEndVelocity;
         EnableMovement(true);
     }
+
+    [ServerRpc]
+    public void DragUpdateServerRpc(Vector3 newPosition, float deltaTime)
+    {
+        transform.position = newPosition;
+    }
 }
