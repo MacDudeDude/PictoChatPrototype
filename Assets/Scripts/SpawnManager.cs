@@ -6,7 +6,7 @@ using PrimeTween;
 using FishNet;
 using FishNet.Connection;
 using FishNet.Object;
-
+using FishNet.Transporting;
 public class SpawnManager : MonoBehaviour
 {
 
@@ -16,7 +16,7 @@ public class SpawnManager : MonoBehaviour
     private NetworkObject playerPrefab;
     private PlayerDraw artist;
 
-    private List<GameObject> players = new List<GameObject>();
+    private Dictionary<NetworkConnection, GameObject> players = new Dictionary<NetworkConnection, GameObject>();
 
     private void Start()
     {
@@ -32,6 +32,8 @@ public class SpawnManager : MonoBehaviour
         {
             SteamPlayerManager.Instance.OnPlayerRegistered += OnPlayerRegistered;
         }
+
+        InstanceFinder.ServerManager.OnRemoteConnectionState += OnRemoteConnectionState;
     }
 
     private void OnDestroy()
@@ -46,6 +48,7 @@ public class SpawnManager : MonoBehaviour
             SteamPlayerManager.Instance.OnPlayerRegistered -= OnPlayerRegistered;
         }
     }
+
 
     private void Initialize()
     {
@@ -84,7 +87,7 @@ public class SpawnManager : MonoBehaviour
             Debug.Log("[SpawnManager] Spawning player with owner: " + conn);
             GameObject playerInstance = Instantiate(playerPrefab.gameObject);
             InstanceFinder.ServerManager.Spawn(playerInstance, conn);
-            players.Add(playerInstance);
+            players.Add(conn, playerInstance);
         }
 
     }
@@ -110,12 +113,19 @@ public class SpawnManager : MonoBehaviour
             SpawnPlayer(0, conn.Value);
         }
     }
-
+    private void OnRemoteConnectionState(NetworkConnection conn, RemoteConnectionStateArgs args)
+    {
+        if (args.ConnectionState == RemoteConnectionState.Stopped)
+        {
+            InstanceFinder.ServerManager.Despawn(players[conn]);
+            players.Remove(conn);
+        }
+    }
     private void DespawnPlayers()
     {
         foreach (var player in players)
         {
-            InstanceFinder.ServerManager.Despawn(player);
+            InstanceFinder.ServerManager.Despawn(player.Value);
         }
     }
 
