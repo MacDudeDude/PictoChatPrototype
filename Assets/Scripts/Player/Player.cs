@@ -136,6 +136,11 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     [ServerRpc]
     public void DragUpdateServerRpc(Vector3 newPosition, float deltaTime)
     {
+        UpdatePositionRpc(newPosition);
+    }
+    [ObserversRpc]
+    public void UpdatePositionRpc(Vector3 newPosition)
+    {
         transform.position = newPosition;
     }
 }
