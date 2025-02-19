@@ -139,7 +139,7 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     {
         rb.velocity = dragEndVelocity;
         EnableMovement(true);
-        RequestReturnOwnershipServerRpc();
+        //RequestReturnOwnershipServerRpc();
     }
     /// <summary>
     /// Transfers ownership of this Player to a new owner.
@@ -152,7 +152,7 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
         Debug.Log("[Player] Request Transfer Ownership For Drag ServerRpc");
         _originalOwner = Owner;
         Debug.Log("[Player] Original Owner: " + _originalOwner);
-        GetComponent<NetworkObject>().RemoveOwnership();
+        NetworkObject.RemoveOwnership();
     }
 
     /// <summary>
@@ -162,9 +162,9 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     [ServerRpc(RequireOwnership = false)]
     public void RequestReturnOwnershipServerRpc()
     {
-        if (_originalOwner != null && Owner != _originalOwner)
+        if (_originalOwner != null)
         {
-            GetComponent<NetworkObject>().GiveOwnership(_originalOwner);
+            NetworkObject.GiveOwnership(_originalOwner);
             Debug.Log("[Player] Giving back ownership to original Owner: " + _originalOwner);
         }
     }

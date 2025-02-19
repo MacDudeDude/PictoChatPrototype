@@ -644,10 +644,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a69d83a982933064384f0910050d1ba2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 785704022}
+  _networkObjectCache: {fileID: 0}
   selectedTool: 0
   mouse: {fileID: 1359775944}
   drawer: {fileID: 1359775942}
-  startingState: 0
+  startingState: 2
   tools:
   - {fileID: 785704018}
   - {fileID: 785704017}
@@ -962,6 +965,7 @@ MonoBehaviour:
   - {fileID: 2010747676}
   playerButtons: []
   playerDraw: {fileID: 1359775942}
+  hostToolsManager: {fileID: 0}
 --- !u!4 &1341854678
 Transform:
   m_ObjectHideFlags: 0
