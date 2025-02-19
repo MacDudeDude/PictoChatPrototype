@@ -4,7 +4,7 @@ using UnityEngine;
 using FishNet.Object;
 using FishNet.Managing;
 using System.Linq;
-public class HostToolsManager : MonoBehaviour
+public class HostToolsManager : NetworkBehaviour
 {
     public enum SelectedTool
     {
@@ -52,6 +52,8 @@ public class HostToolsManager : MonoBehaviour
 
     private void Update()
     {
+        if (!IsOwner)
+            return;
         StateMachine.CurrentToolState.FrameUpdate();
     }
 }
