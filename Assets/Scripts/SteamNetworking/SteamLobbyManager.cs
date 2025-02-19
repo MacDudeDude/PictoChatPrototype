@@ -8,6 +8,8 @@ using FishNet.Transporting;
 using FishNet.Connection;
 using FishNet.Object;
 using System;
+using FishNet.Managing.Scened;
+using UnityEditor.SearchService;
 
 /// <summary>
 /// Manages Steam lobby functionality including creation, joining, and searching for lobbies.
@@ -39,6 +41,8 @@ public class SteamLobbyManager : MonoBehaviour
 
     // Dedicated event for artist changes only
     public event Action<string> OnArtistChanged;
+
+    SceneLoadData gameScene;
 
     /// <summary>
     /// Initializes the singleton instance and sets up Steam callbacks.
@@ -193,7 +197,11 @@ public class SteamLobbyManager : MonoBehaviour
         Debug.Log("[SteamLobbyManager] Lobby entered: " + lobby.Id);
         InstanceFinder.ClientManager.StartConnection();
         Debug.Log("[SteamLobbyManager] Client manager started");
-        UnityEngine.SceneManagement.SceneManager.LoadScene(gameSceneName);
+
+        gameScene = new SceneLoadData(gameSceneName);
+        gameScene.ReplaceScenes = ReplaceOption.All;
+        InstanceFinder.SceneManager.LoadGlobalScenes(gameScene);
+
     }
 
     /// <summary>
