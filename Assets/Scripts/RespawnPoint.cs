@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using PrimeTween;
 
@@ -8,19 +7,16 @@ public class RespawnPoint : MonoBehaviour, IDraggable
     public float respawnDuration;
     public bool canRespawn;
 
-    private static RespawnPoint _instance;
-    public static RespawnPoint Instance { get { return _instance; } }
+    public static RespawnPoint Instance { get; private set; }
 
     private void Awake()
     {
-        if (_instance != null && _instance != this)
+        if (Instance != null && Instance != this)
         {
-            Destroy(this.gameObject);
+            Destroy(gameObject);
+            return;
         }
-        else
-        {
-            _instance = this;
-        }
+        Instance = this;
     }
 
     public void QueRespawn(Player player, float extraDuration = 0)

@@ -16,6 +16,7 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     public Rigidbody2D rb;
     public PlayerStateMachine StateMachine { get; set; }
 
+
     private float killTimer;
     private bool alive = true;
     private bool movementEnabled;

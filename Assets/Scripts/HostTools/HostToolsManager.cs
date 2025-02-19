@@ -22,6 +22,8 @@ public class HostToolsManager : MonoBehaviour
     public ToolState[] tools;
     public ToolStateMachine StateMachine { get; set; }
 
+    public bool isSpawned;
+
     private static HostToolsManager _instance;
     public static HostToolsManager Instance { get { return _instance; } }
 
@@ -45,11 +47,16 @@ public class HostToolsManager : MonoBehaviour
 
     private void Start()
     {
+        drawer = FindObjectOfType<PlayerDraw>();
         StateMachine.Initialize(tools[startingState]);
     }
 
     private void Update()
     {
+        if (!isSpawned)
+        {
+            return;
+        }
         StateMachine.CurrentToolState.FrameUpdate();
     }
 }

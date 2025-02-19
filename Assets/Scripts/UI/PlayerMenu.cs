@@ -34,8 +34,8 @@ public class PlayerMenu : MonoBehaviour
 
     public void updatePlayerMenu()
     {
-        var members = SteamLobbyManager.Instance.getMembers();
-        var artistId = SteamLobbyManager.Instance.getArtist();
+        var members = SteamLobbyManager.Instance.GetMembers();
+        var artistId = SteamLobbyManager.Instance.GetArtist();
 
         // Hide all text fields initially
         for (int i = 0; i < playerTexts.Length; i++)
