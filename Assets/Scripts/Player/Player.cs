@@ -9,12 +9,14 @@ using Steamworks;
 
 public class Player : NetworkBehaviour, IKillable, IDraggable
 {
+
     public Animator animator;
     public Transform spritesHolder;
     public int startingState;
     public PlayerState[] PlayerStates;
     public Rigidbody2D rb;
     public PlayerStateMachine StateMachine { get; set; }
+
 
     private float killTimer;
     private bool alive = true;
@@ -29,6 +31,7 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
             PlayerStates[i].Init(this, StateMachine);
         }
     }
+
 
     private void Start()
     {

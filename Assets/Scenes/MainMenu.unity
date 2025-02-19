@@ -2437,9 +2437,9 @@ GameObject:
   - component: {fileID: 4277096866415421765}
   - component: {fileID: 4277096866415421766}
   - component: {fileID: 6635772584594589792}
-  - component: {fileID: 4277096866415421768}
   - component: {fileID: 6635772584594589794}
   - component: {fileID: 6635772584594589793}
+  - component: {fileID: 6635772584594589795}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -2447,21 +2447,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &4277096866415421768
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4277096866415421767}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 211a9f6ec51ddc14f908f5acc0cd0423, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _playerPrefab: {fileID: 3142875464113743011, guid: 6bc8c8c1de6f9f747bbe0a810a8d438b, type: 3}
-  _addToDefaultScene: 1
-  Spawns: []
 --- !u!114 &6635772584594589792
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2516,3 +2501,18 @@ MonoBehaviour:
     _latency: 0
     _outOfOrder: 0
     _packetLoss: 0
+--- !u!114 &6635772584594589795
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4277096866415421767}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4174334a77fd7114ba600892c992008b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prespawnedPlayer: {fileID: -6530951889593297605, guid: 8a52d4f2d062f46febf1aa79fe38e64d, type: 3}
+  playerPrefab: {fileID: 3142875464113743011, guid: 6bc8c8c1de6f9f747bbe0a810a8d438b, type: 3}
+  artistPrefab: {fileID: 4671842590098759571, guid: ce4f8c0541b99eb4db7ed63a5fb3c6c8, type: 3}

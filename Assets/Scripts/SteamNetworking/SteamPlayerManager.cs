@@ -4,6 +4,8 @@ using FishNet.Object;
 using FishNet.Connection;
 using FishNet.Object.Synchronizing;
 using System.Collections.Generic;
+using System;
+using FishNet.Transporting;
 
 /// <summary>
 /// Manages synchronized player connection mappings using FishNet SyncDictionaries.
@@ -16,6 +18,9 @@ public class SteamPlayerManager : NetworkBehaviour
 
     private readonly SyncDictionary<ulong, int> _steamToConnectionSync = new SyncDictionary<ulong, int>();
     private readonly SyncDictionary<int, ulong> _connectionToSteamSync = new SyncDictionary<int, ulong>();
+
+    // New event that gets fired after a successful registration.
+    public event Action<ulong, NetworkConnection> OnPlayerRegistered;
 
     /// <summary>
     /// Gets all currently connected Steam IDs.
@@ -30,6 +35,7 @@ public class SteamPlayerManager : NetworkBehaviour
             return;
         }
         Instance = this;
+        InstanceFinder.ServerManager.OnRemoteConnectionState += OnRemoteConnectionState;
     }
 
     /// <summary>
@@ -47,6 +53,9 @@ public class SteamPlayerManager : NetworkBehaviour
         _steamToConnectionSync[steamId] = clientId;
         _connectionToSteamSync[clientId] = steamId;
         Debug.Log($"[SteamPlayerManager] Registered connection - Steam ID: {steamId}, Connection ID: {clientId}");
+
+        // Fire the registration event.
+        OnPlayerRegistered?.Invoke(steamId, connection);
     }
 
     /// <summary>
@@ -67,6 +76,13 @@ public class SteamPlayerManager : NetworkBehaviour
         }
     }
 
+    private void OnRemoteConnectionState(NetworkConnection connection, RemoteConnectionStateArgs args)
+    {
+        if (args.ConnectionState == RemoteConnectionState.Stopped)
+        {
+            RemoveConnection(connection);
+        }
+    }
     /// <summary>
     /// Retrieves the NetworkConnection associated with a given Steam ID.
     /// </summary>
@@ -107,5 +123,10 @@ public class SteamPlayerManager : NetworkBehaviour
             Debug.LogWarning($"[SteamPlayerManager] No Steam ID found for connection: {clientId}");
             return 0;
         }
+    }
+
+    private void OnDestroy()
+    {
+        InstanceFinder.ServerManager.OnRemoteConnectionState -= OnRemoteConnectionState;
     }
 }

@@ -23,5 +23,11 @@ public class SteamNetworkPlayer : NetworkBehaviour
         // Register this connection with the Steam ID using the separate player manager.
         Debug.Log("Registering connection with Steam ID: " + steamId);
         SteamPlayerManager.Instance.RegisterConnection(Owner, steamId);
+        DespawnPrespawnedPlayer();
+    }
+
+    public void DespawnPrespawnedPlayer()
+    {
+        base.Despawn();
     }
 }

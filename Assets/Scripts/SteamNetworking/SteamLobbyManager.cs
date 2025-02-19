@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using FishNet;
 using FishNet.Transporting;
-using FishNet.Connection;
 using FishNet.Object;
+using System;
+using FishNet.Managing.Scened;
+using UnityEditor.SearchService;
 
 /// <summary>
 /// Manages Steam lobby functionality including creation, joining, and searching for lobbies.
@@ -33,6 +35,14 @@ public class SteamLobbyManager : MonoBehaviour
     private FishyFacepunch.FishyFacepunch _transport;
     [SerializeField] private string gameSceneName = "Game";
 
+    // General event for lobby metadata changes (if needed elsewhere)
+    public event Action OnLobbyMetadataChanged;
+
+    // Dedicated event for artist changes only
+    public event Action<string> OnArtistChanged;
+
+    SceneLoadData gameScene;
+
     /// <summary>
     /// Initializes the singleton instance and sets up Steam callbacks.
     /// </summary>
@@ -52,8 +62,8 @@ public class SteamLobbyManager : MonoBehaviour
         // Setup Steam callbacks
         SteamMatchmaking.OnLobbyEntered += OnLobbyEntered;
         SteamFriends.OnGameLobbyJoinRequested += OnGameLobbyJoinRequested;
-        // Subscribe to FishNet connection events (player management is now handled separately)
-        InstanceFinder.ServerManager.OnRemoteConnectionState += HandleConnectionState;
+
+        InstanceFinder.ClientManager.OnClientConnectionState += OnClientConnectionState;
     }
 
     /// <summary>
@@ -80,10 +90,10 @@ public class SteamLobbyManager : MonoBehaviour
         InstanceFinder.ServerManager.StartConnection();
         var lobby = createLobbyResult.Value;
         lobby.SetData("artist", SteamClient.SteamId.ToString());
+        lobby.SetJoinable(true);
+        lobby.SetPublic();
 
-        string lobbyCode = "55";
-        lobby.SetData("lobbyCode_deletethispartlater", lobbyCode);
-        Debug.Log("[SteamLobbyManager] Lobby created: " + lobby.Id + " Lobbey Code: " + lobbyCode);
+        Debug.Log("[SteamLobbyManager] Lobby created: " + lobby.Id);
     }
 
     /// <summary>
@@ -186,9 +196,25 @@ public class SteamLobbyManager : MonoBehaviour
         Debug.Log("[SteamLobbyManager] Lobby entered: " + lobby.Id);
         InstanceFinder.ClientManager.StartConnection();
         Debug.Log("[SteamLobbyManager] Client manager started");
-        UnityEngine.SceneManagement.SceneManager.LoadScene(gameSceneName);
+
+        gameScene = new SceneLoadData(gameSceneName);
+        gameScene.ReplaceScenes = ReplaceOption.All;
+        InstanceFinder.SceneManager.LoadGlobalScenes(gameScene);
+
     }
 
+    public void LeaveLobby()
+    {
+        CurrentLobby.Value.Leave();
+        CurrentLobby = null;
+    }
+    private void OnClientConnectionState(ClientConnectionStateArgs args)
+    {
+        if (args.ConnectionState == LocalConnectionState.Stopped)
+        {
+            LeaveLobby();
+        }
+    }
     /// <summary>
     /// Callback triggered when a game lobby join is requested (e.g., through Steam overlay).
     /// Attempts to join the requested lobby.
@@ -214,7 +240,7 @@ public class SteamLobbyManager : MonoBehaviour
     /// Gets the currently selected artist ID from the lobby metadata.
     /// </summary>
     /// <returns>The artist ID stored in the lobby data, or null if not set.</returns>
-    public string getArtist()
+    public string GetArtist()
     {
         var artist = CurrentLobby.Value.GetData("artist");
         return artist;
@@ -226,14 +252,30 @@ public class SteamLobbyManager : MonoBehaviour
     /// <param name="artistId">The new artist ID to set for the lobby.</param>
     public void ChangeArtist(string artistId)
     {
+        if (CurrentLobby == null)
+            return;
+
+        // Retrieve the previous artist value (if needed for comparison)
+        string previousArtist = CurrentLobby.Value.GetData("artist");
+
         CurrentLobby.Value.SetData("artist", artistId);
+        Debug.Log($"[SteamLobbyManager] Lobby metadata updated: artist = {artistId}");
+
+        // Fire a general metadata change event.
+        OnLobbyMetadataChanged?.Invoke();
+
+        // Only fire the dedicated event if the artist has actually changed.
+        if (artistId != previousArtist)
+        {
+            OnArtistChanged?.Invoke(artistId);
+        }
     }
 
     /// <summary>
     /// Gets a list of all Steam friends currently in the lobby.
     /// </summary>
     /// <returns>A List of Friend objects representing the lobby members.</returns>
-    public List<Friend> getMembers()
+    public List<Friend> GetMembers()
     {
         List<Friend> members = new List<Friend>();
         foreach (var member in CurrentLobby.Value.Members)
@@ -243,21 +285,6 @@ public class SteamLobbyManager : MonoBehaviour
         return members;
     }
 
-    /// <summary>
-    /// Handles client connection/disconnection events.
-    /// Logs when clients disconnect from the game server.
-    /// Player management is handled separately by the SteamPlayerManager.
-    /// </summary>
-    /// <param name="connection">The network connection that changed state.</param>
-    /// <param name="args">Contains information about the connection state change.</param>
-    private void HandleConnectionState(NetworkConnection connection, RemoteConnectionStateArgs args)
-    {
-        if (args.ConnectionState != RemoteConnectionState.Started)
-        {
-            Debug.Log($"[SteamLobbyManager] Client disconnected. Connection ID: {connection.ClientId}");
-            // Note: Player management (removal, etc.) is handled by SteamPlayerManager.
-        }
-    }
 
     /// <summary>
     /// Cleans up Steam callbacks when the object is destroyed.
@@ -268,10 +295,5 @@ public class SteamLobbyManager : MonoBehaviour
         SteamMatchmaking.OnLobbyEntered -= OnLobbyEntered;
         SteamFriends.OnGameLobbyJoinRequested -= OnGameLobbyJoinRequested;
 
-        // Unsubscribe from FishNet connection events
-        if (InstanceFinder.ServerManager != null)
-        {
-            InstanceFinder.ServerManager.OnRemoteConnectionState -= HandleConnectionState;
-        }
     }
 }

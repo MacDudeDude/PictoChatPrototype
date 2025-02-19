@@ -22,6 +22,8 @@ public class HostToolsManager : MonoBehaviour
     public ToolState[] tools;
     public ToolStateMachine StateMachine { get; set; }
 
+    public bool isSpawned;
+
     private static HostToolsManager _instance;
     public static HostToolsManager Instance { get { return _instance; } }
 
