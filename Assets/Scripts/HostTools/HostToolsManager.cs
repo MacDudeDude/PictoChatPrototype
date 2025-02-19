@@ -53,10 +53,6 @@ public class HostToolsManager : MonoBehaviour
 
     private void Update()
     {
-        if (!isSpawned)
-        {
-            return;
-        }
         StateMachine.CurrentToolState.FrameUpdate();
     }
 }
