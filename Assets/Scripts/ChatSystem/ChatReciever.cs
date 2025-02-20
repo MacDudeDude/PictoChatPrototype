@@ -14,6 +14,17 @@ public class ChatReciever : MonoBehaviour
     public int maxPreviousMessages;
     private List<GameObject> messages = new List<GameObject>();
 
+    private int width;
+    private int height;
+    private float ppu;
+
+    public void Init(float ppu, int height, int width)
+    {
+        this.ppu = 1f / ppu;
+        this.width = width;
+        this.height = height;
+    }
+
     public struct ChatBroadcast : IBroadcast
     {
         public string Username;
@@ -34,12 +45,24 @@ public class ChatReciever : MonoBehaviour
         GameObject newChatMessage = Instantiate(chatMessagePrefab, content);
         messages.Add(newChatMessage);
         newChatMessage.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = username;
+        newChatMessage.GetComponentInChildren<UnityEngine.UI.RawImage>().texture = CreateTextureFromMessage(colors);
 
         if (messages.Count > maxPreviousMessages)
         {
             Destroy(messages[0]);
             messages.RemoveAt(0);
         }
+    }
+
+    private Texture2D CreateTextureFromMessage(Color32[] colors)
+    {
+        Texture2D newTex = new Texture2D(width, height, TextureFormat.ARGB32, false);
+        newTex.filterMode = FilterMode.Point;
+
+        newTex.SetPixels32(colors);
+        newTex.Apply();
+
+        return newTex;
     }
 
     public void OnChatBroadcast(NetworkConnection conn, ChatBroadcast msg, Channel channel)

@@ -50,6 +50,8 @@ public class ChatDrawer : MonoBehaviour
         textureColors = new Color32[width * height];
 
         ResetChatScreen();
+
+        recieverSender.Init(ppu, height, width);
     }
 
     public void SwitchToPenTool()
