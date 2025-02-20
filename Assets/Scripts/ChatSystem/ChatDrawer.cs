@@ -98,6 +98,7 @@ public class ChatDrawer : MonoBehaviour
     public void SendChatMessage()
     {
         recieverSender.SendChatMessage(textureColors);
+        ResetChatScreen();
     }
 
     public void EnableDraw()

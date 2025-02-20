@@ -3774,7 +3774,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   content: {fileID: 1160824405}
   chatMessagePrefab: {fileID: 8968416956306666027, guid: df644bae58a48f643b663d5786f0d484, type: 3}
-  maxPreviousMessages: 0
+  maxPreviousMessages: 10
 --- !u!1 &1210223632
 GameObject:
   m_ObjectHideFlags: 0
