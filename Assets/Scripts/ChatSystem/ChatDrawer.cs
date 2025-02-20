@@ -10,6 +10,8 @@ public class ChatDrawer : MonoBehaviour
         erasing,
     }
 
+    public ChatReciever recieverSender;
+    [Header("Self Drawing Variables")]
     public ChatTools currentTool;
     public Color currentColor;
     public float currentRadius;
@@ -48,6 +50,31 @@ public class ChatDrawer : MonoBehaviour
         textureColors = new Color32[width * height];
 
         ResetChatScreen();
+    }
+
+    public void SwitchToPenTool()
+    {
+        currentTool = ChatTools.drawing;
+    }
+
+    public void SwitchToEraserTool()
+    {
+        currentTool = ChatTools.erasing;
+    }
+
+    public void SetRadius(float radius)
+    {
+        currentRadius = radius;
+    }
+
+    public void SetColor(Color32 color)
+    {
+        currentColor = color;
+    }
+
+    public void SendChatMessage()
+    {
+        recieverSender.SendChatMessage(textureColors);
     }
 
     // Update is called once per frame
@@ -117,7 +144,7 @@ public class ChatDrawer : MonoBehaviour
         }
     }
 
-    void ResetChatScreen()
+    public void ResetChatScreen()
     {
         for (int i = 0; i < textureColors.Length; i++)
         {
@@ -210,5 +237,23 @@ public class ChatDrawer : MonoBehaviour
         }
 
         return linePositions;
+    }
+
+    private void OnDrawGizmos()
+    {
+        ppu = Mathf.RoundToInt(tile.sprite.pixelsPerUnit);
+
+        Vector3 boundsCenter = transform.position;
+        Vector3 boundsSize = Vector3.one;
+
+        float ppuThingy = 1 / tile.sprite.pixelsPerUnit;
+        boundsCenter.x += (width / 2 * ppuThingy);
+        boundsCenter.y += (height / 2 * ppuThingy);
+        boundsCenter.z = 0;
+
+        boundsSize.x = width * ppuThingy;
+        boundsSize.y = height * ppuThingy;
+
+        Gizmos.DrawWireCube(boundsCenter, boundsSize);
     }
 }
