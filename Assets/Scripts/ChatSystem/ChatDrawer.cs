@@ -4,15 +4,14 @@ using UnityEngine;
 
 public class ChatDrawer : MonoBehaviour
 {
-    public enum ChatTools
-    {
-        drawing,
-        erasing,
-    }
-
+    public bool drawing;
+    public bool erasing;
+    public OverUI uiChecker;
     public ChatReciever recieverSender;
+    public UnityEngine.UI.Toggle[] toggles;
+    public UnityEngine.UI.Toggle[] colorToggles;
+    public Color32[] colors;
     [Header("Self Drawing Variables")]
-    public ChatTools currentTool;
     public Color currentColor;
     public float currentRadius;
     public Bounds chatDrawBounds;
@@ -27,11 +26,13 @@ public class ChatDrawer : MonoBehaviour
     private Camera cam;
     private bool tilemapUpdated;
     private Vector3 lastMousePosition;
+    private BoxCollider2D col;
 
     // Start is called before the first frame update
     void Start()
     {
         cam = Camera.main;
+        col = GetComponent<BoxCollider2D>();
         chatDrawingArea.InitializeTextures(width, height, 1, tile.sprite.pixelsPerUnit);
         ppu = Mathf.RoundToInt(tile.sprite.pixelsPerUnit);
 
@@ -48,35 +49,65 @@ public class ChatDrawer : MonoBehaviour
 
         chatDrawBounds = new Bounds(boundsCenter, boundsSize);
         textureColors = new Color32[width * height];
+        col.offset = chatDrawBounds.center - transform.position;
+        col.size = chatDrawBounds.size;
 
         ResetChatScreen();
 
         recieverSender.Init(ppu, height, width);
     }
 
-    public void SwitchToPenTool()
+    public void SwitchToPenTool(bool enabled)
     {
-        currentTool = ChatTools.drawing;
+        drawing = enabled;
     }
 
-    public void SwitchToEraserTool()
+    public void SwitchToEraserTool(bool enabled)
     {
-        currentTool = ChatTools.erasing;
+        erasing = enabled;
     }
 
-    public void SetRadius(float radius)
+    public void SetRadius()
     {
-        currentRadius = radius;
+        if(toggles[0].isOn)
+        {
+            currentRadius = 0.1f;
+        }else if (toggles[1].isOn)
+        {
+            currentRadius = 1.1f;
+        }else if(toggles[2].isOn)
+        {
+            currentRadius = 2.1f;
+        }
     }
 
-    public void SetColor(Color32 color)
+    public void SetColor()
     {
-        currentColor = color;
+        currentColor = Color.magenta; // For debugging
+
+        for (int i = 0; i < colorToggles.Length; i++)
+        {
+            if(colorToggles[i].isOn)
+            {
+                currentColor = colors[i];
+                break;
+            }
+        }
     }
 
     public void SendChatMessage()
     {
         recieverSender.SendChatMessage(textureColors);
+    }
+
+    public void EnableDraw()
+    {
+        col.enabled = true;
+    }
+
+    public void DisableDraw()
+    {
+        col.enabled = false;
     }
 
     // Update is called once per frame
@@ -96,11 +127,11 @@ public class ChatDrawer : MonoBehaviour
         //    }
         //}
 
-        if (currentTool == ChatTools.drawing)
+        if (drawing)
         {
             DrawTool();
         }
-        else if (currentTool == ChatTools.erasing)
+        else if (erasing)
         {
             EraseTool();
         }
@@ -122,9 +153,13 @@ public class ChatDrawer : MonoBehaviour
         if (Input.GetMouseButton(0))
         {
             Vector2 mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
-            Vector3Int gridStartpoint = drawGrid.WorldToCell(lastMousePosition);
-            Vector3Int gridEndpoint = drawGrid.WorldToCell(mousePos);
-            DrawLine(gridStartpoint, gridEndpoint, currentRadius, currentColor);
+
+            if (!uiChecker.IsPointerOverUIElement() && !uiChecker.IsPointOverElement(cam.WorldToScreenPoint(mousePos + ((Vector2)lastMousePosition - mousePos))))
+            {
+                Vector3Int gridStartpoint = drawGrid.WorldToCell(lastMousePosition);
+                Vector3Int gridEndpoint = drawGrid.WorldToCell(mousePos);
+                DrawLine(gridStartpoint, gridEndpoint, currentRadius, currentColor);
+            }
 
             lastMousePosition = mousePos;
         }
@@ -138,9 +173,13 @@ public class ChatDrawer : MonoBehaviour
         if (Input.GetMouseButton(0))
         {
             Vector2 mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
-            Vector3Int gridStartpoint = drawGrid.WorldToCell(lastMousePosition);
-            Vector3Int gridEndpoint = drawGrid.WorldToCell(mousePos);
-            DrawLine(gridStartpoint, gridEndpoint, currentRadius, Color.white);
+
+            if (!uiChecker.IsPointerOverUIElement() && !uiChecker.IsPointOverElement(cam.WorldToScreenPoint(mousePos + ((Vector2)lastMousePosition - mousePos))))
+            {
+                Vector3Int gridStartpoint = drawGrid.WorldToCell(lastMousePosition);
+                Vector3Int gridEndpoint = drawGrid.WorldToCell(mousePos);
+                DrawLine(gridStartpoint, gridEndpoint, currentRadius, Color.white);
+            }
 
             lastMousePosition = mousePos;
         }

@@ -37,7 +37,7 @@ public class ChatReciever : MonoBehaviour
         newMsh.Username = "asd";
         newMsh.textureColors = colors;
 
-        InstanceFinder.ClientManager.Broadcast(newMsh);
+        InstanceFinder.ClientManager.Broadcast(newMsh, Channel.Reliable);
     }
 
     public void RecieveChatMessage(Color32[] colors, string username)
