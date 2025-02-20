@@ -32,7 +32,7 @@ public class TextureManager : MonoBehaviour
             spriteHolders[i].GetComponent<MeshRenderer>().sortingOrder = -4 + i;
             spriteHolders[i].GetComponent<MeshRenderer>().material.mainTexture = textures[i];
 
-            spriteHolders[i].transform.position = new Vector3(width * ppu * 0.5f, height * ppu * 0.5f, 0);
+            spriteHolders[i].transform.localPosition = new Vector3(width * ppu * 0.5f, height * ppu * 0.5f, 0);
             spriteHolders[i].transform.localScale = new Vector3(width * ppu, height * ppu, 1);
         }
 
@@ -40,7 +40,7 @@ public class TextureManager : MonoBehaviour
         whiteBG.name = ("Background Sorting Layer : " + (-5));
         whiteBG.GetComponent<MeshRenderer>().sortingOrder = -5;
 
-        whiteBG.transform.position = new Vector3(width * ppu * 0.5f, height * ppu * 0.5f, 0);
+        whiteBG.transform.localPosition= new Vector3(width * ppu * 0.5f, height * ppu * 0.5f, 0);
         whiteBG.transform.localScale = new Vector3(width * ppu, height * ppu, 1);
     }
 
