@@ -4,6 +4,6 @@ public class PenTool : DrawingToolBase
 {
     public override void OnToolUpdate()
     {
-        HandleDrawing(1, drawingService.CurrentColor);
+        HandleDrawing(1);
     }
 } 

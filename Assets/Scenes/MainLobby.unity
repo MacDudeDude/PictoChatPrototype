@@ -580,7 +580,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 785704021}
-  - component: {fileID: 785704020}
+  - component: {fileID: 785704026}
   - component: {fileID: 785704024}
   - component: {fileID: 785704023}
   - component: {fileID: 785704025}
@@ -591,25 +591,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &785704020
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 785704016}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a69d83a982933064384f0910050d1ba2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  availableTools:
-  - toolName: Draw
-    tool: {fileID: 785704023}
-  - toolName: Erase
-    tool: {fileID: 785704024}
-  - toolName: Drag
-    tool: {fileID: 785704025}
 --- !u!4 &785704021
 Transform:
   m_ObjectHideFlags: 0
@@ -663,6 +644,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dragSpeed: 30
+--- !u!114 &785704026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 785704016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a69d83a982933064384f0910050d1ba2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  availableTools:
+  - toolName: Pen
+    tool: {fileID: 785704023}
 --- !u!1001 &1049590812
 PrefabInstance:
   m_ObjectHideFlags: 0

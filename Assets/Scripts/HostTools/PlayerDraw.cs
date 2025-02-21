@@ -41,7 +41,7 @@ public class PlayerDraw : NetworkBehaviour, IDrawingService
     [Header("Drawing Settings")]
     public int currentLayer;
     public float placeRadius;
-    public Color32 currentcolor;
+    public Color32 currentColor;
 
     [Header("References")]
     public MouseManager mouseManager;
@@ -101,7 +101,7 @@ public class PlayerDraw : NetworkBehaviour, IDrawingService
     public Grid CollisionGrid => collisionGrid;
     public float PlaceRadius => placeRadius;
     public int CurrentLayer => currentLayer;
-    public Color32 CurrentColor => currentcolor;
+    public Color32 CurrentColor => currentColor;
 
     /// <summary>
     /// Called when client starts. Sets up ownership and requests stored commands.
@@ -315,7 +315,7 @@ public class PlayerDraw : NetworkBehaviour, IDrawingService
             {
                 Vector3Int gridStartpoint = collisionGrid.WorldToCell(lastMousePosition);
                 Vector3Int gridEndpoint = collisionGrid.WorldToCell(mousePos);
-                DrawLineServerRpc(gridStartpoint, gridEndpoint, placeRadius, 1, currentLayer, currentcolor);
+                DrawLineServerRpc(gridStartpoint, gridEndpoint, placeRadius, 1, currentLayer, currentColor);
             }
 
             lastMousePosition = mousePos;

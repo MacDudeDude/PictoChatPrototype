@@ -5,7 +5,6 @@ public abstract class DrawingToolBase : MonoBehaviour, IDrawingTool
     protected IDrawingService drawingService;
     protected Camera mainCamera;
     protected Vector2 lastMousePosition;
-
     public void Initialize(IDrawingService service)
     {
         drawingService = service;
@@ -31,7 +30,7 @@ public abstract class DrawingToolBase : MonoBehaviour, IDrawingTool
         return mainCamera.ScreenToWorldPoint(Input.mousePosition);
     }
 
-    protected void HandleDrawing(int value, Color32 color)
+    protected void HandleDrawing(int value)
     {
         if (!CanUse()) return;
 
@@ -46,7 +45,7 @@ public abstract class DrawingToolBase : MonoBehaviour, IDrawingTool
             {
                 Vector3Int gridStartpoint = drawingService.CollisionGrid.WorldToCell(lastMousePosition);
                 Vector3Int gridEndpoint = drawingService.CollisionGrid.WorldToCell(mousePos);
-                drawingService.DrawLine(gridStartpoint, gridEndpoint, drawingService.PlaceRadius, value, drawingService.CurrentLayer, color);
+                drawingService.DrawLine(gridStartpoint, gridEndpoint, drawingService.PlaceRadius, value, drawingService.CurrentLayer, drawingService.CurrentColor);
             }
 
             lastMousePosition = mousePos;

@@ -19,7 +19,6 @@ public class HostToolsManager : MonoBehaviour
     private Dictionary<string, DrawingToolBase> toolDictionary;
     private DrawingToolBase currentTool;
 
-    [Header("References")]
     [SerializeField] private IDrawingService drawingService;
 
     private static HostToolsManager _instance;
@@ -34,6 +33,7 @@ public class HostToolsManager : MonoBehaviour
         }
         
         _instance = this;
+        drawingService = GetComponentInChildren<PlayerDraw>();
         InitializeTools();
     }
 
@@ -54,7 +54,7 @@ public class HostToolsManager : MonoBehaviour
         currentTool?.OnToolUpdate();
     }
 
-    private void SwitchTool(string toolName)
+    public void SwitchTool(string toolName)
     {
         if (!toolDictionary.TryGetValue(toolName, out DrawingToolBase newTool))
             return;
@@ -62,10 +62,5 @@ public class HostToolsManager : MonoBehaviour
         currentTool?.OnToolDeselected();
         currentTool = newTool;
         currentTool.OnToolSelected();
-    }
-
-    public void OnToolSelected(string toolName)
-    {
-        SwitchTool(toolName);
     }
 }
