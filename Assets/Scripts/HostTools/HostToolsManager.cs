@@ -4,26 +4,23 @@ using UnityEngine;
 using FishNet.Object;
 using FishNet.Managing;
 using System.Linq;
+
 public class HostToolsManager : MonoBehaviour
 {
-    public enum SelectedTool
+    [System.Serializable]
+    public class ToolEntry
     {
-        Pen,
-        Eraser,
-        Hand
+        public string toolName;  // For UI identification
+        public DrawingToolBase tool;
     }
 
+    [Header("Tool Settings")]
+    [SerializeField] private List<ToolEntry> availableTools;
+    private Dictionary<string, DrawingToolBase> toolDictionary;
+    private DrawingToolBase currentTool;
 
-    public SelectedTool selectedTool;
-    public MouseManager mouse;
-    public PlayerDraw drawer;
-
-    public int startingState;
-    public ToolState[] tools;
-    public ToolStateMachine StateMachine { get; set; }
-
-    public bool isSpawned;
-
+    private IDrawingService drawingService;
+    private INetworkDrawingService drawingNetwork;
     private static HostToolsManager _instance;
     public static HostToolsManager Instance { get { return _instance; } }
 
@@ -32,26 +29,39 @@ public class HostToolsManager : MonoBehaviour
         if (_instance != null && _instance != this)
         {
             Destroy(this.gameObject);
+            return;
         }
-        else
-        {
-            _instance = this;
-
-            StateMachine = new ToolStateMachine();
-            for (int i = 0; i < tools.Length; i++)
-            {
-                tools[i].Init(this);
-            }
-        }
+        
+        _instance = this;
+        drawingService = GetComponentInChildren<IDrawingService>();
+        drawingNetwork = GetComponentInChildren<INetworkDrawingService>();
+        InitializeTools();
     }
 
-    private void Start()
+    private void InitializeTools()
     {
-        StateMachine.Initialize(tools[startingState]);
+        toolDictionary = new Dictionary<string, DrawingToolBase>();
+        foreach (var toolEntry in availableTools)
+        {
+            toolEntry.tool.Initialize(drawingService, drawingNetwork);
+            toolDictionary[toolEntry.toolName] = toolEntry.tool;
+        }
+
+        currentTool = toolDictionary.Values.First();
     }
 
     private void Update()
     {
-        StateMachine.CurrentToolState.FrameUpdate();
+        currentTool?.OnToolUpdate();
+    }
+
+    public void SwitchTool(string toolName)
+    {
+        if (!toolDictionary.TryGetValue(toolName, out DrawingToolBase newTool))
+            return;
+
+        currentTool?.OnToolDeselected();
+        currentTool = newTool;
+        currentTool.OnToolSelected();
     }
 }

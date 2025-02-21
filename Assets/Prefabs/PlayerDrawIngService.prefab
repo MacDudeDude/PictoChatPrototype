@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4671842590098759583
+--- !u!1 &8224317198423284804
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,25 +8,26 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4671842590098759569}
-  - component: {fileID: 4671842590098759568}
-  - component: {fileID: 4671842590098759570}
-  - component: {fileID: 4671842590098759571}
+  - component: {fileID: 8224317198423284807}
+  - component: {fileID: 8224317198423285178}
+  - component: {fileID: 8224317198423284805}
+  - component: {fileID: 8224317198423285179}
+  - component: {fileID: 8224317198423285176}
   m_Layer: 0
-  m_Name: PlayerDraw
+  m_Name: PlayerDrawIngService
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4671842590098759569
+--- !u!4 &8224317198423284807
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4671842590098759583}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_GameObject: {fileID: 8224317198423284804}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -34,50 +35,13 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4671842590098759568
+--- !u!114 &8224317198423285178
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4671842590098759583}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2860070cf0572a44d8057645e7c69117, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _componentIndexCache: 255
-  _addedNetworkObject: {fileID: 4671842590098759571}
-  _networkObjectCache: {fileID: 0}
-  currentLayer: 0
-  placeRadius: 1.1
-  playAreaBoundsX: {x: 0, y: 0}
-  playAreaBoundsY: {x: 0, y: 0}
-  layersAmount: 3
-  collisionLayer: 1
-  tileValues:
-  - {fileID: 0}
-  - {fileID: 11400000, guid: 49b2b84931f1bc64d816d81003ab91cf, type: 2}
-  currentcolor:
-    serializedVersion: 2
-    rgba: 0
-  mouseManager: {fileID: 4671842590098759570}
-  collisionGridPrefab: {fileID: 1380134424323737350, guid: 30f7bef53b232495b850ba1faa988be7, type: 3}
-  tilemapGridPrefab: {fileID: 3433889008773610484, guid: 8e0b894cdbfc742a4b5451e499d26871, type: 3}
-  texManagerPrefab: {fileID: 1165261202938171685, guid: 5df58bbda335842808044df06ee1c97d, type: 3}
-  tilemapPrefab: {fileID: 7604062276924931468, guid: ea86279986b17864eb6147ab0c4e2f31, type: 3}
-  rows: 10
-  collumns: 6
-  width: 100
-  height: 100
-  hostToolsManager: {fileID: 0}
---- !u!114 &4671842590098759570
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4671842590098759583}
+  m_GameObject: {fileID: 8224317198423284804}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: feecaa0e57324664c8ab40aaf946a9f2, type: 3}
@@ -87,13 +51,13 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 35841
   hoveredObject: {fileID: 0}
---- !u!114 &4671842590098759571
+--- !u!114 &8224317198423284805
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4671842590098759583}
+  m_GameObject: {fileID: 8224317198423284804}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
@@ -109,9 +73,9 @@ MonoBehaviour:
   RuntimeParentNetworkBehaviour: {fileID: 0}
   RuntimeChildNetworkBehaviours: []
   _isNetworked: 1
-  _isSpawnable: 1
+  _isSpawnable: 0
   _isGlobal: 0
-  _initializeOrder: 0
+  _initializeOrder: -128
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedValusSet: 0
@@ -138,3 +102,51 @@ MonoBehaviour:
     Rotation: {x: 0, y: 0, z: 0, w: 0}
     Scale: {x: 0, y: 0, z: 0}
     IsValid: 0
+--- !u!114 &8224317198423285179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8224317198423284804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22090ee95373044b09c2405996629548, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentLayer: 0
+  placeRadius: 0
+  currentColor:
+    serializedVersion: 2
+    rgba: 4278190080
+  mouseManager: {fileID: 8224317198423285178}
+  texManager: {fileID: 0}
+  collisionGrid: {fileID: 0}
+  tilemapGrid: {fileID: 0}
+  playAreaBoundsX: {x: 0, y: 0}
+  playAreaBoundsY: {x: 0, y: 0}
+  layersAmount: 0
+  collisionLayer: 1
+  tileValues:
+  - {fileID: 0}
+  - {fileID: 11400000, guid: 49b2b84931f1bc64d816d81003ab91cf, type: 2}
+  tilemapPrefab: {fileID: 7604062276924931468, guid: ea86279986b17864eb6147ab0c4e2f31, type: 3}
+  rows: 10
+  collumns: 6
+  width: 100
+  height: 100
+--- !u!114 &8224317198423285176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8224317198423284804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b51b119a90e014cf39af912ef2378140, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 8224317198423284805}
+  _networkObjectCache: {fileID: 0}

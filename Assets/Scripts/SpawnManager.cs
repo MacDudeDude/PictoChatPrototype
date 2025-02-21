@@ -14,7 +14,7 @@ public class SpawnManager : MonoBehaviour
     private NetworkObject prespawnedPlayer;
     [SerializeField]
     private NetworkObject playerPrefab;
-    private PlayerDraw artist;
+    private PlayerDrawingNetwork artist;
 
     private Dictionary<NetworkConnection, GameObject> players = new Dictionary<NetworkConnection, GameObject>();
 
