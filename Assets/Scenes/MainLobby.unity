@@ -905,7 +905,7 @@ MonoBehaviour:
   - {fileID: 469078656}
   - {fileID: 2010747676}
   playerButtons: []
-  playerDraw: {fileID: 1359775942}
+  playerDrawingNetwork: {fileID: 0}
 --- !u!4 &1341854678
 Transform:
   m_ObjectHideFlags: 0
@@ -922,17 +922,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1359775942 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4671842590098759568, guid: ce4f8c0541b99eb4db7ed63a5fb3c6c8, type: 3}
-  m_PrefabInstance: {fileID: 2110205180}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2860070cf0572a44d8057645e7c69117, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1734199166
 GameObject:
   m_ObjectHideFlags: 0
@@ -1556,13 +1545,87 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerDraw
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4671842590098759568, guid: ce4f8c0541b99eb4db7ed63a5fb3c6c8, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: ce4f8c0541b99eb4db7ed63a5fb3c6c8, type: 3}
 --- !u!4 &2110205181 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4671842590098759569, guid: ce4f8c0541b99eb4db7ed63a5fb3c6c8, type: 3}
   m_PrefabInstance: {fileID: 2110205180}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2110205182 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4671842590098759583, guid: ce4f8c0541b99eb4db7ed63a5fb3c6c8, type: 3}
+  m_PrefabInstance: {fileID: 2110205180}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2110205183 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4671842590098759571, guid: ce4f8c0541b99eb4db7ed63a5fb3c6c8, type: 3}
+  m_PrefabInstance: {fileID: 2110205180}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2110205182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2110205184 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4671842590098759570, guid: ce4f8c0541b99eb4db7ed63a5fb3c6c8, type: 3}
+  m_PrefabInstance: {fileID: 2110205180}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2110205182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: feecaa0e57324664c8ab40aaf946a9f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2110205185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2110205182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22090ee95373044b09c2405996629548, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentLayer: 0
+  placeRadius: 0
+  currentColor:
+    serializedVersion: 2
+    rgba: 4278190080
+  mouseManager: {fileID: 2110205184}
+  texManager: {fileID: 1968798793}
+  collisionGrid: {fileID: 1049590813}
+  tilemapGrid: {fileID: 1290228137}
+  playAreaBoundsX: {x: 0, y: 0}
+  playAreaBoundsY: {x: 0, y: 0}
+  layersAmount: 0
+  collisionLayer: 1
+  tileValues: []
+  tilemapPrefab: {fileID: 7604062276924931468, guid: ea86279986b17864eb6147ab0c4e2f31, type: 3}
+  rows: 10
+  collumns: 6
+  width: 100
+  height: 100
+--- !u!114 &2110205186
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2110205182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b51b119a90e014cf39af912ef2378140, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 2110205183}
+  _networkObjectCache: {fileID: 0}
 --- !u!1 &2128216048
 GameObject:
   m_ObjectHideFlags: 0
