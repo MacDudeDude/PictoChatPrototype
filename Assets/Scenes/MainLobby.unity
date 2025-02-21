@@ -1489,6 +1489,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1049590813}
     - target: {fileID: 4671842590098759568, guid: ce4f8c0541b99eb4db7ed63a5fb3c6c8, type: 3}
+      propertyPath: currentColor.rgba
+      value: 4278190080
+      objectReference: {fileID: 0}
+    - target: {fileID: 4671842590098759568, guid: ce4f8c0541b99eb4db7ed63a5fb3c6c8, type: 3}
       propertyPath: currentcolor.rgba
       value: 4278190080
       objectReference: {fileID: 0}
