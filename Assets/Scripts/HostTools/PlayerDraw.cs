@@ -36,25 +36,24 @@ public struct DrawCommand
 /// Handles networked drawing functionality for players in a multiplayer game.
 /// Allows players to draw on a shared tilemap grid that syncs across the network.
 /// </summary>
-public class PlayerDraw : NetworkBehaviour
+public class PlayerDraw : NetworkBehaviour, IDrawingService
 {
-    /// <summary>Currently selected layer to draw on</summary>
+    [Header("Drawing Settings")]
     public int currentLayer;
-
-    /// <summary>Radius of the drawing brush</summary>
     public float placeRadius;
+    public Color32 currentcolor;
+
+    [Header("References")]
+    public MouseManager mouseManager;
+    public TextureManager texManager;
+    public Grid collisionGrid;
+    public Grid tilemapGrid;
 
     /// <summary>X bounds of the playable drawing area</summary>
     public Vector2 playAreaBoundsX;
 
     /// <summary>Y bounds of the playable drawing area</summary>
     public Vector2 playAreaBoundsY;
-
-    /// <summary>Reference to the mouse input manager</summary>
-    public MouseManager mouseManager;
-
-    /// <summary>Reference to the texture manager</summary>
-    public TextureManager texManager;
 
     /// <summary>Total number of drawing layers</summary>
     public int layersAmount;
@@ -65,14 +64,6 @@ public class PlayerDraw : NetworkBehaviour
     /// <summary>Array of tile types that can be placed</summary>
     public Tile[] tileValues;
 
-    /// <summary>The current drawing color</summary>
-    public Color32 currentcolor;
-
-    /// <summary>Main Unity grid for world positioning</summary>
-    public Grid grid;
-
-    /// <summary>Grid for tilemap positioning</summary>
-    public Grid tilemapGrid;
 
     /// <summary>Prefab for creating new tilemaps</summary>
     public GameObject tilemapPrefab;
@@ -104,6 +95,13 @@ public class PlayerDraw : NetworkBehaviour
 
     /// <summary>List of all drawing commands for replay to new clients</summary>
     private List<DrawCommand> storedCommands = new List<DrawCommand>();
+
+    public bool IsOwner => base.IsOwner;
+    public MouseManager MouseManager => mouseManager;
+    public Grid CollisionGrid => collisionGrid;
+    public float PlaceRadius => placeRadius;
+    public int CurrentLayer => currentLayer;
+    public Color32 CurrentColor => currentcolor;
 
     /// <summary>
     /// Called when client starts. Sets up ownership and requests stored commands.
@@ -175,7 +173,7 @@ public class PlayerDraw : NetworkBehaviour
         {
             for (int y = 0; y < collumns; y++)
             {
-                Tilemap tempMap = Instantiate(tilemapPrefab, Vector3.zero, Quaternion.identity, grid.transform).GetComponent<Tilemap>();
+                Tilemap tempMap = Instantiate(tilemapPrefab, Vector3.zero, Quaternion.identity, collisionGrid.transform).GetComponent<Tilemap>();
                 tilemaps[x, y] = tempMap;
             }
         }
@@ -229,7 +227,7 @@ public class PlayerDraw : NetworkBehaviour
     /// </summary>
     public void SetOutlineTiles()
     {
-        playareaOutline = Instantiate(tilemapPrefab, Vector3.zero, Quaternion.identity, grid.transform).GetComponent<Tilemap>();
+        playareaOutline = Instantiate(tilemapPrefab, Vector3.zero, Quaternion.identity, collisionGrid.transform).GetComponent<Tilemap>();
 
         Vector3Int[] positions = new Vector3Int[width + 2];
         TileBase[] tiles = new TileBase[width + 2];
@@ -315,8 +313,8 @@ public class PlayerDraw : NetworkBehaviour
 
             if (mouseManager.GetObjectBetweenTwoPoints(mousePos, lastMousePosition) == null)
             {
-                Vector3Int gridStartpoint = grid.WorldToCell(lastMousePosition);
-                Vector3Int gridEndpoint = grid.WorldToCell(mousePos);
+                Vector3Int gridStartpoint = collisionGrid.WorldToCell(lastMousePosition);
+                Vector3Int gridEndpoint = collisionGrid.WorldToCell(mousePos);
                 DrawLineServerRpc(gridStartpoint, gridEndpoint, placeRadius, 1, currentLayer, currentcolor);
             }
 
@@ -338,8 +336,8 @@ public class PlayerDraw : NetworkBehaviour
         if (Input.GetMouseButton(0))
         {
             Vector2 mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
-            Vector3Int gridStartpoint = grid.WorldToCell(lastMousePosition);
-            Vector3Int gridEndpoint = grid.WorldToCell(mousePos);
+            Vector3Int gridStartpoint = collisionGrid.WorldToCell(lastMousePosition);
+            Vector3Int gridEndpoint = collisionGrid.WorldToCell(mousePos);
 
             DrawLineServerRpc(gridStartpoint, gridEndpoint, placeRadius, 0, currentLayer, Color.clear);
 
@@ -392,7 +390,7 @@ public class PlayerDraw : NetworkBehaviour
                 if (pixelgrid[currentLayer][x, y] != 0)
                 {
                     Vector3Int currentGridPos = new Vector3Int(x, y);
-                    Vector3 worldPos = grid.CellToWorld(currentGridPos);
+                    Vector3 worldPos = collisionGrid.CellToWorld(currentGridPos);
                     Vector3Int currentTileMapPos = tilemapGrid.WorldToCell(worldPos);
 
                     QueTile(currentTileMapPos.x, currentTileMapPos.y, currentGridPos, null, 0, currentLayer, Color.clear);
@@ -441,13 +439,13 @@ public class PlayerDraw : NetworkBehaviour
         for (int i = 0; i < line.Count; i++)
         {
             Vector3Int centerGridPos = (Vector3Int)line[i];
-            Vector2 centerGridWorldPos = grid.CellToWorld(centerGridPos);
+            Vector2 centerGridWorldPos = collisionGrid.CellToWorld(centerGridPos);
             for (int x = -gridRadius; x <= gridRadius; x++)
             {
                 for (int y = -gridRadius; y <= gridRadius; y++)
                 {
                     Vector3Int currentGridPos = new Vector3Int(centerGridPos.x + x, centerGridPos.y + y);
-                    Vector2 worldPos = grid.CellToWorld(currentGridPos);
+                    Vector2 worldPos = collisionGrid.CellToWorld(currentGridPos);
 
                     if ((worldPos - centerGridWorldPos).sqrMagnitude <= squaredRadius)
                     {
