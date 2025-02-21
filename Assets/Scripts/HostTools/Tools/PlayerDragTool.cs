@@ -36,7 +36,7 @@ public class PlayerDragTool : DrawingToolBase
         if (!isDragging && Input.GetMouseButtonDown(0) && canDrag)
         {
             GameObject clickedOn = drawingService.MouseManager.GetHoveredObject();
-            if (clickedOn?.transform.root.TryGetComponent(out IDraggable draggableObject) == true && draggableObject.CanDrag())
+            if (clickedOn != null && clickedOn.transform.root.TryGetComponent(out IDraggable draggableObject) == true && draggableObject.CanDrag())
             {
                 grabbedObject = draggableObject;
                 grabbedTransform = clickedOn.transform.root;
