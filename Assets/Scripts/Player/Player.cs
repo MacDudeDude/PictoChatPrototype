@@ -22,7 +22,14 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     private bool alive = true;
     private bool movementEnabled;
 
+    // Field to store the original owner's clientId.
+    private NetworkConnection _originalOwner = null;
 
+    public override void OnStartServer()
+    {
+        base.OnStartServer();
+        _originalOwner = Owner;
+    }
     private void Awake()
     {
         StateMachine = new PlayerStateMachine();
@@ -125,11 +132,48 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     public void BeginDrag()
     {
         DisableMovement();
+        RequestTransferOwnershipForDragServerRpc();
     }
 
     public void EndDrag(Vector3 dragEndVelocity)
     {
         rb.velocity = dragEndVelocity;
         EnableMovement(true);
+        RequestReturnOwnershipServerRpc();
     }
+    /// <summary>
+    /// Transfers ownership of this Player to a new owner.
+    /// This method can be called from a non-owner via RPC.
+    /// </summary>
+    /// <param name="newOwner">The clientId of the new owner (dragging client).</param>
+    [ServerRpc(RequireOwnership = false)]
+    public void RequestTransferOwnershipForDragServerRpc()
+    {
+        Debug.Log("[Player] Request Transfer Ownership For Drag ServerRpc");
+        _originalOwner = Owner;
+        Debug.Log("[Player] Original Owner: " + _originalOwner);
+        NetworkObject.RemoveOwnership();
+    }
+
+    /// <summary>
+    /// Returns ownership of this Player to the original owner.
+    /// This method can be called from a non-owner via RPC.
+    /// </summary>
+    [ServerRpc(RequireOwnership = false)]
+    public void RequestReturnOwnershipServerRpc()
+    {
+        if (_originalOwner != null)
+        {
+            NetworkObject.GiveOwnership(_originalOwner);
+            Debug.Log("[Player] Giving back ownership to original Owner: " + Owner);
+        }
+    }
+    [ServerRpc]
+    public void DragUpdateServerRpc(Vector3 newPosition, float deltaTime)
+    {
+        // Set the new position on the server.
+        transform.position = newPosition;
+
+    }
+
 }
