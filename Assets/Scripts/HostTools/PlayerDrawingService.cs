@@ -116,6 +116,12 @@ public class PlayerDrawingService : MonoBehaviour, IDrawingService
         ConfigurePlayAreaBounds();
     }
 
+    void FixedUpdate()
+    {
+        UpdateTiles();
+    }
+
+
     /// <summary>
     /// Initializes arrays that track updated tile positions.
     /// </summary>
@@ -294,6 +300,7 @@ public class PlayerDrawingService : MonoBehaviour, IDrawingService
     /// </summary>
     public void DrawLine(Vector3Int gridStartPoint, Vector3Int gridEndPoint, float radius, int value, int layer, Color32 color)
     {
+        Debug.Log("[PlayerDrawingService] Drawing line");
         float currentPlaceRadius = radius * (1f / ppu);
         int gridRadius = Mathf.CeilToInt(currentPlaceRadius / (1f / ppu));
         float squaredRadius = Mathf.Pow(currentPlaceRadius, 2);
@@ -301,6 +308,7 @@ public class PlayerDrawingService : MonoBehaviour, IDrawingService
         List<Vector2Int> line = GenerateLine(gridStartPoint.x, gridStartPoint.y, gridEndPoint.x, gridEndPoint.y);
         foreach (Vector2Int point in line)
         {
+
             Vector3Int gridPoint = new Vector3Int(point.x, point.y, 0);
             ApplyBrushAtGridPosition(gridPoint, squaredRadius, gridRadius, value, layer, color);
         }

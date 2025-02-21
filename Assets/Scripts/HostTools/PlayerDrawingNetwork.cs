@@ -67,6 +67,7 @@ public class PlayerDrawingNetwork : NetworkBehaviour, INetworkDrawingService
         
         // Relay the command to all clients.
         DrawLineObserversRpc(startPoint, endPoint, radius, value, layer, color);
+        Debug.Log("[PlayerDrawingNetwork] Drawing line on server");
     }
 
     /// <summary>
@@ -75,7 +76,9 @@ public class PlayerDrawingNetwork : NetworkBehaviour, INetworkDrawingService
     [ObserversRpc]
     public void DrawLineObserversRpc(UnityEngine.Vector3Int startPoint, UnityEngine.Vector3Int endPoint, float radius, int value, int layer, UnityEngine.Color32 color)
     {
+        
         drawingService.DrawLine(startPoint, endPoint, radius, value, layer, color);
+        Debug.Log("[PlayerDrawingNetwork] Drawing line on all clients");
     }
 
     /// <summary>
