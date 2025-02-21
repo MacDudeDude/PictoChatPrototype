@@ -3,7 +3,6 @@ using FishNet.Object;
 
 public interface IDrawingService
 {
-    bool IsOwner { get; }
     MouseManager MouseManager { get; }
     Grid CollisionGrid { get; }
     float PlaceRadius { get; }

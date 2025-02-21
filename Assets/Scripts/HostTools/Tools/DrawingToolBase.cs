@@ -3,11 +3,13 @@ using UnityEngine;
 public abstract class DrawingToolBase : MonoBehaviour, IDrawingTool
 {
     protected IDrawingService drawingService;
+    protected INetworkDrawingService remoteDrawingService;
     protected Camera mainCamera;
     protected Vector2 lastMousePosition;
-    public void Initialize(IDrawingService service)
+    public void Initialize(IDrawingService service, INetworkDrawingService networkService)
     {
         drawingService = service;
+        remoteDrawingService = networkService;
         mainCamera = Camera.main;
     }
 
@@ -20,7 +22,7 @@ public abstract class DrawingToolBase : MonoBehaviour, IDrawingTool
 
     public virtual bool CanUse()
     {
-        return drawingService.IsOwner;
+        return remoteDrawingService.IsOwner;
     }
 
     public abstract void OnToolUpdate();
@@ -45,7 +47,7 @@ public abstract class DrawingToolBase : MonoBehaviour, IDrawingTool
             {
                 Vector3Int gridStartpoint = drawingService.CollisionGrid.WorldToCell(lastMousePosition);
                 Vector3Int gridEndpoint = drawingService.CollisionGrid.WorldToCell(mousePos);
-                drawingService.DrawLine(gridStartpoint, gridEndpoint, drawingService.PlaceRadius, value, drawingService.CurrentLayer, drawingService.CurrentColor);
+                remoteDrawingService.SendDrawLine(gridStartpoint, gridEndpoint, drawingService.PlaceRadius, value, drawingService.CurrentLayer, drawingService.CurrentColor);
             }
 
             lastMousePosition = mousePos;

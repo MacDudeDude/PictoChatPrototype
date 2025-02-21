@@ -19,8 +19,8 @@ public class HostToolsManager : MonoBehaviour
     private Dictionary<string, DrawingToolBase> toolDictionary;
     private DrawingToolBase currentTool;
 
-    [SerializeField] private IDrawingService drawingService;
-
+    private IDrawingService drawingService;
+    private INetworkDrawingService drawingNetwork;
     private static HostToolsManager _instance;
     public static HostToolsManager Instance { get { return _instance; } }
 
@@ -33,7 +33,8 @@ public class HostToolsManager : MonoBehaviour
         }
         
         _instance = this;
-        drawingService = GetComponentInChildren<PlayerDraw>();
+        drawingService = GetComponentInChildren<IDrawingService>();
+        drawingNetwork = GetComponentInChildren<INetworkDrawingService>();
         InitializeTools();
     }
 
@@ -42,7 +43,7 @@ public class HostToolsManager : MonoBehaviour
         toolDictionary = new Dictionary<string, DrawingToolBase>();
         foreach (var toolEntry in availableTools)
         {
-            toolEntry.tool.Initialize(drawingService);
+            toolEntry.tool.Initialize(drawingService, drawingNetwork);
             toolDictionary[toolEntry.toolName] = toolEntry.tool;
         }
 
