@@ -659,6 +659,10 @@ MonoBehaviour:
   availableTools:
   - toolName: Pen
     tool: {fileID: 785704023}
+  - toolName: Drag
+    tool: {fileID: 785704023}
+  - toolName: Erase
+    tool: {fileID: 785704023}
 --- !u!1001 &1049590812
 PrefabInstance:
   m_ObjectHideFlags: 0
