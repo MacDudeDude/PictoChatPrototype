@@ -1,18 +1,38 @@
 
 using FishNet.Managing.Scened;
-using FishNet.Object;
 using FishNet;
 using UnityEngine;
 using System;
-public class BaseMinigame : MonoBehaviour, IMinigameScene
+using UnityEditor.U2D.Path.GUIFramework;
+[CreateAssetMenu(fileName = "New Minigame", menuName = "Minigame")]
+public class BaseMinigame : ScriptableObject, IMinigameScene
 {
-    public string DisplayName { get; set; }
-    public string Description { get; set; }
-    public string SceneName { get; set; }
-    public int RequiredPlayers { get; set; }
+    [SerializeField]
+    private string displayName;
+    public string DisplayName { get; private set; }
+    [SerializeField]
+    private string description;
+    public string Description { get; private set; }
+    [SerializeField]
+    private string sceneName;
+    public string SceneName { get; private set; }
+    [SerializeField]
+    private int requiredPlayers;
+    public int RequiredPlayers { get; private set; }
 
     private SceneLoadData sld => new SceneLoadData(SceneName);
     private SceneUnloadData sud => new SceneUnloadData(SceneName);
+
+    public virtual void Initialize()
+    {
+        DisplayName = displayName;
+        Description = description;
+        SceneName = sceneName;
+        RequiredPlayers = requiredPlayers;
+        sld.ReplaceScenes = ReplaceOption.None;
+
+    }
+
     public virtual void StartMinigame()
     {
         InstanceFinder.SceneManager.LoadGlobalScenes(sld);
@@ -23,5 +43,4 @@ public class BaseMinigame : MonoBehaviour, IMinigameScene
         InstanceFinder.SceneManager.UnloadGlobalScenes(sud);
     }
 
-    public event Action OnMinigameOver;
 }

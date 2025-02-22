@@ -8,6 +8,5 @@ public interface IMinigameScene
     public int RequiredPlayers { get; }
     public void StartMinigame();
     public void EndMinigame();
-    public event Action OnMinigameOver;
 
 }

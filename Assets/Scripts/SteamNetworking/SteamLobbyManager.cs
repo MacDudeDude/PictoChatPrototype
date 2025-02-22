@@ -27,6 +27,12 @@ public class SteamLobbyManager : MonoBehaviour
     [SerializeField]
     private int maxPlayers = 4;
 
+    [SerializeField]
+    private string idleMinigame = "Doodling...";
+
+    [SerializeField]
+    private string playingMinigame = "Playing ";
+
     /// <summary>
     /// The currently joined Steam lobby, if any.
     /// </summary>
@@ -54,6 +60,7 @@ public class SteamLobbyManager : MonoBehaviour
             return;
         }
         Instance = this;
+        DontDestroyOnLoad(gameObject);
         GameObject managerInstance = Instantiate(SteamPlayerManager.gameObject);
         InstanceFinder.ServerManager.Spawn(managerInstance);
 
@@ -110,6 +117,7 @@ public class SteamLobbyManager : MonoBehaviour
         InstanceFinder.ServerManager.StartConnection();
         var lobby = createLobbyResult.Value;
         lobby.SetData("artist", SteamClient.SteamId.ToString());
+        lobby.SetData("minigame", idleMinigame);
         lobby.SetJoinable(true);
         lobby.SetPublic();
 
@@ -299,7 +307,14 @@ public class SteamLobbyManager : MonoBehaviour
         if (CurrentLobby == null)
             return;
 
-        CurrentLobby.Value.SetData("minigame", minigameName);
+        if (minigameName == null)
+        {
+            CurrentLobby.Value.SetData("minigame", idleMinigame);
+            OnLobbyMetadataChanged?.Invoke();
+            return;
+        }
+
+        CurrentLobby.Value.SetData("minigame", playingMinigame + minigameName);
         OnLobbyMetadataChanged?.Invoke();
     }
 

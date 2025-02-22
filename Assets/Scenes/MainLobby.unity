@@ -644,6 +644,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dragSpeed: 30
+  throwForceMultiplier: 10
+  velocityBufferSize: 5
 --- !u!114 &785704026
 MonoBehaviour:
   m_ObjectHideFlags: 0

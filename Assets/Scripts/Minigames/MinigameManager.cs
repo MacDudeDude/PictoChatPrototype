@@ -30,14 +30,15 @@ public class MinigameManager : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-        Instance = this;
-        if (Instance != null)
+        if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
             return;
         }
         Instance = this;
+        DontDestroyOnLoad(gameObject);
         Initialize();
+        Debug.Log($"[MinigameManager] MinigameManager initialized");
     }
 
     /// <summary>
@@ -48,6 +49,7 @@ public class MinigameManager : MonoBehaviour
         minigameDictionary = new Dictionary<string, BaseMinigame>();
         foreach (var minigame in Minigames)
         {
+            minigame.Initialize();
             minigameDictionary.Add(minigame.SceneName, minigame);
             Debug.Log($"[MinigameManager] Added minigame: {minigame.SceneName}");
         }
@@ -66,6 +68,10 @@ public class MinigameManager : MonoBehaviour
             isMinigameActive = true;
             StartMinigame(currentMinigame);
         }
+        else
+        {
+            Debug.LogError($"[MinigameManager] Failed to change minigame to: {minigameName}");
+        }
     }
 
     /// <summary>
@@ -81,27 +87,18 @@ public class MinigameManager : MonoBehaviour
             return;
         }
         minigame.StartMinigame();
-        OnMinigameStarted?.Invoke(minigame);
-        minigame.OnMinigameOver += OnMinigameOver;
-    }
 
-    /// <summary>
-    /// Handler for when a minigame ends. Triggers the end event and cleanup.
-    /// </summary>
-    private void OnMinigameOver()
-    {
-        OnMinigameEnded?.Invoke();
-        EndMinigame();
+        OnMinigameStarted?.Invoke(minigame);
     }
 
     /// <summary>
     /// Ends the current minigame and cleans up event handlers.
     /// </summary>
-    private void EndMinigame()
+    public void EndMinigame()
     {
         Debug.Log($"[MinigameManager] Ending minigame: {currentMinigame.SceneName}");
         isMinigameActive = false;
         currentMinigame.EndMinigame();
-        currentMinigame.OnMinigameOver -= OnMinigameOver;
+        OnMinigameEnded?.Invoke();
     }
 }
