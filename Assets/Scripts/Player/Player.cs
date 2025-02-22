@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using FishNet.Object;
 using FishNet.Connection;
 using FishNet.Object.Synchronizing;
+using FishNet.Component.Transforming;
 
 using UnityEngine;
 using Steamworks;
@@ -24,6 +25,10 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
 
     // Field to store the original owner's clientId.
     private NetworkConnection _originalOwner = null;
+
+    [SerializeField] private NetworkTransform networkTransform;
+    private Vector3 targetDragPosition;
+    private bool isDragging;
 
     public override void OnStartServer()
     {
@@ -131,56 +136,57 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
 
     public void BeginDrag()
     {
+        if (!alive) return;
+
+        RequestTransferOwnershipForDragServerRpc();
         DisableMovement();
+        isDragging = true;
+    }
+
+    public void UpdateDragPosition(Vector3 newPosition)
+    {
+        if (!isDragging) return;
+
+        // Smoothly update position
+        targetDragPosition = newPosition;
+        transform.position = Vector3.Lerp(transform.position, targetDragPosition, Time.deltaTime * 30f);
+
+        // Force network transform to sync immediately
+        if (networkTransform != null)
+            networkTransform.ForceSend();
     }
 
     public void EndDrag(Vector3 dragEndVelocity)
     {
-        EnableMovementTargetRpc(dragEndVelocity);
-    }
-    /// <summary>
-    /// Transfers ownership of this Player to a new owner.
-    /// This method can be called from a non-owner via RPC.
-    /// </summary>
-    /// <param name="newOwner">The clientId of the new owner (dragging client).</param>
-    [ServerRpc(RequireOwnership = false)]
-    public void RequestTransferOwnershipForDragServerRpc()
-    {
-        Debug.Log("[Player] Request Transfer Ownership For Drag ServerRpc");
-        _originalOwner = Owner;
-        Debug.Log("[Player] Original Owner: " + _originalOwner);
-        NetworkObject.RemoveOwnership();
+        isDragging = false;
+        RequestReturnOwnershipServerRpc(dragEndVelocity);
     }
 
-    /// <summary>
-    /// Returns ownership of this Player to the original owner.
-    /// This method can be called from a non-owner via RPC.
-    /// </summary>
     [ServerRpc(RequireOwnership = false)]
-    public void RequestReturnOwnershipServerRpc(Vector3 dragEndVelocity)
+    private void RequestTransferOwnershipForDragServerRpc()
     {
-        if (_originalOwner != null)
-        {
-            EnableMovement(true);
-            rb.velocity = Vector2.zero;
-            NetworkObject.GiveOwnership(_originalOwner);
-            EnableMovementTargetRpc(dragEndVelocity);
-            Debug.Log("[Player] Giving back ownership to original Owner: " + Owner);
-        }
+        // Store original owner and transfer ownership to dragging client
+        _originalOwner = Owner;
+        NetworkObject.RemoveOwnership(); // Give to host/artist
     }
+
     [ServerRpc(RequireOwnership = false)]
-    public void DragUpdateServerRpc(Vector3 newPosition, float deltaTime)
+    private void RequestReturnOwnershipServerRpc(Vector3 dragEndVelocity)
     {
-        transform.position = newPosition;
+        if (_originalOwner == null) return;
+
+        // Return ownership and apply throw velocity
+        NetworkObject.GiveOwnership(_originalOwner);
+        ApplyThrowVelocityObserversRpc(dragEndVelocity);
     }
+
     [ObserversRpc]
-    public void EnableMovementTargetRpc(Vector3 dragEndVelocity)
+    private void ApplyThrowVelocityObserversRpc(Vector3 velocity)
     {
         EnableMovement(true);
-        rb.velocity = dragEndVelocity;
-        if (!IsOwner)
+        if (IsOwner)
         {
-            rb.velocity = Vector2.zero;
+            rb.velocity = velocity;
         }
     }
 }

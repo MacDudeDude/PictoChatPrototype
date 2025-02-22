@@ -2,16 +2,17 @@ using UnityEngine;
 
 public class PlayerDragTool : DrawingToolBase
 {
-    public float dragSpeed = 30;
+    public float dragSpeed = 30f;
+    public float throwForceMultiplier = 1f;
 
     private IDraggable grabbedObject;
     private Transform grabbedTransform;
     private Vector3 lastPos;
+    private Vector3 dragVelocity;
     private bool isDragging;
     private bool canDrag;
-
-    private float lastServerUpdateTime = 0f;
-    private float serverUpdateInterval = 0.05f; // 50ms update interval
+    private float dragUpdateRate = 0.01f;
+    private float lastDragUpdate;
 
     public void Awake()
     {
@@ -56,16 +57,18 @@ public class PlayerDragTool : DrawingToolBase
         {
             if (grabbedObject.CanDrag() && canDrag)
             {
-                Vector2 newPos = GetCurrentMousePosition();
-                grabbedTransform.position = Vector3.Lerp(grabbedTransform.position, newPos, Time.deltaTime * dragSpeed);
+                Vector2 targetPos = GetCurrentMousePosition();
 
-                if (Time.time - lastServerUpdateTime >= serverUpdateInterval)
+                if (Time.time - lastDragUpdate >= dragUpdateRate)
                 {
-                    if (grabbedTransform.TryGetComponent(out Player player))
+                    dragVelocity = (targetPos - (Vector2)lastPos) / dragUpdateRate;
+                    lastPos = grabbedTransform.position;
+                    lastDragUpdate = Time.time;
+
+                    if (grabbedObject is Player player)
                     {
-                        player.DragUpdateServerRpc(grabbedTransform.position, Time.deltaTime);
+                        player.UpdateDragPosition(targetPos);
                     }
-                    lastServerUpdateTime = Time.time;
                 }
             }
             else
@@ -73,17 +76,14 @@ public class PlayerDragTool : DrawingToolBase
                 ClearDragReferences();
             }
         }
-        else if (isDragging)
-        {
-            ClearDragReferences();
-        }
     }
 
     private void HandleDragEnd()
     {
         if (isDragging && Input.GetMouseButtonUp(0) && grabbedObject != null)
         {
-            grabbedObject.EndDrag((grabbedTransform.position - lastPos) / Time.deltaTime);
+            Vector3 throwVelocity = dragVelocity * throwForceMultiplier;
+            grabbedObject.EndDrag(throwVelocity);
             ClearDragReferences();
         }
     }
