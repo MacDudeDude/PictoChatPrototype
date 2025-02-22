@@ -137,7 +137,7 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
 
     public void EndDrag(Vector3 dragEndVelocity)
     {
-        RequestReturnOwnershipServerRpc();
+        RequestReturnOwnershipServerRpc(dragEndVelocity);
         rb.velocity = dragEndVelocity;
         EnableMovement(true);
     }
@@ -160,12 +160,12 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     /// This method can be called from a non-owner via RPC.
     /// </summary>
     [ServerRpc(RequireOwnership = false)]
-    public void RequestReturnOwnershipServerRpc()
+    public void RequestReturnOwnershipServerRpc(Vector3 dragEndVelocity)
     {
         if (_originalOwner != null)
         {
             NetworkObject.GiveOwnership(_originalOwner);
-            EnableMovementObserversRpc();
+            EnableMovementTargetRpc(_originalOwner, dragEndVelocity);
             Debug.Log("[Player] Giving back ownership to original Owner: " + Owner);
         }
     }
@@ -176,10 +176,14 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
         transform.position = newPosition;
 
     }
-    [ObserversRpc]
-    public void EnableMovementObserversRpc()
+    [TargetRpc]
+    public void EnableMovementTargetRpc(NetworkConnection target, Vector3 dragEndVelocity)
     {
         EnableMovement(true);
+        rb.velocity = dragEndVelocity;
+
+
+
     }
 
 }
