@@ -165,6 +165,7 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
         if (_originalOwner != null)
         {
             NetworkObject.GiveOwnership(_originalOwner);
+            EnableMovementObserversRpc();
             Debug.Log("[Player] Giving back ownership to original Owner: " + Owner);
         }
     }
@@ -174,6 +175,11 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
         // Set the new position on the server.
         transform.position = newPosition;
 
+    }
+    [ObserversRpc]
+    public void EnableMovementObserversRpc()
+    {
+        EnableMovement(true);
     }
 
 }
