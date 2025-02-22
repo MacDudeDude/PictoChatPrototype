@@ -182,5 +182,9 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     {
         EnableMovement(true);
         rb.velocity = dragEndVelocity;
+        if (!IsOwner)
+        {
+            rb.velocity = Vector2.zero;
+        }
     }
 }
