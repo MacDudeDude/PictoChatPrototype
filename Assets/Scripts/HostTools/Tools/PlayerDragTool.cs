@@ -10,7 +10,10 @@ public class PlayerDragTool : DrawingToolBase
     private bool isDragging;
     private bool canDrag;
 
-    public  void Awake()
+    private float lastServerUpdateTime = 0f;
+    private float serverUpdateInterval = 0.05f; // 50ms update interval
+
+    public void Awake()
     {
         canDrag = true;
     }
@@ -26,7 +29,7 @@ public class PlayerDragTool : DrawingToolBase
         HandleDragStart();
         HandleDragUpdate();
         HandleDragEnd();
-        
+
         if (grabbedTransform != null)
             lastPos = grabbedTransform.position;
     }
@@ -55,6 +58,15 @@ public class PlayerDragTool : DrawingToolBase
             {
                 Vector2 newPos = GetCurrentMousePosition();
                 grabbedTransform.position = Vector3.Lerp(grabbedTransform.position, newPos, Time.deltaTime * dragSpeed);
+
+                if (Time.time - lastServerUpdateTime >= serverUpdateInterval)
+                {
+                    if (grabbedTransform.TryGetComponent(out Player player))
+                    {
+                        player.DragUpdateServerRpc(grabbedTransform.position, Time.deltaTime);
+                    }
+                    lastServerUpdateTime = Time.time;
+                }
             }
             else
             {
@@ -99,4 +111,4 @@ public class PlayerDragTool : DrawingToolBase
         grabbedObject = null;
         isDragging = false;
     }
-} 
+}
