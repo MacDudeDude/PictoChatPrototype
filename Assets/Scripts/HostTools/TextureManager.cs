@@ -5,6 +5,7 @@ using UnityEngine;
 public class TextureManager : MonoBehaviour
 {
     public GameObject texturePrefab;
+    public bool createWhiteBackground = true;
 
     private GameObject[] spriteHolders;
     private Texture2D[] textures;
@@ -36,12 +37,15 @@ public class TextureManager : MonoBehaviour
             spriteHolders[i].transform.localScale = new Vector3(width * ppu, height * ppu, 1);
         }
 
-        GameObject whiteBG = Instantiate(texturePrefab, transform);
-        whiteBG.name = ("Background Sorting Layer : " + (-5));
-        whiteBG.GetComponent<MeshRenderer>().sortingOrder = -5;
+        if(createWhiteBackground)
+        {
+            GameObject whiteBG = Instantiate(texturePrefab, transform);
+            whiteBG.name = ("Background Sorting Layer : " + (-5));
+            whiteBG.GetComponent<MeshRenderer>().sortingOrder = -5;
 
-        whiteBG.transform.localPosition= new Vector3(width * ppu * 0.5f, height * ppu * 0.5f, 0);
-        whiteBG.transform.localScale = new Vector3(width * ppu, height * ppu, 1);
+            whiteBG.transform.localPosition= new Vector3(width * ppu * 0.5f, height * ppu * 0.5f, 0);
+            whiteBG.transform.localScale = new Vector3(width * ppu, height * ppu, 1);
+        }
     }
 
     public void SetPixels(Color32[] newColors, int layer)

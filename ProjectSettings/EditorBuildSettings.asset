@@ -15,6 +15,6 @@ EditorBuildSettings:
     path: Assets/Scenes/MainLobby.unity
     guid: 1edeb26e5145847cdbfe9b692a6262b4
   - enabled: 1
-    path: Assets/Scenes/MainLobbyWithChatSystem.unity
-    guid: 1bc207e4e016a0340bcd4ad0667797f9
+    path: Assets/Scenes/MainLobbyWithUI.unity
+    guid: d6347d041e267294185ac568abcb3176
   m_configObjects: {}

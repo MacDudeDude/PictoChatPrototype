@@ -1226,7 +1226,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SteamPlayerManager: {fileID: -1968948866105213758, guid: bc0c86c2d2e8a104e89fc33ffde096e5, type: 3}
   maxPlayers: 4
-  gameSceneName: MainLobby
+  gameSceneName: MainLobbyWithUI
 --- !u!4 &1192145376
 Transform:
   m_ObjectHideFlags: 0

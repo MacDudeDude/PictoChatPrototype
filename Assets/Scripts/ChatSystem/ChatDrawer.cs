@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ChatDrawer : MonoBehaviour
 {
+    public float minTimeBetweenChats;
     public bool drawing;
     public bool erasing;
     public OverUI uiChecker;
@@ -27,6 +28,9 @@ public class ChatDrawer : MonoBehaviour
     private bool tilemapUpdated;
     private Vector3 lastMousePosition;
     private BoxCollider2D col;
+    private float lastSentTimer;
+
+    private bool startedInBounds = false;
 
     // Start is called before the first frame update
     void Start()
@@ -97,6 +101,10 @@ public class ChatDrawer : MonoBehaviour
 
     public void SendChatMessage()
     {
+        if (lastSentTimer > 0)
+            return;
+        lastSentTimer = minTimeBetweenChats;
+
         recieverSender.SendChatMessage(textureColors);
         ResetChatScreen();
     }
@@ -114,19 +122,7 @@ public class ChatDrawer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Vector3 mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
-        //mousePos.z = 0;
-        //if (chatDrawBounds.Contains(mousePos))
-        //{
-        //    if (currentTool == ChatTools.drawing)
-        //    {
-        //        DrawTool();
-        //    }
-        //    else if (currentTool == ChatTools.erasing)
-        //    {
-        //        EraseTool();
-        //    }
-        //}
+        lastSentTimer -= Time.deltaTime;
 
         if (drawing)
         {
@@ -136,6 +132,14 @@ public class ChatDrawer : MonoBehaviour
         {
             EraseTool();
         }
+    }
+
+    private bool InBounds()
+    {
+        Vector3 mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+        mousePos.z = 0;
+
+        return chatDrawBounds.Contains(mousePos);
     }
 
     private void FixedUpdate()
@@ -149,9 +153,12 @@ public class ChatDrawer : MonoBehaviour
     void DrawTool()
     {
         if (Input.GetMouseButtonDown(0))
+        {
+            startedInBounds = InBounds();
             lastMousePosition = cam.ScreenToWorldPoint(Input.mousePosition);
+        }
 
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0) && startedInBounds)
         {
             Vector2 mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
 
@@ -169,9 +176,12 @@ public class ChatDrawer : MonoBehaviour
     void EraseTool()
     {
         if (Input.GetMouseButtonDown(0))
+        {
+            startedInBounds = InBounds();
             lastMousePosition = cam.ScreenToWorldPoint(Input.mousePosition);
+        }
 
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0) && startedInBounds)
         {
             Vector2 mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
 
@@ -179,7 +189,7 @@ public class ChatDrawer : MonoBehaviour
             {
                 Vector3Int gridStartpoint = drawGrid.WorldToCell(lastMousePosition);
                 Vector3Int gridEndpoint = drawGrid.WorldToCell(mousePos);
-                DrawLine(gridStartpoint, gridEndpoint, currentRadius, Color.white);
+                DrawLine(gridStartpoint, gridEndpoint, currentRadius, Color.clear);
             }
 
             lastMousePosition = mousePos;
@@ -190,7 +200,7 @@ public class ChatDrawer : MonoBehaviour
     {
         for (int i = 0; i < textureColors.Length; i++)
         {
-            textureColors[i] = Color.white;
+            textureColors[i] = Color.clear;
         }
 
         chatDrawingArea.SetPixels(textureColors, 0);
