@@ -27,6 +27,12 @@ public class SteamLobbyManager : MonoBehaviour
     [SerializeField]
     private int maxPlayers = 4;
 
+    [SerializeField]
+    private string idleMinigame = "Doodling...";
+
+    [SerializeField]
+    private string playingMinigame = "Playing ";
+
     /// <summary>
     /// The currently joined Steam lobby, if any.
     /// </summary>
@@ -54,6 +60,7 @@ public class SteamLobbyManager : MonoBehaviour
             return;
         }
         Instance = this;
+        DontDestroyOnLoad(gameObject);
         GameObject managerInstance = Instantiate(SteamPlayerManager.gameObject);
         InstanceFinder.ServerManager.Spawn(managerInstance);
 
@@ -64,6 +71,26 @@ public class SteamLobbyManager : MonoBehaviour
         SteamFriends.OnGameLobbyJoinRequested += OnGameLobbyJoinRequested;
 
         InstanceFinder.ClientManager.OnClientConnectionState += OnClientConnectionState;
+
+        MinigameManager.Instance.OnMinigameStarted += OnMinigameStarted;
+        MinigameManager.Instance.OnMinigameEnded += OnMinigameEnded;
+    }
+
+    /// <summary>
+    /// Changes the minigame in the lobby metadata.
+    /// </summary>
+    /// <param name="minigame">The minigame to change to.</param>
+    private void OnMinigameStarted(BaseMinigame minigame)
+    {
+        ChangeMinigame(minigame.SceneName);
+    }
+
+    /// <summary>
+    /// Changes the minigame in the lobby metadata to null.
+    /// </summary>
+    private void OnMinigameEnded()
+    {
+        ChangeMinigame(null);
     }
 
     /// <summary>
@@ -90,6 +117,7 @@ public class SteamLobbyManager : MonoBehaviour
         InstanceFinder.ServerManager.StartConnection();
         var lobby = createLobbyResult.Value;
         lobby.SetData("artist", SteamClient.SteamId.ToString());
+        lobby.SetData("minigame", idleMinigame);
         lobby.SetJoinable(true);
         lobby.SetPublic();
 
@@ -269,6 +297,25 @@ public class SteamLobbyManager : MonoBehaviour
         {
             OnArtistChanged?.Invoke(artistId);
         }
+    }
+    /// <summary>
+    /// Changes the minigame in the lobby metadata.
+    /// </summary>
+    /// <param name="minigameName">The name of the minigame to change to.   </param>
+    public void ChangeMinigame(string minigameName)
+    {
+        if (CurrentLobby == null)
+            return;
+
+        if (minigameName == null)
+        {
+            CurrentLobby.Value.SetData("minigame", idleMinigame);
+            OnLobbyMetadataChanged?.Invoke();
+            return;
+        }
+
+        CurrentLobby.Value.SetData("minigame", playingMinigame + minigameName);
+        OnLobbyMetadataChanged?.Invoke();
     }
 
     /// <summary>
