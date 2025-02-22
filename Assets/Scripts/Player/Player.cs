@@ -131,15 +131,15 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
 
     public void BeginDrag()
     {
-        DisableMovement();
         RequestTransferOwnershipForDragServerRpc();
+        DisableMovement();
     }
 
     public void EndDrag(Vector3 dragEndVelocity)
     {
+        RequestReturnOwnershipServerRpc();
         rb.velocity = dragEndVelocity;
         EnableMovement(true);
-        //RequestReturnOwnershipServerRpc();
     }
     /// <summary>
     /// Transfers ownership of this Player to a new owner.
