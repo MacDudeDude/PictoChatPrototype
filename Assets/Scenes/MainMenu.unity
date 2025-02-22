@@ -1226,7 +1226,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SteamPlayerManager: {fileID: -1968948866105213758, guid: bc0c86c2d2e8a104e89fc33ffde096e5, type: 3}
   maxPlayers: 4
-  gameSceneName: MainLobby
+  gameSceneName: MainLobbyWithChatSystem
 --- !u!4 &1192145376
 Transform:
   m_ObjectHideFlags: 0
@@ -2515,4 +2515,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prespawnedPlayer: {fileID: -6530951889593297605, guid: 8a52d4f2d062f46febf1aa79fe38e64d, type: 3}
   playerPrefab: {fileID: 3142875464113743011, guid: 6bc8c8c1de6f9f747bbe0a810a8d438b, type: 3}
-  artistPrefab: {fileID: 4671842590098759571, guid: ce4f8c0541b99eb4db7ed63a5fb3c6c8, type: 3}
