@@ -80,6 +80,9 @@ public class PlayerDrawingService : MonoBehaviour, IDrawingService
     /// <summary>Height of a single tilemap section</summary>
     public int height;
 
+    // basically it just doesn't let the player draw above here for consistency reasons
+    public int drawHeightOffset;
+
     private int ppu; // Pixels per unit
     private Vector2 lastMousePosition;
     private Tilemap[,] tilemaps;
@@ -154,6 +157,7 @@ public class PlayerDrawingService : MonoBehaviour, IDrawingService
 
         width *= rows;
         height *= collumns;
+        height -= drawHeightOffset;
         currentLayer = collisionLayer;
     }
 
@@ -399,5 +403,30 @@ public class PlayerDrawingService : MonoBehaviour, IDrawingService
         }
 
         return linePositions;
+    }
+
+    private void OnDrawGizmos()
+    {
+        float ppu = Mathf.RoundToInt(40);
+        Vector3 boundsCenter = transform.position;
+        Vector3 boundsSize = Vector3.one;
+
+        float width = this.width * rows;
+        float height = this.height * collumns;
+
+        float ppuThingy = 1 / ppu;
+        boundsCenter.x += (width / 2 * ppuThingy);
+        boundsCenter.y += (height / 2 * ppuThingy);
+        boundsCenter.z = 0;
+
+        boundsSize.x = width * ppuThingy;
+        boundsSize.y = height * ppuThingy;
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireCube(boundsCenter, boundsSize);
+        Gizmos.color = Color.red;
+
+        Vector3 yOffset = Vector3.up * drawHeightOffset * ppuThingy;
+        Gizmos.DrawLine(boundsCenter + Vector3.up * boundsSize.y / 2 - yOffset, boundsCenter + Vector3.up * boundsSize.y / 2 + Vector3.right * 100 - yOffset );
     }
 }

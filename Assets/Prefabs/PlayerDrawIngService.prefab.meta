@@ -1,6 +1,12 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Prefabs/PlayerDrawIngService.prefab.meta
 guid: bff36eda48b314a10aa0c9933e5ce230
 PrefabImporter:
+========
+guid: cb21a0ad0a09f4d46bcfe7ba597eecad
+folderAsset: yes
+DefaultImporter:
+>>>>>>>> chatsystem:Assets/Prefabs/ChatUI.meta
   externalObjects: {}
   userData: 
   assetBundleName: 
