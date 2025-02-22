@@ -139,7 +139,7 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     {
         rb.velocity = dragEndVelocity;
         EnableMovement(true);
-        RequestReturnOwnershipServerRpc();
+        //RequestReturnOwnershipServerRpc();
     }
     /// <summary>
     /// Transfers ownership of this Player to a new owner.
