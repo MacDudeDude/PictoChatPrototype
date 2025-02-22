@@ -64,6 +64,26 @@ public class SteamLobbyManager : MonoBehaviour
         SteamFriends.OnGameLobbyJoinRequested += OnGameLobbyJoinRequested;
 
         InstanceFinder.ClientManager.OnClientConnectionState += OnClientConnectionState;
+
+        MinigameManager.Instance.OnMinigameStarted += OnMinigameStarted;
+        MinigameManager.Instance.OnMinigameEnded += OnMinigameEnded;
+    }
+
+    /// <summary>
+    /// Changes the minigame in the lobby metadata.
+    /// </summary>
+    /// <param name="minigame">The minigame to change to.</param>
+    private void OnMinigameStarted(BaseMinigame minigame)
+    {
+        ChangeMinigame(minigame.SceneName);
+    }
+
+    /// <summary>
+    /// Changes the minigame in the lobby metadata to null.
+    /// </summary>
+    private void OnMinigameEnded()
+    {
+        ChangeMinigame(null);
     }
 
     /// <summary>
@@ -269,6 +289,18 @@ public class SteamLobbyManager : MonoBehaviour
         {
             OnArtistChanged?.Invoke(artistId);
         }
+    }
+    /// <summary>
+    /// Changes the minigame in the lobby metadata.
+    /// </summary>
+    /// <param name="minigameName">The name of the minigame to change to.   </param>
+    public void ChangeMinigame(string minigameName)
+    {
+        if (CurrentLobby == null)
+            return;
+
+        CurrentLobby.Value.SetData("minigame", minigameName);
+        OnLobbyMetadataChanged?.Invoke();
     }
 
     /// <summary>

@@ -125,6 +125,14 @@ public class SteamPlayerManager : NetworkBehaviour
         }
     }
 
+    /// <summary>
+    /// Gets the number of players currently connected.
+    /// </summary>
+    public int GetPlayerCount()
+    {
+        return _steamToConnectionSync.Count;
+    }
+
     private void OnDestroy()
     {
         InstanceFinder.ServerManager.OnRemoteConnectionState -= OnRemoteConnectionState;
