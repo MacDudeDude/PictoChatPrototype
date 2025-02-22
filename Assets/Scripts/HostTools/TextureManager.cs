@@ -6,6 +6,7 @@ public class TextureManager : MonoBehaviour
 {
     public GameObject texturePrefab;
     public bool createWhiteBackground = true;
+    public string sortingLayerName = "Default";
 
     private GameObject[] spriteHolders;
     private Texture2D[] textures;
@@ -30,6 +31,7 @@ public class TextureManager : MonoBehaviour
 
             spriteHolders[i] = Instantiate(texturePrefab, transform);
             spriteHolders[i].name = ("Sorting Layer : " + (-4 + i));
+            spriteHolders[i].GetComponent<MeshRenderer>().sortingLayerName = sortingLayerName;
             spriteHolders[i].GetComponent<MeshRenderer>().sortingOrder = -4 + i;
             spriteHolders[i].GetComponent<MeshRenderer>().material.mainTexture = textures[i];
 
