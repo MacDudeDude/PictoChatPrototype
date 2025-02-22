@@ -164,6 +164,7 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
         if (_originalOwner != null)
         {
             EnableMovement(true);
+            rb.velocity = Vector2.zero;
             NetworkObject.GiveOwnership(_originalOwner);
             EnableMovementTargetRpc(dragEndVelocity);
             Debug.Log("[Player] Giving back ownership to original Owner: " + Owner);
@@ -181,10 +182,5 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     {
         EnableMovement(true);
         rb.velocity = dragEndVelocity;
-        if (!base.IsOwner)
-        {
-            rb.velocity = Vector2.zero;
-        }
     }
-
-    }
+}
