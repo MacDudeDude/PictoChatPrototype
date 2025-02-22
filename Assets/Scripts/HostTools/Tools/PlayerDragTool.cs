@@ -3,7 +3,8 @@ using UnityEngine;
 public class PlayerDragTool : DrawingToolBase
 {
     public float dragSpeed = 30f;
-    public float throwForceMultiplier = 1f;
+    public float throwForceMultiplier = 10f;
+    public int velocityBufferSize = 5;
 
     private IDraggable grabbedObject;
     private Transform grabbedTransform;
@@ -13,10 +14,14 @@ public class PlayerDragTool : DrawingToolBase
     private bool canDrag;
     private float dragUpdateRate = 0.01f;
     private float lastDragUpdate;
+    private Vector3[] velocityBuffer;
+    private int velocityBufferIndex;
+    private float lastFixedTime;
 
     public void Awake()
     {
         canDrag = true;
+        velocityBuffer = new Vector3[velocityBufferSize];
     }
 
     public override void OnToolUpdate()
@@ -61,7 +66,10 @@ public class PlayerDragTool : DrawingToolBase
 
                 if (Time.time - lastDragUpdate >= dragUpdateRate)
                 {
-                    dragVelocity = (targetPos - (Vector2)lastPos) / dragUpdateRate;
+                    Vector3 currentVelocity = (targetPos - (Vector2)lastPos) / dragUpdateRate;
+                    velocityBuffer[velocityBufferIndex] = currentVelocity;
+                    velocityBufferIndex = (velocityBufferIndex + 1) % velocityBufferSize;
+
                     lastPos = grabbedTransform.position;
                     lastDragUpdate = Time.time;
 
@@ -82,7 +90,21 @@ public class PlayerDragTool : DrawingToolBase
     {
         if (isDragging && Input.GetMouseButtonUp(0) && grabbedObject != null)
         {
-            Vector3 throwVelocity = dragVelocity * throwForceMultiplier;
+            Vector3 averageVelocity = Vector3.zero;
+            foreach (Vector3 vel in velocityBuffer)
+            {
+                averageVelocity += vel;
+            }
+            averageVelocity /= velocityBufferSize;
+
+            Vector3 throwVelocity = averageVelocity * throwForceMultiplier;
+
+            float maxThrowSpeed = 20f;
+            if (throwVelocity.magnitude > maxThrowSpeed)
+            {
+                throwVelocity = throwVelocity.normalized * maxThrowSpeed;
+            }
+
             grabbedObject.EndDrag(throwVelocity);
             ClearDragReferences();
         }
@@ -110,5 +132,10 @@ public class PlayerDragTool : DrawingToolBase
         grabbedTransform = null;
         grabbedObject = null;
         isDragging = false;
+        for (int i = 0; i < velocityBufferSize; i++)
+        {
+            velocityBuffer[i] = Vector3.zero;
+        }
+        velocityBufferIndex = 0;
     }
 }

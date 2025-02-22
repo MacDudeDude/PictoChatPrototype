@@ -246,6 +246,7 @@ MonoBehaviour:
   - {fileID: 5121102187584088595}
   - {fileID: 5121102187584088594}
   rb: {fileID: 5121102187584088596}
+  networkTransform: {fileID: 0}
 --- !u!114 &5121102187584088595
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -407,7 +408,7 @@ MonoBehaviour:
     Position: 1
     Rotation: 1
     Scale: 0
-  _interpolation: 2
+  _interpolation: 28
   _extrapolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1

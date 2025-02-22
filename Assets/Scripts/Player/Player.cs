@@ -141,17 +141,16 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
         RequestTransferOwnershipForDragServerRpc();
         DisableMovement();
         isDragging = true;
+        rb.gravityScale = 0f; // Disable gravity while dragging
     }
 
     public void UpdateDragPosition(Vector3 newPosition)
     {
         if (!isDragging) return;
 
-        // Smoothly update position
-        targetDragPosition = newPosition;
-        transform.position = Vector3.Lerp(transform.position, targetDragPosition, Time.deltaTime * 30f);
+        // Direct position update for more responsive dragging
+        transform.position = newPosition;
 
-        // Force network transform to sync immediately
         if (networkTransform != null)
             networkTransform.ForceSend();
     }
@@ -159,6 +158,7 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     public void EndDrag(Vector3 dragEndVelocity)
     {
         isDragging = false;
+        rb.gravityScale = 1f; // Restore gravity
         RequestReturnOwnershipServerRpc(dragEndVelocity);
     }
 
@@ -186,7 +186,8 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
         EnableMovement(true);
         if (IsOwner)
         {
-            rb.velocity = velocity;
+            rb.velocity = Vector2.zero; // Reset velocity first
+            rb.AddForce(velocity, ForceMode2D.Impulse); // Use AddForce instead of direct velocity
         }
     }
 }
