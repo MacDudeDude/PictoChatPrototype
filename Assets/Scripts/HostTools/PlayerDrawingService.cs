@@ -157,6 +157,7 @@ public class PlayerDrawingService : MonoBehaviour, IDrawingService
 
         width *= rows;
         height *= collumns;
+        height -= drawHeightOffset;
         currentLayer = collisionLayer;
     }
 
@@ -333,7 +334,7 @@ public class PlayerDrawingService : MonoBehaviour, IDrawingService
 
                 if ((worldPos - centerGridWorldPos).sqrMagnitude <= squaredRadius)
                 {
-                    if (currentGridPos.x < 0 || currentGridPos.y < 0 || currentGridPos.x >= width || currentGridPos.y >= (height - drawHeightOffset))
+                    if (currentGridPos.x < 0 || currentGridPos.y < 0 || currentGridPos.x >= width || currentGridPos.y >= height)
                         continue;
 
                     Vector3Int currentTileMapPos = tilemapGrid.WorldToCell(worldPos);
