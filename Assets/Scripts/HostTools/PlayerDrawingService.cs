@@ -320,7 +320,6 @@ public class PlayerDrawingService : MonoBehaviour, IDrawingService
 
     /// <summary>
     /// Applies a brush stroke centered at the specified grid position.
-    /// Extracted from DrawLine to better modularize the drawing logic.
     /// </summary>
     private void ApplyBrushAtGridPosition(Vector3Int centerGridPos, float squaredRadius, int gridRadius, int value, int layer, Color32 color)
     {
