@@ -905,7 +905,7 @@ MonoBehaviour:
   - {fileID: 469078656}
   - {fileID: 2010747676}
   playerButtons: []
-  playerDrawingNetwork: {fileID: 0}
+  playerDrawingNetwork: {fileID: 8224317196908687547}
 --- !u!4 &1341854678
 Transform:
   m_ObjectHideFlags: 0
@@ -1838,3 +1838,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bff36eda48b314a10aa0c9933e5ce230, type: 3}
+--- !u!114 &8224317196908687547 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8224317198423285176, guid: bff36eda48b314a10aa0c9933e5ce230, type: 3}
+  m_PrefabInstance: {fileID: 8224317196908687546}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b51b119a90e014cf39af912ef2378140, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
