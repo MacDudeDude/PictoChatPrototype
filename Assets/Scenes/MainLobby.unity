@@ -657,9 +657,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   availableTools:
-  - toolName: Pen
-    tool: {fileID: 785704023}
   - toolName: Drag
+    tool: {fileID: 785704025}
+  - toolName: Pen
     tool: {fileID: 785704023}
   - toolName: Erase
     tool: {fileID: 785704023}
