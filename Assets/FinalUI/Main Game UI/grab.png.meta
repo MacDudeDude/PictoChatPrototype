@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: c7df49f7d266c91428ac4d62d8e7a426
+guid: 422780df48f44fd48830e86c68f00275
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -127,28 +127,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites:
-    - serializedVersion: 2
-      name: minigame button hover_0
-      rect:
-        serializedVersion: 2
-        x: 18
-        y: 15
-        width: 177
-        height: 197
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 1e856c2e219570b4884479abb9323de9
-      internalID: 1484592804
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
+    sprites: []
     outline: []
     physicsShape: []
     bones: []
@@ -159,8 +138,7 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable:
-      minigame button hover_0: 1484592804
+    nameFileIdTable: {}
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
