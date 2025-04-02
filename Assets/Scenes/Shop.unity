@@ -1603,6 +1603,8 @@ MonoBehaviour:
   leftButton: {fileID: 116995207}
   rightButton: {fileID: 816717418}
   currentItemButton: {fileID: 582195271}
+  priceText: {fileID: 827110738}
+  buyButton: {fileID: 558445016}
 --- !u!1 &980020355
 GameObject:
   m_ObjectHideFlags: 0

@@ -12,6 +12,8 @@ public class ShopCarousel : MonoBehaviour
     public Button rightButton;
 
     public Button currentItemButton;
+    public TextMeshProUGUI priceText;
+    public Button buyButton;
 
     private int currentItemIndex = 0;
     private List<ShopItemSave> itemSaves = new List<ShopItemSave>();
@@ -22,7 +24,6 @@ public class ShopCarousel : MonoBehaviour
         Debug.Log("ShopCarousel: Start method called");
         leftButton.onClick.AddListener(onLeftButtonClick);
         rightButton.onClick.AddListener(onRightButtonClick);
-        Debug.Log("ShopCarousel: Button listeners added");
 
         string filePath = Application.persistentDataPath + "/shopItems.json";
         Debug.Log("ShopCarousel: File path set to " + filePath);
@@ -98,12 +99,28 @@ public class ShopCarousel : MonoBehaviour
     }
     void UpdateCurrentItem()
     {
-        for (int i = 0; i < itemSaves.Count; i++)
+        Debug.Log("ShopCarousel: ItemSaves[i].itemID: " + itemSaves[currentItemIndex].itemID + " shopItems[currentItemIndex].itemID: " + shopItems[currentItemIndex].itemID + " itemSaves[i].isPurchased: " + itemSaves[currentItemIndex].isPurchased);
+
+        ShopItemSave currentSave = itemSaves.Find(save => save.itemID == shopItems[currentItemIndex].itemID);
+
+        Image buttonImage = currentItemButton.GetComponent<Image>();
+        buttonImage.sprite = shopItems[currentItemIndex].itemIcon;
+
+        float itemAlpha = currentSave.isPurchased ? 1.0f : 0.5f;
+        Color buttonColor = buttonImage.color;
+        buttonColor.a = itemAlpha;
+        buttonImage.color = buttonColor;
+
+        if (currentSave.isPurchased)
         {
-            if (itemSaves[i].itemID == shopItems[currentItemIndex].itemID)
-            {
-                currentItemButton.GetComponent<Image>().sprite = shopItems[currentItemIndex].itemIcon;
-            }
+            priceText.text = "Purchased";
+            buyButton.gameObject.SetActive(false);
+        }
+        else
+        {
+            priceText.text = shopItems[currentItemIndex].itemPrice.ToString();
+            buyButton.gameObject.SetActive(true);
         }
     }
+
 }

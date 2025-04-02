@@ -5657,6 +5657,7 @@ MonoBehaviour:
     rgba: 4294901899
   - serializedVersion: 2
     rgba: 4285361517
+  messageInput: {fileID: 0}
   currentColor: {r: 0, g: 0, b: 0, a: 1}
   currentRadius: 0.1
   chatDrawBounds:
@@ -5739,6 +5740,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   texturePrefab: {fileID: 1742853188342811146, guid: 4085a1285a9ddb54d9071b05c2b6efd4, type: 3}
   createWhiteBackground: 0
+  sortingLayerName: Default
 --- !u!1 &3979891116406151365
 GameObject:
   m_ObjectHideFlags: 0
