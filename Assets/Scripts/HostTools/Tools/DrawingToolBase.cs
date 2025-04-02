@@ -47,7 +47,7 @@ public abstract class DrawingToolBase : MonoBehaviour, IDrawingTool
             {
                 Vector3Int gridStartpoint = drawingService.CollisionGrid.WorldToCell(lastMousePosition);
                 Vector3Int gridEndpoint = drawingService.CollisionGrid.WorldToCell(mousePos);
-                remoteDrawingService.SendDrawLine(gridStartpoint, gridEndpoint, drawingService.PlaceRadius, value, drawingService.CurrentLayer, drawingService.CurrentColor);
+                remoteDrawingService.SendDrawLine(gridStartpoint, gridEndpoint, drawingService.PlaceRadius, value, drawingService.CurrentLayer, value == 0 ? Color.clear : drawingService.CurrentColor);
             }
 
             lastMousePosition = mousePos;

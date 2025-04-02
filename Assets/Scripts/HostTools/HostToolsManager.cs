@@ -52,6 +52,7 @@ public class HostToolsManager : MonoBehaviour
 
     private void Update()
     {
+        Debug.Log(currentTool);
         currentTool?.OnToolUpdate();
     }
 
