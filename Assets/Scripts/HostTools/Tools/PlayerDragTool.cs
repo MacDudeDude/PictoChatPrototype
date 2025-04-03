@@ -68,7 +68,6 @@ public class PlayerDragTool : DrawingToolBase
                 Vector3 currentVelocity = (targetPos - (Vector2)lastPos) / Time.deltaTime;
                 velocityBuffer[velocityBufferIndex] = currentVelocity;
                 velocityBufferIndex = (velocityBufferIndex + 1) % velocityBufferSize;
-                Debug.Log("[PlayerDragTool] Velocity: " + currentVelocity);
 
 
                 grabbedObject.UpdateDragPosition(targetPos);
@@ -88,7 +87,6 @@ public class PlayerDragTool : DrawingToolBase
             foreach (Vector3 vel in velocityBuffer)
             {
                 averageVelocity += vel;
-                Debug.Log("[PlayerDragTool] Velocity in buffer: " + vel);
             }
             averageVelocity /= velocityBufferSize;
             Debug.Log("[PlayerDragTool] Average velocity: " + averageVelocity);
@@ -98,6 +96,7 @@ public class PlayerDragTool : DrawingToolBase
             if (throwVelocity.magnitude > maxThrowSpeed)
             {
                 throwVelocity = throwVelocity.normalized * maxThrowSpeed;
+                Debug.Log("[PlayerDragTool] Clamped velocity: " + throwVelocity);
             }
 
             grabbedObject.EndDrag(throwVelocity);
