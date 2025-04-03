@@ -28,25 +28,23 @@ public class ChatReciever : MonoBehaviour
     public struct ChatBroadcast : IBroadcast
     {
         public string Username;
-        public string TextMessage;
         public Color32[] textureColors;
     }
 
-    public void SendChatMessage(Color32[] colors, string textMessage = "")
+    public void SendChatMessage(Color32[] colors)
     {
         ChatBroadcast newMsh = new ChatBroadcast();
         newMsh.Username = "asd";
         newMsh.textureColors = colors;
-        newMsh.TextMessage = textMessage;
 
         InstanceFinder.ClientManager.Broadcast(newMsh, Channel.Reliable);
     }
 
-    public void RecieveChatMessage(Color32[] colors, string username, string textMessage)
+    public void RecieveChatMessage(Color32[] colors, string username)
     {
         GameObject newChatMessage = Instantiate(chatMessagePrefab, content);
         messages.Add(newChatMessage);
-        newChatMessage.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = username + (string.IsNullOrEmpty(textMessage) ? "" : ": " + textMessage);
+        newChatMessage.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = username;
         newChatMessage.GetComponentInChildren<UnityEngine.UI.RawImage>().texture = CreateTextureFromMessage(colors);
 
         if (messages.Count > maxPreviousMessages)
@@ -77,7 +75,10 @@ public class ChatReciever : MonoBehaviour
         //does not have any objects spawned.
         if (nob == null)
             return;
-        msg.Username = SteamLobbyManager.Instance.getLocalSteamUsername();
+
+        //Populate the username field in the received msg.
+        //Let us assume GetClientUsername actually does something.
+        msg.Username = conn.ClientId.ToString();
 
         //If you were to view the available Broadcast methods
         //you will find we are using the one with this signature...
@@ -95,7 +96,7 @@ public class ChatReciever : MonoBehaviour
         //called with the broadcast data.
         InstanceFinder.ClientManager.RegisterBroadcast<ChatBroadcast>(OnChatBroadcast);
 
-        if (InstanceFinder.IsServerStarted)
+        if(InstanceFinder.IsServerStarted)
         {
             InstanceFinder.ServerManager.RegisterBroadcast<ChatBroadcast>(OnChatBroadcast);
         }
@@ -106,7 +107,7 @@ public class ChatReciever : MonoBehaviour
     //channel they came in on.
     private void OnChatBroadcast(ChatBroadcast msg, Channel channel)
     {
-        RecieveChatMessage(msg.textureColors, msg.Username, msg.TextMessage);
+        RecieveChatMessage(msg.textureColors, msg.Username);
     }
 
     private void OnDisable()
@@ -116,7 +117,7 @@ public class ChatReciever : MonoBehaviour
         //you no longer wish to receive the broadcasts on that object.
         InstanceFinder.ClientManager.UnregisterBroadcast<ChatBroadcast>(OnChatBroadcast);
 
-        if (InstanceFinder.IsServerStarted)
+        if(InstanceFinder.IsServerStarted)
         {
             InstanceFinder.ServerManager.UnregisterBroadcast<ChatBroadcast>(OnChatBroadcast);
         }

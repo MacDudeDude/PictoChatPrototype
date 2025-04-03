@@ -5657,7 +5657,6 @@ MonoBehaviour:
     rgba: 4294901899
   - serializedVersion: 2
     rgba: 4285361517
-  messageInput: {fileID: 0}
   currentColor: {r: 0, g: 0, b: 0, a: 1}
   currentRadius: 0.1
   chatDrawBounds:
