@@ -92,8 +92,10 @@ public class PlayerDragTool : DrawingToolBase
             foreach (Vector3 vel in velocityBuffer)
             {
                 averageVelocity += vel;
+                Debug.Log("[PlayerDragTool] Velocity: " + vel);
             }
             averageVelocity /= velocityBufferSize;
+            Debug.Log("[PlayerDragTool] Average velocity: " + averageVelocity);
 
             Vector3 throwVelocity = averageVelocity * throwForceMultiplier;
 
