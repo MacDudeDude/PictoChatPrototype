@@ -73,6 +73,7 @@ public class PlayerDragTool : DrawingToolBase
                     lastPos = grabbedTransform.position;
                     lastDragUpdate = Time.time;
 
+                    Debug.Log("[PlayerDragTool] Update drag velocity: " + currentVelocity);
                     grabbedObject.UpdateDragPosition(targetPos);
                 }
             }
@@ -101,6 +102,8 @@ public class PlayerDragTool : DrawingToolBase
             {
                 throwVelocity = throwVelocity.normalized * maxThrowSpeed;
             }
+
+            Debug.Log("[PlayerDragTool] Throw velocity: " + throwVelocity);
 
             grabbedObject.EndDrag(throwVelocity);
             ClearDragReferences();
