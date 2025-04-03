@@ -3,20 +3,16 @@ using UnityEngine;
 public class PlayerDragTool : DrawingToolBase
 {
     public float dragSpeed = 30f;
-    public float throwForceMultiplier = 10f;
+    public float throwForceMultiplier = 2f;
     public int velocityBufferSize = 5;
 
     private IDraggable grabbedObject;
     private Transform grabbedTransform;
     private Vector3 lastPos;
-    private Vector3 dragVelocity;
     private bool isDragging;
     private bool canDrag;
-    private float dragUpdateRate = 0.01f;
-    private float lastDragUpdate;
     private Vector3[] velocityBuffer;
     private int velocityBufferIndex;
-    private float lastFixedTime;
 
     public void Awake()
     {
@@ -92,7 +88,7 @@ public class PlayerDragTool : DrawingToolBase
             Debug.Log("[PlayerDragTool] Average velocity: " + averageVelocity);
             Vector3 throwVelocity = averageVelocity * throwForceMultiplier;
 
-            float maxThrowSpeed = 20f;
+            float maxThrowSpeed = 5f;
             if (throwVelocity.magnitude > maxThrowSpeed)
             {
                 throwVelocity = throwVelocity.normalized * maxThrowSpeed;
