@@ -332,6 +332,11 @@ public class SteamLobbyManager : MonoBehaviour
         return members;
     }
 
+    public string getLocalSteamUsername()
+    {
+        var username = SteamClient.Name;
+        return username;
+    }
 
     /// <summary>
     /// Cleans up Steam callbacks when the object is destroyed.

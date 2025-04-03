@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class ChatDrawer : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class ChatDrawer : MonoBehaviour
     public UnityEngine.UI.Toggle[] toggles;
     public UnityEngine.UI.Toggle[] colorToggles;
     public Color32[] colors;
+    public TMP_InputField messageInput;
     [Header("Self Drawing Variables")]
     public Color currentColor;
     public float currentRadius;
@@ -73,13 +75,15 @@ public class ChatDrawer : MonoBehaviour
 
     public void SetRadius()
     {
-        if(toggles[0].isOn)
+        if (toggles[0].isOn)
         {
             currentRadius = 0.1f;
-        }else if (toggles[1].isOn)
+        }
+        else if (toggles[1].isOn)
         {
             currentRadius = 1.1f;
-        }else if(toggles[2].isOn)
+        }
+        else if (toggles[2].isOn)
         {
             currentRadius = 2.1f;
         }
@@ -91,7 +95,7 @@ public class ChatDrawer : MonoBehaviour
 
         for (int i = 0; i < colorToggles.Length; i++)
         {
-            if(colorToggles[i].isOn)
+            if (colorToggles[i].isOn)
             {
                 currentColor = colors[i];
                 break;
@@ -105,7 +109,14 @@ public class ChatDrawer : MonoBehaviour
             return;
         lastSentTimer = minTimeBetweenChats;
 
-        recieverSender.SendChatMessage(textureColors);
+        string message = messageInput != null ? messageInput.text : "";
+        recieverSender.SendChatMessage(textureColors, message);
+
+        if (messageInput != null)
+        {
+            messageInput.text = "";
+        }
+
         ResetChatScreen();
     }
 
