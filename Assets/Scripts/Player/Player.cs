@@ -183,6 +183,6 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     private void ApplyThrowVelocityObserversRpc(Vector3 velocity)
     {
         EnableMovement(true);
-        rb.AddForce(velocity, ForceMode2D.Impulse); // Use AddForce instead of direct velocity
+        rb.velocity = velocity;
     }
 }
