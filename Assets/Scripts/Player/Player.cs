@@ -178,7 +178,7 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
 
         // Return ownership and apply throw velocity
         rb.AddForce(dragEndVelocity, ForceMode2D.Impulse); // Use AddForce instead of direct velocity
-        NetworkObject.GiveOwnership(_originalOwner);
+        //NetworkObject.GiveOwnership(_originalOwner);
         ApplyThrowVelocityObserversRpc(dragEndVelocity);
     }
 
