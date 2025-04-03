@@ -312,7 +312,6 @@ public class PlayerDrawingService : MonoBehaviour, IDrawingService
         List<Vector2Int> line = GenerateLine(gridStartPoint.x, gridStartPoint.y, gridEndPoint.x, gridEndPoint.y);
         foreach (Vector2Int point in line)
         {
-
             Vector3Int gridPoint = new Vector3Int(point.x, point.y, 0);
             ApplyBrushAtGridPosition(gridPoint, squaredRadius, gridRadius, value, layer, color);
         }
@@ -426,6 +425,6 @@ public class PlayerDrawingService : MonoBehaviour, IDrawingService
         Gizmos.color = Color.red;
 
         Vector3 yOffset = Vector3.up * drawHeightOffset * ppuThingy;
-        Gizmos.DrawLine(boundsCenter + Vector3.up * boundsSize.y / 2 - yOffset, boundsCenter + Vector3.up * boundsSize.y / 2 + Vector3.right * 100 - yOffset );
+        Gizmos.DrawLine(boundsCenter + Vector3.up * boundsSize.y / 2 - yOffset, boundsCenter + Vector3.up * boundsSize.y / 2 + Vector3.right * 100 - yOffset);
     }
 }
