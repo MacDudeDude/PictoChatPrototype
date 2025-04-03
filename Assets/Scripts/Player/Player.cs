@@ -161,7 +161,6 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
         isDragging = false;
         rb.gravityScale = 1f; // Restore gravity
         RequestReturnOwnershipServerRpc();
-        rb.simulated = true;
         rb.AddForce(dragEndVelocity, ForceMode2D.Impulse);
         Debug.Log("[Player] End drag with velocity: " + dragEndVelocity);
     }
@@ -180,6 +179,7 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
         if (_originalOwner == null) return;
 
         // Return ownership and apply throw velocity
+        rb.simulated = true;
         NetworkObject.GiveOwnership(_originalOwner);
         EnableMovement(true);
 
