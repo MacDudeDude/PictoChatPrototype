@@ -17,13 +17,13 @@ public class ColorHolder : MonoBehaviour
 
     public void SendColor(bool isOn)
     {
-        if(isOn)
+        if (isOn)
             uiManager.SetPenColor(color);
     }
 
     public void OnValidate()
     {
-        if(image != null)
+        if (image != null)
         {
             image.color = color;
         }

@@ -125,6 +125,7 @@ public class SteamPlayerManager : NetworkBehaviour
         }
     }
 
+
     /// <summary>
     /// Gets the number of players currently connected.
     /// </summary>
