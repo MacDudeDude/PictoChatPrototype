@@ -64,18 +64,14 @@ public class PlayerDragTool : DrawingToolBase
             {
                 Vector2 targetPos = GetCurrentMousePosition();
 
-                if (Time.time - lastDragUpdate >= dragUpdateRate)
-                {
-                    Vector3 currentVelocity = (targetPos - (Vector2)lastPos) / dragUpdateRate;
-                    velocityBuffer[velocityBufferIndex] = currentVelocity;
-                    velocityBufferIndex = (velocityBufferIndex + 1) % velocityBufferSize;
+                // Calculate velocity even if not updating position
+                Vector3 currentVelocity = (targetPos - (Vector2)lastPos) / Time.deltaTime;
+                velocityBuffer[velocityBufferIndex] = currentVelocity;
+                velocityBufferIndex = (velocityBufferIndex + 1) % velocityBufferSize;
+                Debug.Log("[PlayerDragTool] Velocity: " + currentVelocity);
 
-                    lastPos = grabbedTransform.position;
-                    lastDragUpdate = Time.time;
 
-                    Debug.Log("[PlayerDragTool] Update drag velocity: " + currentVelocity);
-                    grabbedObject.UpdateDragPosition(targetPos);
-                }
+                grabbedObject.UpdateDragPosition(targetPos);
             }
             else
             {
@@ -92,10 +88,8 @@ public class PlayerDragTool : DrawingToolBase
             foreach (Vector3 vel in velocityBuffer)
             {
                 averageVelocity += vel;
-                Debug.Log("[PlayerDragTool] Velocity: " + vel);
             }
             averageVelocity /= velocityBufferSize;
-            Debug.Log("[PlayerDragTool] Average velocity: " + averageVelocity);
 
             Vector3 throwVelocity = averageVelocity * throwForceMultiplier;
 
@@ -105,10 +99,8 @@ public class PlayerDragTool : DrawingToolBase
                 throwVelocity = throwVelocity.normalized * maxThrowSpeed;
             }
 
-            Debug.Log("[PlayerDragTool] Throw velocity: " + throwVelocity);
-
             grabbedObject.EndDrag(throwVelocity);
-            ClearDragReferences();
+            ClearDragReferences(); // Clear references after using the buffer
         }
     }
 
