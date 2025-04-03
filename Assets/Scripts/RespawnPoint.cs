@@ -65,4 +65,8 @@ public class RespawnPoint : MonoBehaviour, IDraggable
     {
 
     }
+
+    public void UpdateDragPosition(Vector3 newPosition)
+    {
+    }
 }
