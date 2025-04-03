@@ -73,10 +73,7 @@ public class PlayerDragTool : DrawingToolBase
                     lastPos = grabbedTransform.position;
                     lastDragUpdate = Time.time;
 
-                    if (grabbedObject is Player player)
-                    {
-                        player.UpdateDragPosition(targetPos);
-                    }
+                    grabbedObject.UpdateDragPosition(targetPos);
                 }
             }
             else
