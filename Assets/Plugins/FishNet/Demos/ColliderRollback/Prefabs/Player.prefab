@@ -102,6 +102,11 @@ MonoBehaviour:
   _componentIndexCache: 0
   _addedNetworkObject: {fileID: 8475222101369129519}
   _networkObjectCache: {fileID: 8475222101369129519}
+  _hitboxLayer:
+    serializedVersion: 2
+    m_Bits: 32
+  _audio: {fileID: 8300000, guid: 0330762d2b3c8d641bfe11ad89b7e196, type: 3}
+  _muzzleFlashPrefab: {fileID: 39148481766341303, guid: 4385a793e032d634bb912f84a23d6db1, type: 3}
 --- !u!114 &1348621277
 MonoBehaviour:
   m_ObjectHideFlags: 0
