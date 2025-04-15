@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Steamworks;
+using TMPro;
 
 public class ChatDrawer : MonoBehaviour
 {
@@ -12,6 +14,10 @@ public class ChatDrawer : MonoBehaviour
     public UnityEngine.UI.Toggle[] toggles;
     public UnityEngine.UI.Toggle[] colorToggles;
     public Color32[] colors;
+    public TMP_Text usernameText;
+    public TMP_InputField inputField;
+    public TMP_Text inputText;
+    
     [Header("Self Drawing Variables")]
     public Color currentColor;
     public float currentRadius;
@@ -29,6 +35,10 @@ public class ChatDrawer : MonoBehaviour
     private Vector3 lastMousePosition;
     private BoxCollider2D col;
     private float lastSentTimer;
+
+    private bool typingEnabled;
+
+
 
     private bool startedInBounds = false;
 
@@ -55,20 +65,72 @@ public class ChatDrawer : MonoBehaviour
         textureColors = new Color32[width * height];
         col.offset = chatDrawBounds.center - transform.position;
         col.size = chatDrawBounds.size;
+        typingEnabled = false;
+
+        usernameText.text = SteamClient.Name + ":";
 
         ResetChatScreen();
 
         recieverSender.Init(ppu, height, width);
+        
+        // Add listener for input field selection
+        inputField.onSelect.AddListener((string _) => EnableTyping(true));
     }
 
     public void SwitchToPenTool(bool enabled)
     {
         drawing = enabled;
+        erasing = false;
+        typingEnabled = !enabled;
+        
+        if (enabled)
+        {
+            inputField.DeactivateInputField();
+        }
     }
 
     public void SwitchToEraserTool(bool enabled)
     {
         erasing = enabled;
+        drawing = false;
+        typingEnabled = !enabled;
+        
+        if (enabled)
+        {
+            inputField.DeactivateInputField();
+        }
+    }
+
+    public void EnableTyping(bool enabled)
+    {
+        typingEnabled = enabled;
+        
+        if (enabled)
+        {
+            drawing = false;
+            erasing = false;
+            inputField.ActivateInputField();
+        }
+    }
+
+    public void ToggleTypingMode()
+    {
+        if (typingEnabled)
+        {
+            // Switch to last active tool (pen by default)
+            if (erasing)
+            {
+                SwitchToEraserTool(true);
+            }
+            else
+            {
+                SwitchToPenTool(true);
+            }
+        }
+        else
+        {
+            EnableTyping(true);
+        }
     }
 
     public void SetRadius()
@@ -105,8 +167,14 @@ public class ChatDrawer : MonoBehaviour
             return;
         lastSentTimer = minTimeBetweenChats;
 
-        recieverSender.SendChatMessage(textureColors);
+        string message = inputField.text;
+        recieverSender.SendChatMessage(textureColors, message);
+        
+        // Clear both the drawing and the text input
         ResetChatScreen();
+        
+        // Reset to default state (pen tool active)
+        SwitchToPenTool(true);
     }
 
     public void EnableDraw()
@@ -131,6 +199,15 @@ public class ChatDrawer : MonoBehaviour
         else if (erasing)
         {
             EraseTool();
+        }
+
+        if (typingEnabled && !inputField.isFocused)
+        {
+            inputField.ActivateInputField();
+        }
+        else if (!typingEnabled && inputField.isFocused)
+        {
+            inputField.DeactivateInputField();
         }
     }
 
@@ -204,6 +281,7 @@ public class ChatDrawer : MonoBehaviour
         }
 
         chatDrawingArea.SetPixels(textureColors, 0);
+        inputField.text = "";
     }
 
     public void UpdateTiles()

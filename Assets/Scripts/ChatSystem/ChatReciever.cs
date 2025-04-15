@@ -6,7 +6,8 @@ using FishNet.Transporting;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Steamworks;
+using TMPro;
 public class ChatReciever : MonoBehaviour
 {
     public Transform content;
@@ -29,22 +30,44 @@ public class ChatReciever : MonoBehaviour
     {
         public string Username;
         public Color32[] textureColors;
+        public string TextMessage;
     }
 
     public void SendChatMessage(Color32[] colors)
     {
         ChatBroadcast newMsh = new ChatBroadcast();
-        newMsh.Username = "asd";
+        newMsh.Username = SteamClient.Name;
         newMsh.textureColors = colors;
+        newMsh.TextMessage = "";
+
+        InstanceFinder.ClientManager.Broadcast(newMsh, Channel.Reliable);
+    }
+
+    public void SendChatMessage(Color32[] colors, string textMessage)
+    {
+        ChatBroadcast newMsh = new ChatBroadcast();
+        newMsh.Username = SteamClient.Name;
+        newMsh.textureColors = colors;
+        newMsh.TextMessage = textMessage;
 
         InstanceFinder.ClientManager.Broadcast(newMsh, Channel.Reliable);
     }
 
     public void RecieveChatMessage(Color32[] colors, string username)
     {
+        RecieveChatMessage(colors, username, "");
+    }
+
+    public void RecieveChatMessage(Color32[] colors, string username, string textMessage)
+    {
         GameObject newChatMessage = Instantiate(chatMessagePrefab, content);
         messages.Add(newChatMessage);
-        newChatMessage.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = username;
+        TMP_Text[] messageText = newChatMessage.GetComponentsInChildren<TMP_Text>();
+        messageText[0].text = username + ":";
+        if (!string.IsNullOrEmpty(textMessage))
+        {
+            messageText[1].text = textMessage;
+        }
         newChatMessage.GetComponentInChildren<UnityEngine.UI.RawImage>().texture = CreateTextureFromMessage(colors);
 
         if (messages.Count > maxPreviousMessages)
@@ -76,9 +99,6 @@ public class ChatReciever : MonoBehaviour
         if (nob == null)
             return;
 
-        //Populate the username field in the received msg.
-        //Let us assume GetClientUsername actually does something.
-        msg.Username = conn.ClientId.ToString();
 
         //If you were to view the available Broadcast methods
         //you will find we are using the one with this signature...
@@ -107,7 +127,7 @@ public class ChatReciever : MonoBehaviour
     //channel they came in on.
     private void OnChatBroadcast(ChatBroadcast msg, Channel channel)
     {
-        RecieveChatMessage(msg.textureColors, msg.Username);
+        RecieveChatMessage(msg.textureColors, msg.Username, msg.TextMessage);
     }
 
     private void OnDisable()
