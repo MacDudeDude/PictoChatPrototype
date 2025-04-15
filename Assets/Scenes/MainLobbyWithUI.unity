@@ -1927,9 +1927,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26bae81a7b2334fa287556c77c55dc92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dragSpeed: 30
-  throwForceMultiplier: 10
+  dragSpeed: 20
+  throwForceMultiplier: 1
   velocityBufferSize: 5
+  maxThrowSpeed: 20
 --- !u!114 &785704026
 MonoBehaviour:
   m_ObjectHideFlags: 0

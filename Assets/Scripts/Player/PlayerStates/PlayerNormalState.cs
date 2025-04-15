@@ -37,6 +37,8 @@ public class PlayerNormalState : PlayerState
     private bool m_Crouched;
 
     //Move Values
+    private float currentMovementSmoothing;
+    private float movementSmoothLerpIntensity;
     private float horizontalMove;
     private float verticalMove;
     private float jumpBufferTime;
@@ -54,6 +56,7 @@ public class PlayerNormalState : PlayerState
     {
         base.Init(player, playerStateMachine);
         m_Rigidbody2D = rb;
+        currentMovementSmoothing = m_MovementSmoothing;
     }
 
     public override void EnterState()
@@ -68,6 +71,9 @@ public class PlayerNormalState : PlayerState
             dazed = true;
             dazedTime = 1f;
         }
+        Debug.Log(m_Rigidbody2D.velocity.magnitude);
+        currentMovementSmoothing = 0.5f;
+        movementSmoothLerpIntensity = Mathf.Clamp((1 / m_Rigidbody2D.velocity.magnitude) * 10, 0.2f, 10f);
     }
 
     public override void ExitState()
@@ -80,6 +86,9 @@ public class PlayerNormalState : PlayerState
     {
         GetInputs();
         SetAnimatorValues();
+
+        Debug.Log(currentMovementSmoothing);
+        currentMovementSmoothing = Mathf.Lerp(currentMovementSmoothing, m_MovementSmoothing, movementSmoothLerpIntensity * Time.deltaTime);
     }
 
     public override void PhysicsUpdate()
@@ -228,7 +237,7 @@ public class PlayerNormalState : PlayerState
                 targetVelocity.x = m_Rigidbody2D.velocity.x;
             // And then smoothing it out and applying it to the character
 
-            float movementSmoothing = (crouch) ? m_CrouchedMovementSmoothing : m_MovementSmoothing;
+            float movementSmoothing = (crouch) ? m_CrouchedMovementSmoothing : currentMovementSmoothing;
             if (groundedSlideBufferTime <= 0 && crouch)
                 movementSmoothing = m_CrouchedAirMovementSmoothing;
 
