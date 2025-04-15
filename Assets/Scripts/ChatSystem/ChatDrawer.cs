@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Steamworks;
 using TMPro;
+using UnityEngine.UI;
 
 public class ChatDrawer : MonoBehaviour
 {
@@ -17,7 +18,9 @@ public class ChatDrawer : MonoBehaviour
     public TMP_Text usernameText;
     public TMP_InputField inputField;
     public TMP_Text inputText;
-    
+    public Toggle penToggle;
+    public Toggle eraserToggle;
+
     [Header("Self Drawing Variables")]
     public Color currentColor;
     public float currentRadius;
@@ -72,76 +75,84 @@ public class ChatDrawer : MonoBehaviour
         ResetChatScreen();
 
         recieverSender.Init(ppu, height, width);
-        
+
         // Add listener for input field selection
         inputField.onSelect.AddListener((string _) => EnableTyping(true));
     }
 
     public void SwitchToPenTool(bool enabled)
     {
+        // Set pen state
         drawing = enabled;
-        erasing = false;
-        typingEnabled = !enabled;
-        
+
+        // If pen is enabled, ensure eraser is off
         if (enabled)
         {
+            erasing = false;
+            eraserToggle.isOn = false;
+            typingEnabled = false;
             inputField.DeactivateInputField();
+        }
+        // If both tools are off, enable typing
+        else if (!erasing)
+        {
+            EnableTyping(true);
         }
     }
 
     public void SwitchToEraserTool(bool enabled)
     {
+        // Set eraser state
         erasing = enabled;
-        drawing = false;
-        typingEnabled = !enabled;
-        
+
+        // If eraser is enabled, ensure pen is off
         if (enabled)
         {
+            drawing = false;
+            penToggle.isOn = false;
+            typingEnabled = false;
             inputField.DeactivateInputField();
+        }
+        // If both tools are off, enable typing
+        else if (!drawing)
+        {
+            EnableTyping(true);
         }
     }
 
     public void EnableTyping(bool enabled)
     {
         typingEnabled = enabled;
-        
+
         if (enabled)
         {
+            // Disable drawing tools
             drawing = false;
             erasing = false;
+            penToggle.isOn = false;
+            eraserToggle.isOn = false;
+
             inputField.ActivateInputField();
         }
     }
 
     public void ToggleTypingMode()
     {
-        if (typingEnabled)
-        {
-            // Switch to last active tool (pen by default)
-            if (erasing)
-            {
-                SwitchToEraserTool(true);
-            }
-            else
-            {
-                SwitchToPenTool(true);
-            }
-        }
-        else
-        {
-            EnableTyping(true);
-        }
+        // Simply enable or disable typing mode
+        EnableTyping(!typingEnabled);
     }
 
     public void SetRadius()
     {
-        if(toggles[0].isOn)
+        if (toggles[0].isOn)
         {
             currentRadius = 0.1f;
-        }else if (toggles[1].isOn)
+        }
+        else if (toggles[1].isOn)
         {
             currentRadius = 1.1f;
-        }else if(toggles[2].isOn)
+        }
+        else if (toggles[2].isOn)
         {
             currentRadius = 2.1f;
         }
@@ -153,7 +164,7 @@ public class ChatDrawer : MonoBehaviour
 
         for (int i = 0; i < colorToggles.Length; i++)
         {
-            if(colorToggles[i].isOn)
+            if (colorToggles[i].isOn)
             {
                 currentColor = colors[i];
                 break;
@@ -169,10 +180,10 @@ public class ChatDrawer : MonoBehaviour
 
         string message = inputField.text;
         recieverSender.SendChatMessage(textureColors, message);
-        
+
         // Clear both the drawing and the text input
         ResetChatScreen();
-        
+
         // Reset to default state (pen tool active)
         SwitchToPenTool(true);
     }
@@ -282,6 +293,7 @@ public class ChatDrawer : MonoBehaviour
 
         chatDrawingArea.SetPixels(textureColors, 0);
         inputField.text = "";
+        inputField.DeactivateInputField();
     }
 
     public void UpdateTiles()
