@@ -3,17 +3,16 @@ using UnityEngine;
 using FishNet.Object;
 using FishNet.Connection;
 using FishNet.Managing;
-using UnityEngine.Tilemaps;
-
+using FishNet.Transporting;
 public class PlayerDrawingNetwork : NetworkBehaviour, INetworkDrawingService
 {
     // Reference to the pure drawing logic service.
     private PlayerDrawingService drawingService;
-    
+
     // Stores drawing commands for replay to new clients.
     private List<DrawCommand> storedCommands = new List<DrawCommand>();
 
-    public bool IsOwner => base.IsOwner;    
+    public bool IsOwner => base.IsOwner;
 
     private void Awake()
     {
@@ -51,7 +50,7 @@ public class PlayerDrawingNetwork : NetworkBehaviour, INetworkDrawingService
     /// Sends a drawing command from the client to the server.
     /// </summary>
     [ServerRpc(RequireOwnership = true)]
-    public void DrawLineServerRpc(UnityEngine.Vector3Int startPoint, UnityEngine.Vector3Int endPoint, float radius, int value, int layer, UnityEngine.Color32 color)
+    public void DrawLineServerRpc(UnityEngine.Vector3Int startPoint, UnityEngine.Vector3Int endPoint, float radius, int value, int layer, UnityEngine.Color32 color, Channel channel = Channel.Reliable)
     {
         // Store the command for replaying to future clients.
         DrawCommand command = new DrawCommand
@@ -64,7 +63,7 @@ public class PlayerDrawingNetwork : NetworkBehaviour, INetworkDrawingService
             color = color
         };
         storedCommands.Add(command);
-        
+
         // Relay the command to all clients.
         DrawLineObserversRpc(startPoint, endPoint, radius, value, layer, color);
         Debug.Log("[PlayerDrawingNetwork] Drawing line on server");
@@ -74,9 +73,9 @@ public class PlayerDrawingNetwork : NetworkBehaviour, INetworkDrawingService
     /// Observers RPC to update drawing on all clients.
     /// </summary>
     [ObserversRpc]
-    public void DrawLineObserversRpc(UnityEngine.Vector3Int startPoint, UnityEngine.Vector3Int endPoint, float radius, int value, int layer, UnityEngine.Color32 color)
+    public void DrawLineObserversRpc(UnityEngine.Vector3Int startPoint, UnityEngine.Vector3Int endPoint, float radius, int value, int layer, UnityEngine.Color32 color, Channel channel = Channel.Reliable)
     {
-        
+
         drawingService.DrawLine(startPoint, endPoint, radius, value, layer, color);
         Debug.Log("[PlayerDrawingNetwork] Drawing line on all clients");
     }
@@ -130,4 +129,4 @@ public class PlayerDrawingNetwork : NetworkBehaviour, INetworkDrawingService
         SteamLobbyManager.Instance.ChangeArtist(artistId);
     }
 
-} 
+}

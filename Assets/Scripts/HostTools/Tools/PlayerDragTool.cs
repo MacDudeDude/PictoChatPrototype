@@ -5,18 +5,15 @@ public class PlayerDragTool : DrawingToolBase
     public float dragSpeed = 30f;
     public float throwForceMultiplier = 10f;
     public int velocityBufferSize = 5;
+    public float maxThrowSpeed = 5f;
 
     private IDraggable grabbedObject;
     private Transform grabbedTransform;
     private Vector3 lastPos;
-    private Vector3 dragVelocity;
     private bool isDragging;
     private bool canDrag;
-    private float dragUpdateRate = 0.01f;
-    private float lastDragUpdate;
     private Vector3[] velocityBuffer;
     private int velocityBufferIndex;
-    private float lastFixedTime;
 
     public void Awake()
     {
@@ -64,20 +61,13 @@ public class PlayerDragTool : DrawingToolBase
             {
                 Vector2 targetPos = GetCurrentMousePosition();
 
-                if (Time.time - lastDragUpdate >= dragUpdateRate)
-                {
-                    Vector3 currentVelocity = (targetPos - (Vector2)lastPos) / dragUpdateRate;
-                    velocityBuffer[velocityBufferIndex] = currentVelocity;
-                    velocityBufferIndex = (velocityBufferIndex + 1) % velocityBufferSize;
+                // Calculate velocity even if not updating position
+                Vector3 currentVelocity = (targetPos - (Vector2)lastPos) / Time.deltaTime;
+                velocityBuffer[velocityBufferIndex] = currentVelocity;
+                velocityBufferIndex = (velocityBufferIndex + 1) % velocityBufferSize;
 
-                    lastPos = grabbedTransform.position;
-                    lastDragUpdate = Time.time;
 
-                    if (grabbedObject is Player player)
-                    {
-                        player.UpdateDragPosition(targetPos);
-                    }
-                }
+                grabbedObject.UpdateDragPosition(targetPos);
             }
             else
             {
@@ -96,17 +86,17 @@ public class PlayerDragTool : DrawingToolBase
                 averageVelocity += vel;
             }
             averageVelocity /= velocityBufferSize;
-
+            Debug.Log("[PlayerDragTool] Average velocity: " + averageVelocity);
             Vector3 throwVelocity = averageVelocity * throwForceMultiplier;
 
-            float maxThrowSpeed = 20f;
             if (throwVelocity.magnitude > maxThrowSpeed)
             {
                 throwVelocity = throwVelocity.normalized * maxThrowSpeed;
+                Debug.Log("[PlayerDragTool] Clamped velocity: " + throwVelocity);
             }
 
             grabbedObject.EndDrag(throwVelocity);
-            ClearDragReferences();
+            ClearDragReferences(); // Clear references after using the buffer
         }
     }
 

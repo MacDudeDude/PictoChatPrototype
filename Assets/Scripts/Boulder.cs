@@ -29,15 +29,19 @@ public class Boulder : MonoBehaviour, IDraggable
     {
         lastVelocity = rb.velocity;
     }
+    public void UpdateDragPosition(Vector3 newPosition)
+    {
+        transform.position = newPosition;
+    }
 
     public void OnCollisionEnter2D(Collision2D collision)
     {
-        if(canKillLayers == (canKillLayers | (1 << collision.gameObject.layer)))
+        if (canKillLayers == (canKillLayers | (1 << collision.gameObject.layer)))
         {
-            if(lastVelocity.magnitude > killCollisionSpeed)
+            if (lastVelocity.magnitude > killCollisionSpeed)
             {
                 IKillable killable;
-                if(collision.transform.root.TryGetComponent(out killable))
+                if (collision.transform.root.TryGetComponent(out killable))
                 {
                     killable.Kill();
                 }

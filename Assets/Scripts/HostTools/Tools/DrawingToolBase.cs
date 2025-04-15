@@ -13,7 +13,7 @@ public abstract class DrawingToolBase : MonoBehaviour, IDrawingTool
         mainCamera = Camera.main;
     }
 
-    public virtual void OnToolSelected() 
+    public virtual void OnToolSelected()
     {
         lastMousePosition = GetCurrentMousePosition();
     }
@@ -47,10 +47,11 @@ public abstract class DrawingToolBase : MonoBehaviour, IDrawingTool
             {
                 Vector3Int gridStartpoint = drawingService.CollisionGrid.WorldToCell(lastMousePosition);
                 Vector3Int gridEndpoint = drawingService.CollisionGrid.WorldToCell(mousePos);
+                drawingService.DrawLine(gridStartpoint, gridEndpoint, drawingService.PlaceRadius, value, drawingService.CurrentLayer, value == 0 ? Color.clear : drawingService.CurrentColor);
                 remoteDrawingService.SendDrawLine(gridStartpoint, gridEndpoint, drawingService.PlaceRadius, value, drawingService.CurrentLayer, value == 0 ? Color.clear : drawingService.CurrentColor);
             }
 
             lastMousePosition = mousePos;
         }
     }
-} 
+}

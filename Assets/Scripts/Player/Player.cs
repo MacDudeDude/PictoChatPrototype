@@ -151,8 +151,6 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
         // Direct position update for more responsive dragging
         transform.position = newPosition;
 
-        if (networkTransform != null)
-            networkTransform.ForceSend();
     }
 
     public void EndDrag(Vector3 dragEndVelocity)
@@ -167,7 +165,7 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     {
         // Store original owner and transfer ownership to dragging client
         _originalOwner = Owner;
-        NetworkObject.RemoveOwnership(); // Give to host/artist
+        NetworkObject.GiveOwnership(SteamPlayerManager.Instance.GetNetworkConnection(SteamLobbyManager.Instance.GetArtist())); // Give to host/artist
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -175,7 +173,6 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     {
         if (_originalOwner == null) return;
 
-        // Return ownership and apply throw velocity
         NetworkObject.GiveOwnership(_originalOwner);
         ApplyThrowVelocityObserversRpc(dragEndVelocity);
     }
@@ -186,8 +183,7 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
         EnableMovement(true);
         if (IsOwner)
         {
-            rb.velocity = Vector2.zero; // Reset velocity first
-            rb.AddForce(velocity, ForceMode2D.Impulse); // Use AddForce instead of direct velocity
+            rb.AddForce(velocity, ForceMode2D.Impulse);
         }
     }
 }

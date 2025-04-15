@@ -1,8 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using FishNet;
-using FishNet.Managing;
+
 
 public class GameUIManager : MonoBehaviour
 {
@@ -45,7 +44,7 @@ public class GameUIManager : MonoBehaviour
 
         foreach (var member in members)
         {
-            if (member.Id.ToString() == artistId)
+            if (member.Id == artistId)
             {
                 artistName.text = member.Name + " is hosting";
                 break;
