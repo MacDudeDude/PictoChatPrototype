@@ -183,6 +183,7 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
         EnableMovement(true);
         if (IsOwner)
         {
+            transform.position = throwPositon;
             rb.AddForce(velocity, ForceMode2D.Impulse);
         }
     }
