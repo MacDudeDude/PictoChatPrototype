@@ -80,7 +80,7 @@ public class SpawnManager : MonoBehaviour
     }
     private void SpawnPlayer(ulong steamId = 0, NetworkConnection conn = null)
     {
-        ulong artistId = ulong.Parse(SteamLobbyManager.Instance.GetArtist());
+        ulong artistId = SteamLobbyManager.Instance.GetArtist();
         NetworkConnection artistConn = SteamPlayerManager.Instance.GetNetworkConnection(artistId);
         if (conn != artistConn)
         {
@@ -98,7 +98,7 @@ public class SpawnManager : MonoBehaviour
         NetworkConnection artistConn = null;
         if (newArtistId == null)
         {
-            artistId = ulong.Parse(SteamLobbyManager.Instance.GetArtist());
+            artistId = SteamLobbyManager.Instance.GetArtist();
             artistConn = SteamPlayerManager.Instance.GetNetworkConnection(artistId);
         }
         else

@@ -268,10 +268,10 @@ public class SteamLobbyManager : MonoBehaviour
     /// Gets the currently selected artist ID from the lobby metadata.
     /// </summary>
     /// <returns>The artist ID stored in the lobby data, or null if not set.</returns>
-    public string GetArtist()
+    public ulong GetArtist()
     {
         var artist = CurrentLobby.Value.GetData("artist");
-        return artist;
+        return ulong.Parse(artist);
     }
 
     /// <summary>

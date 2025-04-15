@@ -52,7 +52,7 @@ public class PlayerMenu : MonoBehaviour
         {
             var member = members[i];
 
-            if (member.Id.ToString() == artistId)
+            if (member.Id == artistId)
             {
                 playerTexts[i].text = member.Name + " (Artist)";
             }
