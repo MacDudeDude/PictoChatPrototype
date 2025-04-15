@@ -157,7 +157,7 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     {
         isDragging = false;
         rb.gravityScale = 1f; // Restore gravity
-        RequestReturnOwnershipServerRpc(dragEndVelocity);
+        RequestReturnOwnershipServerRpc(dragEndVelocity, transform.position);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -169,16 +169,16 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void RequestReturnOwnershipServerRpc(Vector3 dragEndVelocity)
+    private void RequestReturnOwnershipServerRpc(Vector3 dragEndVelocity, Vector2 throwPosition)
     {
         if (_originalOwner == null) return;
 
         NetworkObject.GiveOwnership(_originalOwner);
-        ApplyThrowVelocityObserversRpc(dragEndVelocity);
+        ApplyThrowVelocityObserversRpc(dragEndVelocity, throwPosition);
     }
 
     [ObserversRpc]
-    private void ApplyThrowVelocityObserversRpc(Vector3 velocity)
+    private void ApplyThrowVelocityObserversRpc(Vector3 velocity, Vector2 throwPositon)
     {
         EnableMovement(true);
         if (IsOwner)
