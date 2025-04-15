@@ -57,4 +57,9 @@ public class GameUIManager : MonoBehaviour
         drawService.currentColor = color;
         penFillMask.color = color;
     }
+
+    public void SetPenThickness(float thickness)
+    {
+        drawService.placeRadius = thickness;
+    }
 }
