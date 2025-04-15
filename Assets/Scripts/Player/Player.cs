@@ -151,8 +151,6 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
         // Direct position update for more responsive dragging
         transform.position = newPosition;
 
-        if (networkTransform != null)
-            networkTransform.ForceSend();
     }
 
     public void EndDrag(Vector3 dragEndVelocity)
@@ -185,7 +183,7 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
         EnableMovement(true);
         if (IsOwner)
         {
-            rb.velocity = velocity;
+            rb.AddForce(velocity, ForceMode2D.Impulse);
         }
     }
 }
