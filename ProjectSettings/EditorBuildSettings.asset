@@ -12,7 +12,7 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 32d05591989b73b40a8328886c5e4c30
   - enabled: 1
-    path: Assets/Scenes/MainLobby.unity
+    path: Assets/Scenes/OldScenes/MainLobby.unity
     guid: 1edeb26e5145847cdbfe9b692a6262b4
   - enabled: 1
     path: Assets/Scenes/Minigames/TestMinigame.unity

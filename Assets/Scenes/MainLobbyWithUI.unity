@@ -6778,6 +6778,34 @@ PrefabInstance:
       propertyPath: usernameText
       value: 
       objectReference: {fileID: 1544226330}
+    - target: {fileID: 3979891116016923875, guid: ae5700d4ddd89204d8f9aeb8204ef41c, type: 3}
+      propertyPath: colors.Array.data[1].rgba
+      value: 4278912757
+      objectReference: {fileID: 0}
+    - target: {fileID: 3979891116016923875, guid: ae5700d4ddd89204d8f9aeb8204ef41c, type: 3}
+      propertyPath: colors.Array.data[2].rgba
+      value: 4278224126
+      objectReference: {fileID: 0}
+    - target: {fileID: 3979891116016923875, guid: ae5700d4ddd89204d8f9aeb8204ef41c, type: 3}
+      propertyPath: colors.Array.data[3].rgba
+      value: 4278253310
+      objectReference: {fileID: 0}
+    - target: {fileID: 3979891116016923875, guid: ae5700d4ddd89204d8f9aeb8204ef41c, type: 3}
+      propertyPath: colors.Array.data[4].rgba
+      value: 4278306331
+      objectReference: {fileID: 0}
+    - target: {fileID: 3979891116016923875, guid: ae5700d4ddd89204d8f9aeb8204ef41c, type: 3}
+      propertyPath: colors.Array.data[5].rgba
+      value: 4292285698
+      objectReference: {fileID: 0}
+    - target: {fileID: 3979891116016923875, guid: ae5700d4ddd89204d8f9aeb8204ef41c, type: 3}
+      propertyPath: colors.Array.data[6].rgba
+      value: 4288938909
+      objectReference: {fileID: 0}
+    - target: {fileID: 3979891116016923875, guid: ae5700d4ddd89204d8f9aeb8204ef41c, type: 3}
+      propertyPath: colors.Array.data[7].rgba
+      value: 4281555094
+      objectReference: {fileID: 0}
     - target: {fileID: 3979891116852668334, guid: ae5700d4ddd89204d8f9aeb8204ef41c, type: 3}
       propertyPath: m_IsActive
       value: 1

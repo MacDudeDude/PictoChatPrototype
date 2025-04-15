@@ -78,6 +78,11 @@ public class ChatDrawer : MonoBehaviour
 
         // Add listener for input field selection
         inputField.onSelect.AddListener((string _) => EnableTyping(true));
+
+        for (int i = 0; i < colorToggles.Length; i++)
+        {
+            colorToggles[i].transform.GetChild(0).GetComponent<Image>().color = colors[i];
+        }
     }
 
     public void SwitchToPenTool(bool enabled)
