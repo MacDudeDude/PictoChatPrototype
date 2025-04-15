@@ -511,6 +511,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 7103878603223030187, guid: 71ffe23056a41794c9d4bd2027df1322, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7103878603223030188, guid: 71ffe23056a41794c9d4bd2027df1322, type: 3}
       propertyPath: m_RootOrder
       value: 6
@@ -1291,6 +1295,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SteamPlayerManager: {fileID: -1968948866105213758, guid: bc0c86c2d2e8a104e89fc33ffde096e5, type: 3}
   maxPlayers: 4
+  idleMinigame: Doodling...
+  playingMinigame: 'Playing '
   gameSceneName: MainLobbyWithUI
 --- !u!4 &1192145376
 Transform:
