@@ -5657,6 +5657,11 @@ MonoBehaviour:
     rgba: 4294901899
   - serializedVersion: 2
     rgba: 4285361517
+  usernameText: {fileID: 0}
+  inputField: {fileID: 0}
+  inputText: {fileID: 0}
+  penToggle: {fileID: 0}
+  eraserToggle: {fileID: 0}
   currentColor: {r: 0, g: 0, b: 0, a: 1}
   currentRadius: 0.1
   chatDrawBounds:
@@ -5667,6 +5672,7 @@ MonoBehaviour:
   width: 245
   height: 145
   chatDrawingArea: {fileID: 3979891116284119098}
+  popupAbovePlayer: 1
 --- !u!61 &3979891116016923874
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -6340,7 +6346,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fafe2cfe61f6974895a912c3755e8f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AllowSwitchOff: 0
+  m_AllowSwitchOff: 1
 --- !u!225 &1336824447212482861
 CanvasGroup:
   m_ObjectHideFlags: 0
