@@ -31,34 +31,21 @@ public class ChatReciever : MonoBehaviour
         public string Username;
         public Color32[] textureColors;
         public string TextMessage;
+        public bool popupAbovePlayer;
     }
 
-    public void SendChatMessage(Color32[] colors)
-    {
-        ChatBroadcast newMsh = new ChatBroadcast();
-        newMsh.Username = SteamClient.Name;
-        newMsh.textureColors = colors;
-        newMsh.TextMessage = "";
-
-        InstanceFinder.ClientManager.Broadcast(newMsh, Channel.Reliable);
-    }
-
-    public void SendChatMessage(Color32[] colors, string textMessage)
+    public void SendChatMessage(Color32[] colors, string textMessage, bool playerPopup)
     {
         ChatBroadcast newMsh = new ChatBroadcast();
         newMsh.Username = SteamClient.Name;
         newMsh.textureColors = colors;
         newMsh.TextMessage = textMessage;
+        newMsh.popupAbovePlayer = playerPopup;
 
         InstanceFinder.ClientManager.Broadcast(newMsh, Channel.Reliable);
     }
 
-    public void RecieveChatMessage(Color32[] colors, string username)
-    {
-        RecieveChatMessage(colors, username, "");
-    }
-
-    public void RecieveChatMessage(Color32[] colors, string username, string textMessage)
+    public void RecieveChatMessage(Color32[] colors, string username, string textMessage, bool playerPopup)
     {
         GameObject newChatMessage = Instantiate(chatMessagePrefab, content);
         messages.Add(newChatMessage);
@@ -68,7 +55,9 @@ public class ChatReciever : MonoBehaviour
         {
             messageText[1].text = textMessage;
         }
-        newChatMessage.GetComponentInChildren<UnityEngine.UI.RawImage>().texture = CreateTextureFromMessage(colors);
+
+        Texture2D message = CreateTextureFromMessage(colors);
+        newChatMessage.GetComponentInChildren<UnityEngine.UI.RawImage>().texture = message;
 
         if (messages.Count > maxPreviousMessages)
         {
@@ -127,7 +116,7 @@ public class ChatReciever : MonoBehaviour
     //channel they came in on.
     private void OnChatBroadcast(ChatBroadcast msg, Channel channel)
     {
-        RecieveChatMessage(msg.textureColors, msg.Username, msg.TextMessage);
+        RecieveChatMessage(msg.textureColors, msg.Username, msg.TextMessage, msg.popupAbovePlayer);
     }
 
     private void OnDisable()

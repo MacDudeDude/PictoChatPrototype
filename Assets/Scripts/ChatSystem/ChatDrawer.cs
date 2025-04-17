@@ -198,7 +198,7 @@ public class ChatDrawer : MonoBehaviour
         lastSentTimer = minTimeBetweenChats;
 
         string message = inputField.text;
-        recieverSender.SendChatMessage(textureColors, message);
+        recieverSender.SendChatMessage(textureColors, message, popupAbovePlayer);
 
         // Clear both the drawing and the text input
         ResetChatScreen();
