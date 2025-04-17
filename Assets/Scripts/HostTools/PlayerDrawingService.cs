@@ -64,7 +64,6 @@ public class PlayerDrawingService : MonoBehaviour, IDrawingService
     /// <summary>Array of tile types that can be placed</summary>
     public Tile[] tileValues;
 
-
     /// <summary>Prefab for creating new tilemaps</summary>
     public GameObject tilemapPrefab;
 
@@ -324,7 +323,7 @@ public class PlayerDrawingService : MonoBehaviour, IDrawingService
         }
 
         if(pixelChanged)
-            Debug.Log("[PlayerDrawingService] Drawing line");
+                    Debug.Log("[PlayerDrawingService] Drawing line");
 
         return pixelChanged;
     }

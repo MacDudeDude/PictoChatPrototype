@@ -40,8 +40,7 @@ public class ChatDrawer : MonoBehaviour
     private float lastSentTimer;
 
     private bool typingEnabled;
-
-
+    public bool popupAbovePlayer = true;
 
     private bool startedInBounds = false;
 
@@ -83,6 +82,11 @@ public class ChatDrawer : MonoBehaviour
         {
             colorToggles[i].transform.GetChild(0).GetComponent<Image>().color = colors[i];
         }
+    }
+
+    public void SetPlayerPopup(bool enable)
+    {
+        popupAbovePlayer = enable;
     }
 
     public void SwitchToPenTool(bool enabled)
