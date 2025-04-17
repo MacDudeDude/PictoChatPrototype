@@ -106,6 +106,9 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
         if (!alive)
             return;
 
+        if (!IsOwner)
+            return;
+
         alive = false;
         if (RespawnPoint.Instance != null)
             RespawnPoint.Instance.QueRespawn(this);
