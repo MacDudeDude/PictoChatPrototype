@@ -278,7 +278,7 @@ public class PlayerDrawingService : MonoBehaviour, IDrawingService
     /// <summary>
     /// Queues a tile update at the specified position
     /// </summary>
-    private void QueTile(int x, int y, Vector3Int pos, Tile tile, int value, int layer, Color32 color)
+    private bool QueTile(int x, int y, Vector3Int pos, Tile tile, int value, int layer, Color32 color)
     {
         int i = To1DIndex(x, y);
 
@@ -291,37 +291,50 @@ public class PlayerDrawingService : MonoBehaviour, IDrawingService
             }
         }
 
+        if(pixelgrid[layer][pos.x, pos.y] == value)
+            if (textureColors[layer][i].r == color.r && textureColors[layer][i].g == color.g && textureColors[layer][i].b == color.b)
+                return false;
+
         pixelgrid[layer][pos.x, pos.y] = value;
 
         i = (pos.y * width) + pos.x;
         textureColors[layer][i] = color;
 
         tilemapUpdated = true;
+
+        return true;
     }
 
     /// <summary>
     /// Draws a line between two points with given radius and value
     /// </summary>
-    public void DrawLine(Vector3Int gridStartPoint, Vector3Int gridEndPoint, float radius, int value, int layer, Color32 color)
+    public bool DrawLine(Vector3Int gridStartPoint, Vector3Int gridEndPoint, float radius, int value, int layer, Color32 color)
     {
-        Debug.Log("[PlayerDrawingService] Drawing line");
         float currentPlaceRadius = radius * (1f / ppu);
         int gridRadius = Mathf.CeilToInt(currentPlaceRadius / (1f / ppu));
         float squaredRadius = Mathf.Pow(currentPlaceRadius, 2);
 
+        bool pixelChanged = false;
         List<Vector2Int> line = GenerateLine(gridStartPoint.x, gridStartPoint.y, gridEndPoint.x, gridEndPoint.y);
         foreach (Vector2Int point in line)
         {
             Vector3Int gridPoint = new Vector3Int(point.x, point.y, 0);
-            ApplyBrushAtGridPosition(gridPoint, squaredRadius, gridRadius, value, layer, color);
+            if (ApplyBrushAtGridPosition(gridPoint, squaredRadius, gridRadius, value, layer, color))
+                pixelChanged = true;
         }
+
+        if(pixelChanged)
+            Debug.Log("[PlayerDrawingService] Drawing line");
+
+        return pixelChanged;
     }
 
     /// <summary>
     /// Applies a brush stroke centered at the specified grid position.
     /// </summary>
-    private void ApplyBrushAtGridPosition(Vector3Int centerGridPos, float squaredRadius, int gridRadius, int value, int layer, Color32 color)
+    private bool ApplyBrushAtGridPosition(Vector3Int centerGridPos, float squaredRadius, int gridRadius, int value, int layer, Color32 color)
     {
+        bool pixelChanged = false;
         Vector2 centerGridWorldPos = collisionGrid.CellToWorld(centerGridPos);
         for (int x = -gridRadius; x <= gridRadius; x++)
         {
@@ -336,10 +349,13 @@ public class PlayerDrawingService : MonoBehaviour, IDrawingService
                         continue;
 
                     Vector3Int currentTileMapPos = tilemapGrid.WorldToCell(worldPos);
-                    QueTile(currentTileMapPos.x, currentTileMapPos.y, currentGridPos, tileValues[value], value, layer, color);
+                    if (QueTile(currentTileMapPos.x, currentTileMapPos.y, currentGridPos, tileValues[value], value, layer, color))
+                        pixelChanged = true;
                 }
             }
         }
+
+        return pixelChanged;
     }
 
     /// <summary>
