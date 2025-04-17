@@ -151,6 +151,16 @@ public class ChatDrawer : MonoBehaviour
         EnableTyping(!typingEnabled);
     }
 
+    public void SetColor(Color32 color)
+    {
+        currentColor = color;
+    }
+
+    public void SetRadius(float radius)
+    {
+        currentRadius = radius;
+    }
+
     public void SetRadius()
     {
         if (toggles[0].isOn)

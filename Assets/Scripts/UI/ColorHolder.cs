@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class ColorHolder : MonoBehaviour
 {
     public GameUIManager uiManager;
+    public ChatDrawer chatManager;
     public Color32 color;
     public Image image;
 
@@ -18,7 +19,10 @@ public class ColorHolder : MonoBehaviour
     public void SendColor(bool isOn)
     {
         if (isOn)
+        {
+            chatManager.SetColor(color);
             uiManager.SetPenColor(color);
+        }
     }
 
     public void OnValidate()
