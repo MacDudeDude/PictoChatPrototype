@@ -141,7 +141,7 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     {
         if (!alive) return;
 
-        RequestTransferOwnershipForDragServerRpc();
+        TransferOwnerDragging();
         DisableMovement();
         isDragging = true;
         rb.gravityScale = 0f; // Disable gravity while dragging
@@ -158,13 +158,16 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
 
     public void EndDrag(Vector3 dragEndVelocity)
     {
+        if (!IsOwner) return;
+        EnableMovement(true);
         isDragging = false;
-        rb.gravityScale = 1f; // Restore gravity
-        RequestReturnOwnershipServerRpc(dragEndVelocity);
+        rb.gravityScale = 1f;
+        rb.AddForce(dragEndVelocity, ForceMode2D.Impulse);
+        EndDragTargetRpc(_originalOwner);
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void RequestTransferOwnershipForDragServerRpc()
+    private void TransferOwnerDragging()
     {
         // Store original owner and transfer ownership to dragging client
         _originalOwner = Owner;
@@ -172,21 +175,20 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void RequestReturnOwnershipServerRpc(Vector3 dragEndVelocity)
+    private void ReturnOwnership()
     {
         if (_originalOwner == null) return;
 
         NetworkObject.GiveOwnership(_originalOwner);
-        ApplyThrowVelocityObserversRpc(dragEndVelocity);
     }
 
-    [ObserversRpc]
-    private void ApplyThrowVelocityObserversRpc(Vector3 velocity)
+    [TargetRpc]
+    private void EndDragTargetRpc(NetworkConnection conn)
     {
-        EnableMovement(true);
-        if (IsOwner)
+        while (rb.velocity.magnitude > 0.01f)
         {
-            rb.AddForce(velocity, ForceMode2D.Impulse);
+            // Wait for the velocity to be zero
         }
+        ReturnOwnership();
     }
 }
