@@ -34,6 +34,7 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     {
         base.OnStartServer();
         _originalOwner = Owner;
+        Debug.Log("[Player] OnStartServer - Original owner set: " + Owner?.ClientId);
     }
     private void Awake()
     {
@@ -42,6 +43,7 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
         {
             PlayerStates[i].Init(this, StateMachine);
         }
+        Debug.Log("[Player] Awake - State machine initialized with " + PlayerStates.Length + " states");
     }
 
 
@@ -49,6 +51,7 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     {
         Kill();
         StateMachine.Initialize(PlayerStates[startingState]);
+        Debug.Log("[Player] Start - Initialized with state: " + PlayerStates[startingState].GetType().Name);
     }
 
     void Update()
@@ -75,12 +78,14 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     {
         if (collision.contactCount > 20)
         {
+            Debug.Log("[Player] OnCollisionStay2D - Too many contacts (" + collision.contactCount + "), killing player");
             Kill();
         }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        Debug.Log("[Player] OnTriggerEnter2D - Triggered by " + collision.gameObject.name + ", killing player");
         Kill();
     }
 
@@ -89,6 +94,8 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
         if (alive && Input.GetKey(KeyCode.R))
         {
             killTimer += Time.deltaTime;
+            if (killTimer > 1.5f)
+                Debug.Log("[Player] Self-destruct imminent: " + killTimer.ToString("F1") + "/2.0");
         }
         else
         {
@@ -96,7 +103,10 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
         }
 
         if (killTimer >= 2)
+        {
+            Debug.Log("[Player] Self-destruct activated");
             Kill();
+        }
 
         killTimer = Mathf.Clamp(killTimer, 0, 2);
     }
@@ -104,11 +114,18 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     public void Kill()
     {
         if (!alive)
+        {
+            Debug.Log("[Player] Kill attempted but player already dead");
             return;
+        }
 
         if (!IsOwner)
+        {
+            Debug.Log("[Player] Kill attempted but not owner");
             return;
+        }
 
+        Debug.Log("[Player] Player killed");
         alive = false;
         if (RespawnPoint.Instance != null)
             RespawnPoint.Instance.QueRespawn(this);
@@ -116,6 +133,7 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
 
     public void DisableMovement()
     {
+        Debug.Log("[Player] Movement disabled");
         rb.velocity = Vector2.zero;
         movementEnabled = false;
         rb.simulated = false;
@@ -124,8 +142,12 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     public void EnableMovement(bool onlyIfAlive)
     {
         if (onlyIfAlive && !alive)
+        {
+            Debug.Log("[Player] EnableMovement called but player not alive");
             return;
+        }
 
+        Debug.Log("[Player] Movement enabled");
         StateMachine.CurrentPlayerState.EnterState();
         movementEnabled = true;
         rb.simulated = true;
@@ -134,13 +156,19 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
 
     public bool CanDrag()
     {
+        Debug.Log("[Player] CanDrag check: " + alive);
         return alive;
     }
 
     public void BeginDrag()
     {
-        if (!alive) return;
+        if (!alive)
+        {
+            Debug.Log("[Player] BeginDrag called but player not alive");
+            return;
+        }
 
+        Debug.Log("[Player] Beginning drag, transferring ownership");
         TransferOwnerDragging();
         DisableMovement();
         isDragging = true;
@@ -149,16 +177,24 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
 
     public void UpdateDragPosition(Vector3 newPosition)
     {
-        if (!isDragging) return;
+        if (!isDragging)
+        {
+            Debug.Log("[Player] UpdateDragPosition called but not dragging");
+            return;
+        }
 
         // Direct position update for more responsive dragging
         transform.position = newPosition;
-
     }
 
     public void EndDrag(Vector3 dragEndVelocity)
     {
-        if (!IsOwner) return;
+        if (!IsOwner)
+        {
+            Debug.Log("[Player] EndDrag called but not owner");
+            return;
+        }
+        Debug.Log("[Player] Ending drag with velocity: " + dragEndVelocity);
         EnableMovement(true);
         isDragging = false;
         rb.gravityScale = 1f;
@@ -171,24 +207,32 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     {
         // Store original owner and transfer ownership to dragging client
         _originalOwner = Owner;
+        Debug.Log("[Player] Server: Transferring ownership from " + _originalOwner?.ClientId);
         NetworkObject.RemoveOwnership();
     }
 
     [ServerRpc(RequireOwnership = false)]
     private void ReturnOwnership()
     {
-        if (_originalOwner == null) return;
+        if (_originalOwner == null)
+        {
+            Debug.Log("[Player] Server: Cannot return ownership, original owner is null");
+            return;
+        }
 
+        Debug.Log("[Player] Server: Returning ownership to " + _originalOwner.ClientId);
         NetworkObject.GiveOwnership(_originalOwner);
     }
 
     [TargetRpc]
     private void EndDragTargetRpc(NetworkConnection conn)
     {
+        Debug.Log("[Player] Target: EndDragTargetRpc called for connection " + conn?.ClientId);
         while (rb.velocity.magnitude > 0.01f)
         {
             // Wait for the velocity to be zero
         }
+        Debug.Log("[Player] Target: Velocity settled, returning ownership");
         ReturnOwnership();
     }
 }
