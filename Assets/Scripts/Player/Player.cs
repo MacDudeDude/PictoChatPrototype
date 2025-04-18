@@ -171,7 +171,7 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     {
         // Store original owner and transfer ownership to dragging client
         _originalOwner = Owner;
-        NetworkObject.GiveOwnership(SteamPlayerManager.Instance.GetNetworkConnection(SteamLobbyManager.Instance.GetArtist())); // Give to host/artist
+        NetworkObject.RemoveOwnership();
     }
 
     [ServerRpc(RequireOwnership = false)]
