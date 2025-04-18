@@ -8,6 +8,7 @@ using FishNet.Component.Transforming;
 using UnityEngine;
 using Steamworks;
 
+
 public class Player : NetworkBehaviour, IKillable, IDraggable
 {
 
@@ -194,8 +195,9 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
         isDragging = false;
         rb.gravityScale = 1f;
         rb.AddForce(dragEndVelocity, ForceMode2D.Impulse);
-        EndDragTargetRpc(_originalOwner);
+        EndDragTargetRpc(_originalOwner, transform.position);
     }
+
 
     [ServerRpc(RequireOwnership = false)]
     private void TransferOwnerDragging()
@@ -220,11 +222,12 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     }
 
     [TargetRpc]
-    private IEnumerator EndDragTargetRpc(NetworkConnection conn)
+    private IEnumerator EndDragTargetRpc(NetworkConnection conn, UnityEngine.Vector2 endPosition)
     {
         Debug.Log("[Player] Target: EndDragTargetRpc called for connection " + conn?.ClientId);
-        while (rb.velocity.magnitude > 0.01f)
+        while (UnityEngine.Vector2.Distance(transform.position, endPosition) > 0.01f)
         {
+            Debug.Log("[Player] Target: Velocity: " + rb.velocity.magnitude);
             yield return new WaitForFixedUpdate();
         }
         Debug.Log("[Player] Target: Velocity settled, returning ownership");
