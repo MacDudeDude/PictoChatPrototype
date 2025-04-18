@@ -169,8 +169,8 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
         }
 
         Debug.Log("[Player] Beginning drag, transferring ownership");
-        TransferOwnerDragging();
         DisableMovement();
+        TransferOwnerDragging();
         isDragging = true;
         rb.gravityScale = 0f; // Disable gravity while dragging
     }
@@ -189,11 +189,6 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
 
     public void EndDrag(Vector3 dragEndVelocity)
     {
-        if (!IsOwner)
-        {
-            Debug.Log("[Player] EndDrag called but not owner");
-            return;
-        }
         Debug.Log("[Player] Ending drag with velocity: " + dragEndVelocity);
         EnableMovement(true);
         isDragging = false;
