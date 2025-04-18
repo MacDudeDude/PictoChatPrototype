@@ -220,12 +220,12 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     }
 
     [TargetRpc]
-    private void EndDragTargetRpc(NetworkConnection conn)
+    private IEnumerator EndDragTargetRpc(NetworkConnection conn)
     {
         Debug.Log("[Player] Target: EndDragTargetRpc called for connection " + conn?.ClientId);
         while (rb.velocity.magnitude > 0.01f)
         {
-            // Wait for the velocity to be zero
+            yield return new WaitForFixedUpdate();
         }
         Debug.Log("[Player] Target: Velocity settled, returning ownership");
         ReturnOwnership();
