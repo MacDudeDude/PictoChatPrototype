@@ -195,9 +195,9 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
         EnableMovement(true);
         isDragging = false;
         rb.gravityScale = 1f;
-        rb.AddForce(dragEndVelocity, ForceMode2D.Impulse);
         networkTransform.ForceSend();
         ReturnOwnership();
+        rb.AddForce(dragEndVelocity, ForceMode2D.Impulse);
     }
 
 
@@ -207,7 +207,7 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
         // Store original owner and transfer ownership to dragging client
         _originalOwner = Owner;
         Debug.Log("[Player] Server: Transferring ownership from " + _originalOwner?.ClientId);
-        NetworkObject.RemoveOwnership();
+        NetworkObject.GiveOwnership(SteamPlayerManager.Instance.GetNetworkConnection(SteamPlayerManager.Instance.GetSteamId(_originalOwner)));
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -223,14 +223,5 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
         NetworkObject.GiveOwnership(_originalOwner);
     }
 
-    [TargetRpc]
-    private void EndDragTargetRpc(NetworkConnection conn, UnityEngine.Vector2 endPosition)
-    {
-        Debug.Log("[Player] Target: EndDragTargetRpc called for connection " + conn?.ClientId);
-        while (UnityEngine.Vector2.Distance(transform.position, endPosition) > 0.01f)
-        {
-        }
-        Debug.Log("[Player] Target: Velocity settled, returning ownership");
-        ReturnOwnership();
-    }
+
 }
