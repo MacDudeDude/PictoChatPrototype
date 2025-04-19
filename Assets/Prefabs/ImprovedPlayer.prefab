@@ -429,8 +429,8 @@ MonoBehaviour:
     Position: 1
     Rotation: 1
     Scale: 0
-  _interpolation: 5
-  _extrapolation: 10
+  _interpolation: 20
+  _extrapolation: 80
   _enableTeleport: 0
   _teleportThreshold: 1
   _clientAuthoritative: 1

@@ -211,7 +211,7 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
             yield return new WaitForSeconds(0.1f);
         }
         networkTransform.ForceSend();
-        //ReturnOwnership();
+        ReturnOwnership();
     }
 
 
