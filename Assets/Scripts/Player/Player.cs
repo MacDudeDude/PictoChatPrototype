@@ -18,6 +18,11 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     public Rigidbody2D rb;
     public PlayerStateMachine StateMachine { get; set; }
     public Transform grabBox;
+    public GameObject playerMessagePrefab;
+    public float messagePopupDuration;
+
+    private GameObject lastMessageObject;
+    private Coroutine messageCoroutine;
 
     private float killTimer;
     private bool alive = true;
@@ -162,15 +167,39 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
 
     }
 
-    public void OnChatReceived(Color32[] colors, string textMessage, bool playerPopup, NetworkConnection connection)
+    public void OnChatReceived(Texture2D message, string textMessage, bool playerPopup, NetworkConnection connection)
     {
         if (connection == Owner)
         {
             if (playerPopup)
             {
+                if(lastMessageObject != null)
+                {
+                    StopCoroutine(messageCoroutine);
+                    lastMessageObject = null;
+                }
 
+                lastMessageObject = Instantiate(playerMessagePrefab, transform.position, Quaternion.identity, transform);
+
+                TMPro.TMP_Text[] messageText = lastMessageObject.GetComponentsInChildren<TMPro.TMP_Text>();
+                messageText[0].text = "";
+                if (!string.IsNullOrEmpty(textMessage))
+                {
+                    messageText[1].text = textMessage;
+                }
+                lastMessageObject.GetComponentInChildren<UnityEngine.UI.RawImage>().texture = message;
+
+                messageCoroutine = StartCoroutine(ChatMessageDestroyTimer());
             }
         }
+    }
+
+    private IEnumerator ChatMessageDestroyTimer()
+    {
+        yield return new WaitForSeconds(messagePopupDuration);
+
+        Destroy(lastMessageObject);
+        lastMessageObject = null;
     }
 
     public bool CanDrag()

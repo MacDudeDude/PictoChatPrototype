@@ -269,6 +269,8 @@ MonoBehaviour:
   - {fileID: 5121102187584088594}
   rb: {fileID: 5121102187584088596}
   grabBox: {fileID: 1825191900097249645}
+  playerMessagePrefab: {fileID: 7351030133487428255, guid: c6a1ca2632ca790449fea94902b3c13f, type: 3}
+  messagePopupDuration: 2
   networkTransform: {fileID: 0}
 --- !u!114 &5121102187584088595
 MonoBehaviour:

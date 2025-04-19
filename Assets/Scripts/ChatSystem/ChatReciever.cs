@@ -20,7 +20,7 @@ public class ChatReciever : MonoBehaviour
     private int height;
     private float ppu;
 
-    public event Action<Color32[], string, bool, NetworkConnection> OnChatMessageReceived;
+    public event Action<Texture2D, string, bool, NetworkConnection> OnChatMessageReceived;
 
     public static ChatReciever Instance { get; private set; }
 
@@ -65,7 +65,7 @@ public class ChatReciever : MonoBehaviour
 
         Texture2D message = CreateTextureFromMessage(colors);
         newChatMessage.GetComponentInChildren<UnityEngine.UI.RawImage>().texture = message;
-        OnChatMessageReceived?.Invoke(colors, textMessage, playerPopup, connection);
+        OnChatMessageReceived?.Invoke(message, textMessage, playerPopup, connection);
         if (messages.Count > maxPreviousMessages)
         {
             Destroy(messages[0]);
