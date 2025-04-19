@@ -208,9 +208,9 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     {
         while (rb.velocity.magnitude > 0.1f)
         {
+            networkTransform.ForceSend();
             yield return new WaitForSeconds(0.1f);
         }
-        networkTransform.ForceSend();
         ReturnOwnership();
     }
 
