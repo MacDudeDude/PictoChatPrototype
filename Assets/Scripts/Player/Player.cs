@@ -206,7 +206,6 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     private void TransferOwnerDragging()
     {
         // Store original owner and transfer ownership to dragging client
-        _originalOwner = Owner;
         Debug.Log("[Player] Server: Transferring ownership from " + _originalOwner?.ClientId);
         NetworkObject.GiveOwnership(SteamPlayerManager.Instance.GetNetworkConnection(SteamLobbyManager.Instance.GetArtist()));
     }
