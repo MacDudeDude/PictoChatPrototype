@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Steamworks;
 using TMPro;
+using System;
 public class ChatReciever : MonoBehaviour
 {
     public Transform content;
@@ -18,6 +19,10 @@ public class ChatReciever : MonoBehaviour
     private int width;
     private int height;
     private float ppu;
+
+    public event Action<Color32[], string, bool, NetworkConnection> OnChatMessageReceived;
+
+    public static ChatReciever Instance { get; private set; }
 
     public void Init(float ppu, int height, int width)
     {
@@ -32,6 +37,7 @@ public class ChatReciever : MonoBehaviour
         public Color32[] textureColors;
         public string TextMessage;
         public bool popupAbovePlayer;
+        public NetworkConnection connection;
     }
 
     public void SendChatMessage(Color32[] colors, string textMessage, bool playerPopup)
@@ -41,11 +47,11 @@ public class ChatReciever : MonoBehaviour
         newMsh.textureColors = colors;
         newMsh.TextMessage = textMessage;
         newMsh.popupAbovePlayer = playerPopup;
-
+        newMsh.connection = InstanceFinder.ClientManager.Connection;
         InstanceFinder.ClientManager.Broadcast(newMsh, Channel.Reliable);
     }
 
-    public void RecieveChatMessage(Color32[] colors, string username, string textMessage, bool playerPopup)
+    public void RecieveChatMessage(Color32[] colors, string username, string textMessage, bool playerPopup, NetworkConnection connection)
     {
         GameObject newChatMessage = Instantiate(chatMessagePrefab, content);
         messages.Add(newChatMessage);
@@ -56,9 +62,10 @@ public class ChatReciever : MonoBehaviour
             messageText[1].text = textMessage;
         }
 
+
         Texture2D message = CreateTextureFromMessage(colors);
         newChatMessage.GetComponentInChildren<UnityEngine.UI.RawImage>().texture = message;
-
+        OnChatMessageReceived?.Invoke(colors, textMessage, playerPopup, connection);
         if (messages.Count > maxPreviousMessages)
         {
             Destroy(messages[0]);
@@ -98,6 +105,16 @@ public class ChatReciever : MonoBehaviour
         InstanceFinder.ServerManager.Broadcast(nob, msg, true);
     }
 
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+
+    }
     private void OnEnable()
     {
         //Begins listening for any ChatBroadcast from the server.
@@ -105,7 +122,7 @@ public class ChatReciever : MonoBehaviour
         //called with the broadcast data.
         InstanceFinder.ClientManager.RegisterBroadcast<ChatBroadcast>(OnChatBroadcast);
 
-        if(InstanceFinder.IsServerStarted)
+        if (InstanceFinder.IsServerStarted)
         {
             InstanceFinder.ServerManager.RegisterBroadcast<ChatBroadcast>(OnChatBroadcast);
         }
@@ -116,7 +133,7 @@ public class ChatReciever : MonoBehaviour
     //channel they came in on.
     private void OnChatBroadcast(ChatBroadcast msg, Channel channel)
     {
-        RecieveChatMessage(msg.textureColors, msg.Username, msg.TextMessage, msg.popupAbovePlayer);
+        RecieveChatMessage(msg.textureColors, msg.Username, msg.TextMessage, msg.popupAbovePlayer, msg.connection);
     }
 
     private void OnDisable()
@@ -126,7 +143,7 @@ public class ChatReciever : MonoBehaviour
         //you no longer wish to receive the broadcasts on that object.
         InstanceFinder.ClientManager.UnregisterBroadcast<ChatBroadcast>(OnChatBroadcast);
 
-        if(InstanceFinder.IsServerStarted)
+        if (InstanceFinder.IsServerStarted)
         {
             InstanceFinder.ServerManager.UnregisterBroadcast<ChatBroadcast>(OnChatBroadcast);
         }

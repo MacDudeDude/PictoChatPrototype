@@ -53,6 +53,9 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
         Kill();
         StateMachine.Initialize(PlayerStates[startingState]);
         networkTransform = GetComponent<NetworkTransform>();
+
+        ChatReciever.Instance.OnChatMessageReceived += OnChatReceived;
+
         Debug.Log("[Player] Start - Initialized with state: " + PlayerStates[startingState].GetType().Name);
     }
 
@@ -157,6 +160,17 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
 
         grabBox.position = transform.position;
 
+    }
+
+    public void OnChatReceived(Color32[] colors, string textMessage, bool playerPopup, NetworkConnection connection)
+    {
+        if (connection == Owner)
+        {
+            if (playerPopup)
+            {
+
+            }
+        }
     }
 
     public bool CanDrag()
