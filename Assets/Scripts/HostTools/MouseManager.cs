@@ -22,7 +22,7 @@ public class MouseManager : MonoBehaviour
     {
         return hoveredObject;
     }
-    
+
     public GameObject GetObjectBetweenTwoPoints(Vector2 pos1, Vector2 pos2)
     {
         RaycastHit2D hitInfo = Physics2D.Linecast(pos1, pos2, hoverableLayers);
@@ -37,9 +37,13 @@ public class MouseManager : MonoBehaviour
     {
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
         RaycastHit2D hitInfo = Physics2D.Raycast(ray.origin, ray.direction, Mathf.Infinity, hoverableLayers);
-        if(hitInfo.collider != null) {
+        if (hitInfo.collider != null)
+        {
             hoveredObject = hitInfo.collider.transform.root.gameObject;
-        }else {
+            Debug.Log("[MouseManager] Hovered object: " + hoveredObject.name);
+        }
+        else
+        {
             hoveredObject = null;
         }
     }

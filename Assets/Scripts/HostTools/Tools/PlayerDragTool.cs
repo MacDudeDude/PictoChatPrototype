@@ -39,6 +39,7 @@ public class PlayerDragTool : DrawingToolBase
 
     private void HandleDragStart()
     {
+        Debug.Log("[PlayerDragTool] HandleDragStart IsDragging: " + isDragging + " CanDrag: " + canDrag);
         if (!isDragging && Input.GetMouseButtonDown(0) && canDrag)
         {
             GameObject clickedOn = drawingService.MouseManager.GetHoveredObject();
