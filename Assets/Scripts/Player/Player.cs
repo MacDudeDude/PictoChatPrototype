@@ -194,7 +194,7 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     {
         Debug.Log("[Player] Ending drag with velocity: " + dragEndVelocity);
 
-        EnableMovement(true);
+
         animator.SetBool("Dragging", false);
         isDragging = false;
         rb.gravityScale = 2f;
@@ -211,6 +211,7 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
             yield return new WaitForSeconds(0.1f);
         }
         ReturnOwnership();
+        EnableMovement(true);
     }
 
 
