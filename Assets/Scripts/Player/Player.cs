@@ -180,7 +180,7 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
                     lastMessageObject = null;
                 }
 
-                lastMessageObject = Instantiate(playerMessagePrefab, transform.position, Quaternion.identity, transform);
+                lastMessageObject = Instantiate(playerMessagePrefab, transform.position, Quaternion.identity, playerMessageHolder);
 
                 TMPro.TMP_Text[] messageText = lastMessageObject.GetComponentsInChildren<TMPro.TMP_Text>();
                 messageText[0].text = "";
