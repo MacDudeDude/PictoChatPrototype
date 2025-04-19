@@ -196,7 +196,6 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
         EnableMovement(true);
         isDragging = false;
         rb.gravityScale = 2f;
-        networkTransform.ForceSend();
         rb.AddForce(dragEndVelocity, ForceMode2D.Impulse);
         StartCoroutine(WaitForEndVelocity());
 
@@ -208,6 +207,7 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
         {
             yield return new WaitForSeconds(0.1f);
         }
+        networkTransform.ForceSend();
         ReturnOwnership();
     }
 
