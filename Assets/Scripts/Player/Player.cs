@@ -52,6 +52,7 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     {
         Kill();
         StateMachine.Initialize(PlayerStates[startingState]);
+        networkTransform = GetComponent<NetworkTransform>();
         Debug.Log("[Player] Start - Initialized with state: " + PlayerStates[startingState].GetType().Name);
     }
 
@@ -195,7 +196,8 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
         isDragging = false;
         rb.gravityScale = 1f;
         rb.AddForce(dragEndVelocity, ForceMode2D.Impulse);
-        EndDragTargetRpc(_originalOwner, transform.position);
+        networkTransform.ForceSend();
+        ReturnOwnership();
     }
 
 
