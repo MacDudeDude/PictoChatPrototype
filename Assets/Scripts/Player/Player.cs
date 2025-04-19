@@ -196,7 +196,6 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
         if (!IsOwner) return;
 
         animator.SetBool("Dragging", false);
-        EnableMovement(true);
         isDragging = false;
         rb.gravityScale = 2f;
         rb.AddForce(dragEndVelocity, ForceMode2D.Impulse);
@@ -212,6 +211,7 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
             yield return new WaitForSeconds(0.1f);
         }
         ReturnOwnership();
+        EnableMovement(true);
     }
 
 
