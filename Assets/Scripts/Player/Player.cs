@@ -11,14 +11,12 @@ using Steamworks;
 
 public class Player : NetworkBehaviour, IKillable, IDraggable
 {
-
     public Animator animator;
     public Transform spritesHolder;
     public int startingState;
     public PlayerState[] PlayerStates;
     public Rigidbody2D rb;
     public PlayerStateMachine StateMachine { get; set; }
-
 
     private float killTimer;
     private bool alive = true;
@@ -171,6 +169,8 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
         }
 
         Debug.Log("[Player] Beginning drag, transferring ownership");
+        animator.SetBool("Dragging", true);
+        TransferOwnerDragging();
         DisableMovement();
         TransferOwnerDragging();
         isDragging = true;
@@ -193,6 +193,9 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     public void EndDrag(Vector3 dragEndVelocity)
     {
         Debug.Log("[Player] Ending drag with velocity: " + dragEndVelocity);
+        if (!IsOwner) return;
+
+        animator.SetBool("Dragging", false);
         EnableMovement(true);
         isDragging = false;
         rb.gravityScale = 2f;
