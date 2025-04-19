@@ -17,10 +17,12 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     public PlayerState[] PlayerStates;
     public Rigidbody2D rb;
     public PlayerStateMachine StateMachine { get; set; }
+    public Transform grabBox;
 
     private float killTimer;
     private bool alive = true;
     private bool movementEnabled;
+
 
     // Field to store the original owner's clientId.
     private NetworkConnection _originalOwner = null;
@@ -152,6 +154,9 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
         movementEnabled = true;
         rb.simulated = true;
         alive = true;
+
+        grabBox.position = transform.position;
+
     }
 
     public bool CanDrag()
@@ -185,7 +190,6 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
             return;
         }
 
-        // Direct position update for more responsive dragging
         transform.position = newPosition;
         networkTransform.ForceSend();
     }
