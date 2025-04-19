@@ -195,10 +195,20 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
         Debug.Log("[Player] Ending drag with velocity: " + dragEndVelocity);
         EnableMovement(true);
         isDragging = false;
-        rb.gravityScale = 1f;
+        rb.gravityScale = 2f;
         networkTransform.ForceSend();
-        ReturnOwnership();
         rb.AddForce(dragEndVelocity, ForceMode2D.Impulse);
+        StartCoroutine(WaitForEndVelocity());
+
+    }
+
+    private IEnumerator WaitForEndVelocity()
+    {
+        while (rb.velocity.magnitude > 0.1f)
+        {
+            yield return new WaitForSeconds(0.1f);
+        }
+        ReturnOwnership();
     }
 
 
