@@ -196,6 +196,7 @@ GameObject:
   - component: {fileID: 5121102187584088596}
   - component: {fileID: 3142875464113743011}
   - component: {fileID: 3472747510755587910}
+  - component: {fileID: 8988340276362739238}
   m_Layer: 10
   m_Name: ImprovedPlayer
   m_TagString: Untagged
@@ -304,7 +305,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 6200000, guid: 331b730c660536649897e8291329b8dd, type: 2}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: -0.096631244}
@@ -429,6 +430,22 @@ MonoBehaviour:
     X: 0
     Y: 0
     Z: 0
+--- !u!58 &8988340276362739238
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5121102187584088597}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 1
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.5
 --- !u!1 &5121102187716458249
 GameObject:
   m_ObjectHideFlags: 0
