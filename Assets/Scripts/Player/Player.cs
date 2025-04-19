@@ -18,6 +18,7 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     public Rigidbody2D rb;
     public PlayerStateMachine StateMachine { get; set; }
     public Transform grabBox;
+    public Transform playerMessageHolder;
     public GameObject playerMessagePrefab;
     public float messagePopupDuration;
 
