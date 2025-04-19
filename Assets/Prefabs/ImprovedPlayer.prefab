@@ -271,7 +271,7 @@ MonoBehaviour:
   rb: {fileID: 5121102187584088596}
   grabBox: {fileID: 1825191900097249645}
   playerMessageHolder: {fileID: 243069988543448789}
-  playerMessagePrefab: {fileID: 8968416956306666027, guid: df644bae58a48f643b663d5786f0d484, type: 3}
+  playerMessagePrefab: {fileID: 8968416956306666027, guid: 85885cca8fe376042ab19e636a372d25, type: 3}
   messagePopupDuration: 2
   networkTransform: {fileID: 0}
 --- !u!114 &5121102187584088595
