@@ -5,7 +5,7 @@ public class PlayerDragTool : DrawingToolBase
     public float dragSpeed = 30f;
     public float throwForceMultiplier = 10f;
     public int velocityBufferSize = 5;
-    public float maxThrowSpeed = 5f;
+    public float maxThrowSpeed = 15f;
 
     private IDraggable grabbedObject;
     private Transform grabbedTransform;
