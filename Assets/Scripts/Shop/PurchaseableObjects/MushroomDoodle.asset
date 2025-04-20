@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f7fa72103713704f811c6b6667b9b32, type: 3}
+  m_Name: MushroomDoodle
+  m_EditorClassIdentifier: 
+  objectType: 1
+  objectName: Mushroom
+  objectPrice: 50
+  objectSprite: {fileID: 1797193012, guid: ca280c23a5158d64db04f7492a52f59a, type: 3}
+  objectColors: {fileID: -1697335596, guid: 2e4798b3f1123a0459fc1fce570d871c, type: 3}
+  objectID: 1
