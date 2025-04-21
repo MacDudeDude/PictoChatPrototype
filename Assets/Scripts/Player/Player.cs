@@ -69,7 +69,8 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
         playerCosmetics = GetComponent<PlayerCosmetics>();
 
         ChatReciever.Instance.OnChatMessageReceived += OnChatReceived;
-        playerCosmetics.ApplyCosmetics();
+        if(!fakePlayer)
+            playerCosmetics.ApplyCosmetics();
         Debug.Log("[Player] Start - Initialized with state: " + PlayerStates[startingState].GetType().Name);
     }
 
@@ -229,9 +230,12 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
 
         Debug.Log("[Player] Beginning drag, transferring ownership");
         animator.SetBool("Dragging", true);
-        TransferOwnerDragging();
+
+        if (!fakePlayer)
+            TransferOwnerDragging();
         DisableMovement();
-        TransferOwnerDragging();
+        if (!fakePlayer)
+            TransferOwnerDragging();
         isDragging = true;
         rb.gravityScale = 0f; // Disable gravity while dragging
     }
@@ -245,7 +249,9 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
         }
 
         transform.position = newPosition;
-        networkTransform.ForceSend();
+
+        if(!fakePlayer)
+            networkTransform.ForceSend();
     }
 
     public void EndDrag(Vector3 dragEndVelocity)
@@ -257,7 +263,11 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
         isDragging = false;
         rb.gravityScale = 2f;
         rb.AddForce(dragEndVelocity, ForceMode2D.Impulse);
-        StartCoroutine(WaitForEndVelocity());
+
+        if (!fakePlayer)
+            StartCoroutine(WaitForEndVelocity());
+        else
+            EnableMovement(true);
 
     }
 

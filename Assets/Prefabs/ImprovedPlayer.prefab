@@ -442,6 +442,8 @@ MonoBehaviour:
   playerMessageHolder: {fileID: 243069988543448789}
   playerMessagePrefab: {fileID: 8968416956306666027, guid: 85885cca8fe376042ab19e636a372d25, type: 3}
   messagePopupDuration: 2
+  messageCanvas: {fileID: 8320094655339422341}
+  fakePlayer: 0
   playerCosmetics: {fileID: 0}
   networkTransform: {fileID: 0}
 --- !u!114 &5121102187584088595
@@ -476,6 +478,7 @@ MonoBehaviour:
   m_CrouchDisableCollider: {fileID: 5121102189314959732}
   k_GroundedRadius: 0.25
   k_CeilingRadius: 0.23
+  fakePlayer: 0
 --- !u!114 &5121102187584088594
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -879,17 +879,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b5118542af98aa4e9c4b0421476351e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  createLobbyButton: {fileID: 669848391}
-  joinLobbyMenuButton: {fileID: 0}
-  searchLobbyButton: {fileID: 1556551568}
-  joinLobbyButton: {fileID: 312287303}
-  exitButton: {fileID: 1573270490}
-  lobbyListPanel: {fileID: 154103713}
-  joinLobbyPanel: {fileID: 2098999259}
-  joinLobbyField: {fileID: 896521726}
-  lobbyListContent: {fileID: 154103714}
-  lobbyEntryPrefab: {fileID: 4464540164729181461, guid: b166b2b472e272c4096ec59104ff82b7, type: 3}
-  _steamLobbyManager: {fileID: 1192145375}
 --- !u!4 &947462437
 Transform:
   m_ObjectHideFlags: 0
