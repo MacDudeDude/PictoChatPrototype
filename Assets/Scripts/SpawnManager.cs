@@ -82,14 +82,18 @@ public class SpawnManager : MonoBehaviour
     {
         ulong artistId = SteamLobbyManager.Instance.GetArtist();
         NetworkConnection artistConn = SteamPlayerManager.Instance.GetNetworkConnection(artistId);
-        if (conn != artistConn)
-        {
-            Debug.Log("[SpawnManager] Spawning player with owner: " + conn);
+        //if (conn != artistConn)
+        //{
+        //    Debug.Log("[SpawnManager] Spawning player with owner: " + conn);
+        //    GameObject playerInstance = Instantiate(playerPrefab.gameObject);
+        //    InstanceFinder.ServerManager.Spawn(playerInstance, conn);
+        //    players.Add(conn, playerInstance);
+        //}
+
+        Debug.Log("[SpawnManager] Spawning player with owner: " + conn);
             GameObject playerInstance = Instantiate(playerPrefab.gameObject);
             InstanceFinder.ServerManager.Spawn(playerInstance, conn);
             players.Add(conn, playerInstance);
-        }
-
     }
 
     private void RespawnPlayers(string newArtistId = null)

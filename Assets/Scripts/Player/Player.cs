@@ -22,12 +22,16 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
     public GameObject playerMessagePrefab;
     public float messagePopupDuration;
 
+    public Transform messageCanvas;
+    private Vector2 messageCanvasOffset;
     private GameObject lastMessageObject;
     private Coroutine messageCoroutine;
 
     private float killTimer;
     private bool alive = true;
     private bool movementEnabled;
+
+    public bool fakePlayer;
 
 
     // Field to store the original owner's clientId.
@@ -50,6 +54,8 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
         {
             PlayerStates[i].Init(this, StateMachine);
         }
+        messageCanvasOffset = messageCanvas.localPosition;
+        messageCanvas.parent = null;
         Debug.Log("[Player] Awake - State machine initialized with " + PlayerStates.Length + " states");
     }
 
@@ -67,7 +73,9 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
 
     void Update()
     {
-        if (!IsOwner)
+        messageCanvas.position = (Vector2)transform.position + messageCanvasOffset;
+
+        if (!IsOwner && !fakePlayer)
             return;
 
         if (movementEnabled)
@@ -78,7 +86,7 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
 
     private void FixedUpdate()
     {
-        if (!IsOwner)
+        if (!IsOwner && !fakePlayer)
             return;
 
         if (movementEnabled)
@@ -130,7 +138,7 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
             return;
         }
 
-        if (!IsOwner)
+        if (!IsOwner && !fakePlayer)
         {
             Debug.Log("[Player] Kill attempted but not owner");
             return;

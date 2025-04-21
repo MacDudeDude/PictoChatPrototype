@@ -50,6 +50,14 @@ public class PlayerNormalState : PlayerState
     private float flipBuffer;
     private float animationBuffer;
 
+    public bool fakePlayer;
+    private float horizontalInput;
+    private float verticalInput;
+    private float changeDirTimer;
+    private float jumpInputTimer;
+    private float crouchTimer;
+    private float doCrouchTimer;
+
     public override void Init(Player player, PlayerStateMachine playerStateMachine)
     {
         base.Init(player, playerStateMachine);
@@ -78,7 +86,10 @@ public class PlayerNormalState : PlayerState
 
     public override void FrameUpdate()
     {
-        GetInputs();
+        if (!fakePlayer)
+            GetInputs();
+        else
+            FakeInputs();
         SetAnimatorValues();
     }
 
@@ -131,6 +142,76 @@ public class PlayerNormalState : PlayerState
         verticalMove = Input.GetAxisRaw("Vertical");
 
         if (Input.GetKeyDown(KeyCode.Space) && jumpCooldownTime < 0)
+        {
+            jumpBufferTime = jumpBufferDuration;
+        }
+
+        if (jumpBufferTime > 0)
+        {
+            if (groundedBufferTime > 0)
+            {
+                groundedBufferTime = 0;
+                groundedSlideBufferTime = 0;
+                jumpBufferTime = 0;
+
+                doJump = true;
+            }
+        }
+    }
+
+    private void FakeInputs()
+    {
+        bool doJumpT = false;
+        changeDirTimer -= Time.deltaTime;
+        if (changeDirTimer < 0)
+        {
+            changeDirTimer = Random.Range(0.1f, 1f);
+            horizontalInput = Random.Range(-2, 3);
+            horizontalInput = Mathf.Clamp(horizontalInput, -1f, 1f);
+        }
+
+        jumpInputTimer -= Time.deltaTime;
+        if (jumpInputTimer < 0)
+        {
+            jumpInputTimer = Random.Range(0.1f, 4f);
+            doJumpT = true;
+        }
+
+        doCrouchTimer -= Time.deltaTime;
+        if (doCrouchTimer < 0)
+        {
+            if(verticalInput < -0.5f)
+            {
+                doCrouchTimer = Random.Range(0.1f, 3f);
+                verticalInput = 0;
+            }else
+            {
+                doCrouchTimer = Random.Range(0.1f, 3f);
+                verticalInput = -1f;
+            }
+        }
+
+        jumpBufferTime -= Time.deltaTime;
+        jumpCooldownTime -= Time.deltaTime;
+        groundedBufferTime -= Time.deltaTime;
+        groundedSlideBufferTime -= Time.deltaTime;
+        animationBuffer -= Time.deltaTime;
+        flipBuffer -= Time.deltaTime;
+
+        if (!m_Grounded && m_Rigidbody2D.velocity.y < 0.05f)
+            airborneTime += Time.deltaTime;
+
+        dazedTime -= Time.deltaTime;
+        if (dazed)
+            return;
+
+        horizontalMove = 0;
+        verticalMove = 0;
+
+        horizontalMove = horizontalInput * moveSpeed;
+        verticalMove = verticalInput;
+
+        if (doJumpT && jumpCooldownTime < 0)
         {
             jumpBufferTime = jumpBufferDuration;
         }

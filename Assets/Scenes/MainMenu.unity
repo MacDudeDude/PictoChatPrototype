@@ -511,6 +511,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 7103878603223030187, guid: 71ffe23056a41794c9d4bd2027df1322, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7103878603223030188, guid: 71ffe23056a41794c9d4bd2027df1322, type: 3}
       propertyPath: m_RootOrder
       value: 6
@@ -567,8 +571,30 @@ PrefabInstance:
       propertyPath: m_Name
       value: MinigameManager
       objectReference: {fileID: 0}
+    - target: {fileID: 7103878603223030190, guid: 71ffe23056a41794c9d4bd2027df1322, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 71ffe23056a41794c9d4bd2027df1322, type: 3}
+--- !u!1 &652138173 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7103878603223030190, guid: 71ffe23056a41794c9d4bd2027df1322, type: 3}
+  m_PrefabInstance: {fileID: 652138172}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &652138174
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 652138173}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c05731fa4a6dae947b26cd9f8e8dd5ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fakePlayer: {fileID: 5121102187584088597, guid: 58d132b7c49f3ed43bc65d6137d5ece9, type: 3}
 --- !u!1 &669848389
 GameObject:
   m_ObjectHideFlags: 0
