@@ -9,12 +9,25 @@ public class GameUIManager : MonoBehaviour
     public Image penFillMask;
     public TextMeshProUGUI artistName;
 
+    public GameObject shop;
+
     public void Start()
     {
         penFillMask.color = drawService.currentColor;
         UpdateArtistName();
+        shop.SetActive(false);
+
     }
 
+    public void OpenShop()
+    {
+        shop.SetActive(true);
+    }
+
+    public void CloseShop()
+    {
+        shop.SetActive(false);
+    }
 
     private void OnEnable()
     {
@@ -61,5 +74,13 @@ public class GameUIManager : MonoBehaviour
     public void SetPenThickness(float thickness)
     {
         drawService.placeRadius = thickness;
+    }
+
+    public void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            CloseShop();
+        }
     }
 }

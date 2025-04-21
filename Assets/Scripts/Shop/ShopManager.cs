@@ -58,6 +58,7 @@ public class ShopManager : MonoBehaviour
         rightExtraButton.onClick.AddListener(() => NavigateObjects(PurchaseableObjectType.Extra, 1));
 
         purchaseButton.onClick.AddListener(PurchaseSelectedItems);
+        doneButton.onClick.AddListener(SelectCurrentCosmetics);
 
         // Initial display
         UpdateUIDisplay();
@@ -158,6 +159,12 @@ public class ShopManager : MonoBehaviour
 
         // Check which items are unlocked and update UI accordingly
         CheckUnlockedStatus();
+        UpdateDoodleColor();
+    }
+
+    public void UpdateDoodleColor()
+    {
+        doodleColors.color = playerData.GetDoodleColor();
     }
 
     private void CheckUnlockedStatus()
@@ -271,6 +278,33 @@ public class ShopManager : MonoBehaviour
         }
     }
 
+    private void SelectCurrentCosmetics()
+    {
+        // Select the current doodle
+        if (doodleObjects.Count > 0)
+        {
+            PurchaseableObject doodle = doodleObjects[currentDoodleIndex];
+            playerData.SelectDoodle(doodle.objectID);
+        }
+
+        // Select the current hat
+        if (hatObjects.Count > 0)
+        {
+            PurchaseableObject hat = hatObjects[currentHatIndex];
+            playerData.SelectHat(hat.objectID);
+        }
+
+        // Select the current extra
+        if (extraObjects.Count > 0)
+        {
+            PurchaseableObject extra = extraObjects[currentExtraIndex];
+            playerData.SelectExtra(extra.objectID);
+        }
+
+        // Save player data and notify listeners of cosmetics update
+        playerData.SavePlayerData();
+    }
+
     private void UpdateMoneyText()
     {
         moneyText.text = playerData.Coins.ToString();
@@ -278,7 +312,7 @@ public class ShopManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F11))
+        if (Input.GetKeyDown(KeyCode.M))
         {
             UpdateMoneyText();
         }

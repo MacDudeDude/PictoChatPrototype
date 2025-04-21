@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7f7fa72103713704f811c6b6667b9b32, type: 3}
-  m_Name: DuckDoodle
+  m_Name: GlassesExtra
   m_EditorClassIdentifier: 
-  objectType: 1
-  objectName: Duck
-  objectPrice: 0
-  objectSprite: {fileID: 1092038384, guid: 4625a1f2ea1673a48bc188180ab83f12, type: 3}
-  objectColors: {fileID: -262706523, guid: f5842bdcfef97f2499bb23a8968a9b00, type: 3}
-  objectID: 0
+  objectType: 0
+  objectName: GlassesExtra
+  objectPrice: 50
+  objectSprite: {fileID: 21300000, guid: 5932a1407be514df4889043f777d238a, type: 3}
+  objectColors: {fileID: 0}
+  objectID: 3

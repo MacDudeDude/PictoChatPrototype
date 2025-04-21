@@ -5,6 +5,10 @@ using UnityEngine;
 
 public class PlayerDataManager : MonoBehaviour
 {
+    // Static event for cosmetics updates
+    public delegate void CosmeticsUpdatedHandler();
+    public static event CosmeticsUpdatedHandler OnCosmeticsUpdated;
+
     private static PlayerDataManager _instance;
     public static PlayerDataManager Instance
     {
@@ -68,7 +72,7 @@ public class PlayerDataManager : MonoBehaviour
         }
 
         // Add coins
-        if (Input.GetKeyDown(KeyCode.F11))
+        if (Input.GetKeyDown(KeyCode.M))
         {
             AddCoins(devModeCoinsToAdd);
             Debug.Log($"[DEV MODE] Added {devModeCoinsToAdd} coins. New total: {playerData.coins}");
@@ -90,6 +94,7 @@ public class PlayerDataManager : MonoBehaviour
         Debug.Log($"[DEV MODE] Selected Background ID: {playerData.selectedBackgroundID}");
         Debug.Log($"[DEV MODE] Selected Hat ID: {playerData.selectedHatID}");
         Debug.Log($"[DEV MODE] Selected Extra ID: {playerData.selectedExtraID}");
+        Debug.Log($"[DEV MODE] Doodle Color: {playerData.doodleColor}");
     }
 
     public void ResetPlayerData()
@@ -108,6 +113,8 @@ public class PlayerDataManager : MonoBehaviour
         playerData.selectedBackgroundID = 0;
         playerData.selectedHatID = 0;
         playerData.selectedExtraID = 0;
+
+        playerData.doodleColor = new Color(1, 1, 1, 1);
 
         // Unlock default items
         UnlockDefaultItems();
@@ -136,7 +143,8 @@ public class PlayerDataManager : MonoBehaviour
             playerData.selectedHatID = 0;
             playerData.selectedExtraID = 0;
 
-            // Unlock default items
+            playerData.doodleColor = new Color(1, 1, 1, 1);
+
             UnlockDefaultItems();
 
             SavePlayerData();
@@ -175,7 +183,6 @@ public class PlayerDataManager : MonoBehaviour
         };
         playerData.unlockedObjects.Add(noExtra);
 
-        // Add default hat (ID 1)
         UnlockedObject defaultHat = new UnlockedObject
         {
             objectID = 1,
@@ -240,24 +247,28 @@ public class PlayerDataManager : MonoBehaviour
     {
         playerData.selectedDoodleID = doodleID;
         SavePlayerData();
+        OnCosmeticsUpdated?.Invoke();
     }
 
     public void SelectBackground(int backgroundID)
     {
         playerData.selectedBackgroundID = backgroundID;
         SavePlayerData();
+        OnCosmeticsUpdated?.Invoke();
     }
 
     public void SelectHat(int hatID)
     {
         playerData.selectedHatID = hatID;
         SavePlayerData();
+        OnCosmeticsUpdated?.Invoke();
     }
 
     public void SelectExtra(int extraID)
     {
         playerData.selectedExtraID = extraID;
         SavePlayerData();
+        OnCosmeticsUpdated?.Invoke();
     }
 
     // Helper method to get unlocked items of specific type
@@ -275,6 +286,24 @@ public class PlayerDataManager : MonoBehaviour
 
         return results;
     }
+
+    public void SetDoodleColor(Color color)
+    {
+        playerData.doodleColor = color;
+        SavePlayerData();
+        OnCosmeticsUpdated?.Invoke();
+    }
+
+    public Color GetDoodleColor()
+    {
+        return playerData.doodleColor;
+    }
+
+    // Helper method to notify cosmetics updates manually
+    public void NotifyCosmeticsUpdated()
+    {
+        OnCosmeticsUpdated?.Invoke();
+    }
 }
 
 [System.Serializable]
@@ -288,6 +317,8 @@ public class PlayerData
     public int selectedBackgroundID;
     public int selectedHatID;
     public int selectedExtraID;
+
+    public Color doodleColor;
 }
 
 [System.Serializable]

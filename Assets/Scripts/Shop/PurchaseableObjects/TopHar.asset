@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7f7fa72103713704f811c6b6667b9b32, type: 3}
-  m_Name: TestExtra2
+  m_Name: TopHar
   m_EditorClassIdentifier: 
-  objectType: 3
-  objectName: TestExtra2
+  objectType: 2
+  objectName: TopHat
   objectPrice: 50
-  objectSprite: {fileID: 7482667652216324306, guid: 9d9f9f36ab07f8441a1bf41dff2881d9, type: 3}
+  objectSprite: {fileID: 21300000, guid: 465679218970c4a9bbd9b9894c3a20bd, type: 3}
   objectColors: {fileID: 0}
-  objectID: 2
+  objectID: 3
