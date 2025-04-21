@@ -36,6 +36,7 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
 
     // Field to store the original owner's clientId.
     private NetworkConnection _originalOwner = null;
+    public PlayerCosmetics playerCosmetics;
 
     [SerializeField] private NetworkTransform networkTransform;
     private Vector3 targetDragPosition;
@@ -65,9 +66,10 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
         Kill();
         StateMachine.Initialize(PlayerStates[startingState]);
         networkTransform = GetComponent<NetworkTransform>();
+        playerCosmetics = GetComponent<PlayerCosmetics>();
 
         ChatReciever.Instance.OnChatMessageReceived += OnChatReceived;
-
+        playerCosmetics.ApplyCosmetics();
         Debug.Log("[Player] Start - Initialized with state: " + PlayerStates[startingState].GetType().Name);
     }
 
@@ -182,7 +184,7 @@ public class Player : NetworkBehaviour, IKillable, IDraggable
         {
             if (playerPopup)
             {
-                if(lastMessageObject != null)
+                if (lastMessageObject != null)
                 {
                     StopCoroutine(messageCoroutine);
                     lastMessageObject = null;
